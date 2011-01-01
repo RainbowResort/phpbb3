@@ -2493,6 +2493,11 @@ function group_create(&$group_id, $type, $name, $desc, $group_attributes, $allow
 	// Attributes which also affect the users table
 	$user_attribute_ary = array('group_colour', 'group_rank', 'group_avatar', 'group_avatar_type', 'group_avatar_width', 'group_avatar_height');
 
+//-- mod: Prime Age Group ---------------------------------------------------//
+	global $phpbb_root_path, $phpEx;
+	include($phpbb_root_path . 'includes/prime_age_group.' . $phpEx);
+	$prime_age_group->update_attribute_tables($group_attributes);
+//-- end: Prime Age Group ---------------------------------------------------//
 	// Check data. Limit group name length.
 	if (!utf8_strlen($name) || utf8_strlen($name) > 60)
 	{

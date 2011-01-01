@@ -375,6 +375,11 @@ class ucp_profile
 						if ($config['allow_birthdays'])
 						{
 							$sql_ary['user_birthday'] = $data['user_birthday'];
+//-- mod: Prime Age Group ---------------------------------------------------//
+							include($phpbb_root_path . 'includes/prime_age_group.' . $phpEx);
+							$user->data['user_birthday'] = $sql_ary['user_birthday'];
+							$prime_age_group->execute($user->data);
+//-- end: Prime Age Group ---------------------------------------------------//
 //-- mod: Prime Birthdate ---------------------------------------------------//
 							$prime_birthdate->ucp_profile_insert_sql($sql_ary, $data);
 //-- end: Prime Birthdate ---------------------------------------------------//
