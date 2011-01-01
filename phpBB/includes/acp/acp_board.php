@@ -425,6 +425,10 @@ class acp_board
 				trigger_error('NO_MODE', E_USER_ERROR);
 			break;
 		}
+//-- mod: Prime Birthdate ---------------------------------------------------//
+		include($phpbb_root_path . 'includes/prime_birthdate.' . $phpEx);
+		$prime_birthdate->display_acp_options($display_vars, $mode);
+//-- end: Prime Birthdate ---------------------------------------------------//
 
 		if (isset($display_vars['lang']))
 		{

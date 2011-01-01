@@ -741,6 +741,11 @@ function user_active_flip($mode, $user_id_ary, $reason = INACTIVE_MANUAL)
 function user_ban($mode, $ban, $ban_len, $ban_len_other, $ban_exclude, $ban_reason, $ban_give_reason = '')
 {
 	global $db, $user, $auth, $cache;
+//-- mod: Prime Ban to Group -----------------------------------------------//
+	global $phpbb_root_path, $phpEx;
+	include "$phpbb_root_path/includes/prime_ban_to_group.$phpEx";
+	$prime_ban_to_group = new prime_ban_to_group(null, 'unban');
+//-- end: Prime Ban to Group -----------------------------------------------//
 
 	// Delete stale bans
 	$sql = 'DELETE FROM ' . BANLIST_TABLE . '
@@ -1110,6 +1115,9 @@ function user_ban($mode, $ban, $ban_len, $ban_len_other, $ban_exclude, $ban_reas
 					$db->sql_freeresult($result);
 				break;
 			}
+//-- mod: Prime Ban to Group -----------------------------------------------//
+			$prime_ban_to_group->ban_to_group((isset($sql_in) ? $sql_in : $banlist_ary), $ban_end, $mode);
+//-- end: Prime Ban to Group -----------------------------------------------//
 
 			if (isset($sql_where) && $sql_where)
 			{
@@ -1156,6 +1164,11 @@ function user_ban($mode, $ban, $ban_len, $ban_len_other, $ban_exclude, $ban_reas
 function user_unban($mode, $ban)
 {
 	global $db, $user, $auth, $cache;
+//-- mod: Prime Ban to Group -----------------------------------------------//
+	global $phpbb_root_path, $phpEx;
+	include "$phpbb_root_path/includes/prime_ban_to_group.$phpEx";
+	$prime_ban_to_group = new prime_ban_to_group(null, 'unban');
+//-- end: Prime Ban to Group -----------------------------------------------//
 
 	// Delete stale bans
 	$sql = 'DELETE FROM ' . BANLIST_TABLE . '
@@ -1172,6 +1185,10 @@ function user_unban($mode, $ban)
 
 	if (sizeof($unban_sql))
 	{
+//-- mod: Prime Ban to Group -----------------------------------------------//
+		$prime_ban_to_group->ban_to_group($unban_sql, 'unban', $mode);
+//-- end: Prime Ban to Group -----------------------------------------------//
+
 		// Grab details of bans for logging information later
 		switch ($mode)
 		{

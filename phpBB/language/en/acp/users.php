@@ -59,7 +59,7 @@ $lang = array_merge($lang, array(
 
 	'DELETE_POSTS'			=> 'Delete posts',
 	'DELETE_USER'			=> 'Delete user',
-	'DELETE_USER_EXPLAIN'	=> 'Please note that deleting a user is final, they cannot be recovered.',
+	'DELETE_USER_EXPLAIN'	=> 'Please note that deleting a user (by clicking on submit in this block) is final, they cannot be recovered.',
 
 	'FORCE_REACTIVATION_SUCCESS'	=> 'Successfully forced reactivation.',
 	'FOUNDER'						=> 'Founder',

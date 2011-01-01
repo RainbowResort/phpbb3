@@ -143,9 +143,11 @@ function marklist(id, name, state)
 
 // ]]>
 </script>
+<link href="{T_THEME_PATH}/prime_bbcode_note.css" rel="stylesheet" type="text/css" />
+<!-- INCLUDE prime_bbcode_spoiler.html -->
 </head>
 <body class="{S_CONTENT_DIRECTION}">
-
+<!-- INCLUDE prime_bbcode_note.html -->
 <a name="top"></a>
 
 <div id="wrapheader">
@@ -183,13 +185,26 @@ function marklist(id, name, state)
 			</td>
 		</tr>
 		</table>
-	</div>
-
-	<div id="datebar">
+	</div>	
+	
+	<div id="menubar">
 		<table width="100%" cellspacing="0">
 		<tr>
-			<td class="gensmall"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ENDIF --></td>
-			<td class="gensmall" align="{S_CONTENT_FLOW_END}">{CURRENT_TIME}<br /></td>
+			<td>
+			<!-- IF U_TEAM --><a href="{U_TEAM}">{L_THE_TEAM}</a><!-- ENDIF -->
+			</td>
+			<td align="{S_CONTENT_FLOW_END}">
+			<!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ENDIF -->
+			</td>
+		</tr>
+		</table>
+	</div>
+
+	<div id="menubar">
+		<table width="100%" cellspacing="0">
+		<tr>
+			<td class="gensmall"><a href="/index2.html">Return to the Main Site</a> | <a href="/chat/">IRC Chatroom</a> | <a href="/gallery/">Fanart Gallery</a> | <a href="/kaki/">Oekaki</a></td>
+			<td class="gensmall" align="{S_CONTENT_FLOW_END}">{CURRENT_TIME}</td>
 		</tr>
 		</table>
 	</div>

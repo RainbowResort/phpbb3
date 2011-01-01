@@ -82,12 +82,17 @@ class ucp_register
 		$cp = new custom_profile();
 
 		$error = $cp_data = $cp_error = array();
-
+//-- mod: Prime Birthdate ---------------------------------------------------//
+		include($phpbb_root_path . 'includes/prime_birthdate.' . $phpEx);
+		$birthdate = $prime_birthdate->ucp_register_init($coppa, $agreed, $change_lang);
+//-- end: Prime Birthdate ---------------------------------------------------//
 		if (!$agreed || ($coppa === false && $config['coppa_enable']) || ($coppa && !$config['coppa_enable']))
 		{
 			$add_lang = ($change_lang) ? '&amp;change_lang=' . urlencode($change_lang) : '';
 			$add_coppa = ($coppa !== false) ? '&amp;coppa=' . $coppa : '';
-
+//-- mod: Prime Birthdate ---------------------------------------------------//
+			$add_coppa = '';
+//-- end: Prime Birthdate ---------------------------------------------------//
 			$s_hidden_fields = array(
 				'change_lang'	=> $change_lang,
 			);
@@ -234,6 +239,9 @@ class ucp_register
 					$error[] = $user->lang['TOO_MANY_REGISTERS'];
 				}
 			}
+//-- mod: Prime Birthdate ---------------------------------------------------//
+			$prime_birthdate->ucp_register_error_checking($error, $coppa, $birthdate);
+//-- end: Prime Birthdate ---------------------------------------------------//
 
 			// DNSBL check
 			if ($config['check_dnsbl'])
@@ -319,6 +327,9 @@ class ucp_register
 				{
 					$user_row['user_new'] = 1;
 				}
+//-- mod: Prime Birthdate ---------------------------------------------------//
+				$prime_birthdate->ucp_register_update_user_row($user_row, $birthdate);
+//-- end: Prime Birthdate ---------------------------------------------------//
 
 				// Register user...
 				$user_id = user_add($user_row, $cp_data);
