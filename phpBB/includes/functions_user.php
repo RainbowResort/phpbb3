@@ -1818,8 +1818,9 @@ function validate_password($password)
 {
 	global $config, $db, $user;
 
-	if (!$password)
+	if ($password === '' || $config['pass_complex'] === 'PASS_TYPE_ANY')
 	{
+		// Password empty or no password complexity required.
 		return false;
 	}
 
@@ -1830,7 +1831,6 @@ function validate_password($password)
 	{
 		$upp = '\p{Lu}';
 		$low = '\p{Ll}';
-		$let = '\p{L}';
 		$num = '\p{N}';
 		$sym = '[^\p{Lu}\p{Ll}\p{N}]';
 		$pcre = true;
@@ -1840,7 +1840,6 @@ function validate_password($password)
 		mb_regex_encoding('UTF-8');
 		$upp = '[[:upper:]]';
 		$low = '[[:lower:]]';
-		$let = '[[:lower:][:upper:]]';
 		$num = '[[:digit:]]';
 		$sym = '[^[:upper:][:lower:][:digit:]]';
 		$mbstring = true;
@@ -1849,7 +1848,6 @@ function validate_password($password)
 	{
 		$upp = '[A-Z]';
 		$low = '[a-z]';
-		$let = '[a-zA-Z]';
 		$num = '[0-9]';
 		$sym = '[^A-Za-z0-9]';
 		$pcre = true;
@@ -1859,22 +1857,22 @@ function validate_password($password)
 
 	switch ($config['pass_complex'])
 	{
+		// No break statements below ...
+		// We require strong passwords in case pass_complex is not set or is invalid
+		default:
+
+		// Require mixed case letters, numbers and symbols
+		case 'PASS_TYPE_SYMBOL':
+			$chars[] = $sym;
+
+		// Require mixed case letters and numbers
+		case 'PASS_TYPE_ALPHA':
+			$chars[] = $num;
+
+		// Require mixed case letters
 		case 'PASS_TYPE_CASE':
 			$chars[] = $low;
 			$chars[] = $upp;
-		break;
-
-		case 'PASS_TYPE_ALPHA':
-			$chars[] = $let;
-			$chars[] = $num;
-		break;
-
-		case 'PASS_TYPE_SYMBOL':
-			$chars[] = $low;
-			$chars[] = $upp;
-			$chars[] = $num;
-			$chars[] = $sym;
-		break;
 	}
 
 	if ($pcre)
