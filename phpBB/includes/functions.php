@@ -250,6 +250,22 @@ function unique_id($extra = 'c')
 }
 
 /**
+* Wrapper for mt_rand() which allows swapping $min and $max parameters.
+*
+* PHP does not allow us to swap the order of the arguments for mt_rand() anymore.
+* (since PHP 5.3.4, see http://bugs.php.net/46587)
+*
+* @param int $min		Lowest value to be returned
+* @param int $max		Highest value to be returned
+*
+* @return int			Random integer between $min and $max (or $max and $min)
+*/
+function phpbb_mt_rand($min, $max)
+{
+	return ($min > $max) ? mt_rand($max, $min) : mt_rand($min, $max);
+}
+
+/**
 * Return formatted string for filesizes
 *
 * @param int	$value			filesize in bytes
@@ -3472,7 +3488,7 @@ function get_preg_expression($mode)
 * Depends on whether installed PHP version supports unicode properties
 *
 * @param string	$word			word template to be replaced
-* @param bool	$use_unicode	whether or not to take advantage of PCRE supporting unicode 
+* @param bool	$use_unicode	whether or not to take advantage of PCRE supporting unicode
 *
 * @return string $preg_expr		regex to use with word censor
 */
@@ -3582,7 +3598,7 @@ function phpbb_checkdnsrr($host, $type = 'MX')
 	// but until 5.3.3 it only works for MX records
 	// See: http://bugs.php.net/bug.php?id=51844
 
-	// Call checkdnsrr() if 
+	// Call checkdnsrr() if
 	// we're looking for an MX record or
 	// we're not on Windows or
 	// we're running a PHP version where #51844 has been fixed
@@ -3602,7 +3618,7 @@ function phpbb_checkdnsrr($host, $type = 'MX')
 	// dns_get_record() is available since PHP 5; since PHP 5.3 also on Windows,
 	// but on Windows it does not work reliable for AAAA records before PHP 5.3.1
 
-	// Call dns_get_record() if 
+	// Call dns_get_record() if
 	// we're not looking for an AAAA record or
 	// we're not on Windows or
 	// we're running a PHP version where AAAA lookups work reliable
@@ -3632,7 +3648,7 @@ function phpbb_checkdnsrr($host, $type = 'MX')
 		foreach ($resultset as $result)
 		{
 			if (
-				isset($result['host']) && $result['host'] == $host && 
+				isset($result['host']) && $result['host'] == $host &&
 				isset($result['type']) && $result['type'] == $type
 			)
 			{
@@ -3767,7 +3783,7 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 			if (strpos($errfile, 'cache') === false && strpos($errfile, 'template.') === false)
 			{
 				// flush the content, else we get a white page if output buffering is on
-				if ((int) @ini_get('output_buffering') === 1 || strtolower(@ini_get('output_buffering')) === 'on')
+				if (ob_get_level() > 0)
 				{
 					@ob_flush();
 				}
@@ -4460,6 +4476,12 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		$user_lang = substr($user_lang, 0, strpos($user_lang, '-x-'));
 	}
 
+	$s_search_hidden_fields = array();
+	if ($_SID)
+	{
+		$s_search_hidden_fields['sid'] = $_SID;
+	}
+
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
 		'SITENAME'						=> $config['sitename'],
@@ -4549,11 +4571,13 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 
 		'S_LOAD_UNREADS'			=> ($config['load_unreads_search'] && ($config['load_anon_lastread'] || $user->data['is_registered'])) ? true : false,
 
+		'S_SEARCH_HIDDEN_FIELDS'	=> build_hidden_fields($s_search_hidden_fields),
+
 		'T_THEME_PATH'			=> "{$web_path}styles/" . $user->theme['theme_path'] . '/theme',
 		'T_TEMPLATE_PATH'		=> "{$web_path}styles/" . $user->theme['template_path'] . '/template',
 		'T_SUPER_TEMPLATE_PATH'	=> (isset($user->theme['template_inherit_path']) && $user->theme['template_inherit_path']) ? "{$web_path}styles/" . $user->theme['template_inherit_path'] . '/template' : "{$web_path}styles/" . $user->theme['template_path'] . '/template',
 		'T_IMAGESET_PATH'		=> "{$web_path}styles/" . $user->theme['imageset_path'] . '/imageset',
-		'T_IMAGESET_LANG_PATH'	=> "{$web_path}styles/" . $user->theme['imageset_path'] . '/imageset/' . $user->data['user_lang'],
+		'T_IMAGESET_LANG_PATH'	=> "{$web_path}styles/" . $user->theme['imageset_path'] . '/imageset/' . $user->lang_name,
 		'T_IMAGES_PATH'			=> "{$web_path}images/",
 		'T_SMILIES_PATH'		=> "{$web_path}{$config['smilies_path']}/",
 		'T_AVATAR_PATH'			=> "{$web_path}{$config['avatar_path']}/",
@@ -4561,7 +4585,7 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		'T_ICONS_PATH'			=> "{$web_path}{$config['icons_path']}/",
 		'T_RANKS_PATH'			=> "{$web_path}{$config['ranks_path']}/",
 		'T_UPLOAD_PATH'			=> "{$web_path}{$config['upload_path']}/",
-		'T_STYLESHEET_LINK'		=> (!$user->theme['theme_storedb']) ? "{$web_path}styles/" . $user->theme['theme_path'] . '/theme/stylesheet.css' : append_sid("{$phpbb_root_path}style.$phpEx", 'id=' . $user->theme['style_id'] . '&amp;lang=' . $user->data['user_lang']),
+		'T_STYLESHEET_LINK'		=> (!$user->theme['theme_storedb']) ? "{$web_path}styles/" . $user->theme['theme_path'] . '/theme/stylesheet.css' : append_sid("{$phpbb_root_path}style.$phpEx", 'id=' . $user->theme['style_id'] . '&amp;lang=' . $user->lang_name),
 		'T_STYLESHEET_NAME'		=> $user->theme['theme_name'],
 
 		'T_THEME_NAME'			=> $user->theme['theme_path'],
@@ -4743,7 +4767,7 @@ function exit_handler()
 	}
 
 	// As a pre-caution... some setups display a blank page if the flush() is not there.
-	(empty($config['gzip_compress'])) ? @flush() : @ob_flush();
+	(ob_get_level() > 0) ? @ob_flush() : @flush();
 
 	exit;
 }
