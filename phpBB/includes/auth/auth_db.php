@@ -111,8 +111,8 @@ function login_db(&$loginname, &$password, $ip = '', $browser = '', $forwarded_f
 			'attempt_forwarded_for'	=> $forwarded_for,
 			'attempt_time'			=> time(),
 			'user_id'				=> ($row) ? (int) $row['user_id'] : 0,
-			'loginname'				=> $loginname,
-			'loginname_clean'		=> $loginname_clean,
+			'username'				=> $loginname,
+			'username_clean'		=> $loginname_clean,
 		);
 		$sql = 'INSERT INTO ' . LOGIN_ATTEMPT_TABLE . $db->sql_build_array('INSERT', $attempt_data);
 		$result = $db->sql_query($sql);
