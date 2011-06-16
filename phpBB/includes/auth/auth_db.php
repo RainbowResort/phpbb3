@@ -89,7 +89,7 @@ function login_db(&$loginname, &$password, $ip = '', $browser = '', $forwarded_f
 	if (($ip && !$config['ip_login_limit_use_forwarded']) ||
 		($forwarded_for && $config['ip_login_limit_use_forwarded']))
 	{
-		$sql = 'SELECT COUNT(attempt_id) AS count
+		$sql = 'SELECT COUNT(attempt_id) AS attempts
 			FROM ' . LOGIN_ATTEMPT_TABLE . '
 			WHERE attempt_time > ' . (time() - (int) $config['ip_login_limit_time']);
 		if ($config['ip_login_limit_use_forwarded'])
@@ -102,12 +102,12 @@ function login_db(&$loginname, &$password, $ip = '', $browser = '', $forwarded_f
 		}
 
 		$result = $db->sql_query($sql);
-		$attempts = (int) $db->sql_fetchfield('count');
+		$attempts = (int) $db->sql_fetchfield('attempts');
 		$db->sql_freeresult($result);
 
 		$attempt_data = array(
 			'attempt_ip'			=> $ip,
-			'attempt_browser'		=> $browser,
+			'attempt_browser'		=> trim(substr($browser, 0, 149)),
 			'attempt_forwarded_for'	=> $forwarded_for,
 			'attempt_time'			=> time(),
 			'user_id'				=> ($row) ? (int) $row['user_id'] : 0,

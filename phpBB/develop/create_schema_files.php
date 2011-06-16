@@ -329,6 +329,15 @@ foreach ($supported_dbms as $dbms)
 		// Write columns one by one...
 		foreach ($table_data['COLUMNS'] as $column_name => $column_data)
 		{
+			if (strlen($column_name) > 30)
+			{
+				trigger_error("Column name '$column_name' on table '$table_name' is too long. The maximum is 30 characters.", E_USER_ERROR);
+			}
+			if (isset($column_data[2]) && $column_data[2] == 'auto_increment' && strlen($column_name) > 26) // "${column_name}_gen"
+			{
+				trigger_error("Index name '${column_name}_gen' on table '$table_name' is too long. The maximum is 30 characters.", E_USER_ERROR);
+			}
+
 			// Get type
 			if (strpos($column_data[0], ':') !== false)
 			{
@@ -630,6 +639,11 @@ foreach ($supported_dbms as $dbms)
 				if (!is_array($key_data[1]))
 				{
 					$key_data[1] = array($key_data[1]);
+				}
+
+				if (strlen($table_name . $key_name) > 30)
+				{
+					trigger_error("Index name '${table_name}_$key_name' on table '$table_name' is too long. The maximum is 30 characters.", E_USER_ERROR);
 				}
 
 				switch ($dbms)
@@ -1220,9 +1234,9 @@ function get_schema_struct()
 		),
 		'PRIMARY_KEY'	=> 'attempt_id',
 		'KEYS'			=> array(
-			'attempt_ip'				=> array('INDEX', array('attempt_ip', 'attempt_time')),
-			'attempt_forwarded_for'		=> array('INDEX', array('attempt_forwarded_for', 'attempt_time')),
-			'attempt_time'				=> array('INDEX', array('attempt_time')),
+			'att_ip'				=> array('INDEX', array('attempt_ip', 'attempt_time')),
+			'att_for'		=> array('INDEX', array('attempt_forwarded_for', 'attempt_time')),
+			'att_time'				=> array('INDEX', array('attempt_time')),
 			'user_id'					=> array('INDEX', 'user_id'),
 		),
 	);
@@ -2067,4 +2081,3 @@ EOF;
 
 echo 'done';
 
-?>

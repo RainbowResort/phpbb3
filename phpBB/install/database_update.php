@@ -8,17 +8,21 @@
 *
 */
 
-$updates_to_version = '3.0.9-dev';
+define('UPDATES_TO_VERSION', '3.0.10-dev');
 
 // Enter any version to update from to test updates. The version within the db will not be updated.
-$debug_from_version = false;
+define('DEBUG_FROM_VERSION', false);
 
 // Which oldest version does this updater support?
-$oldest_from_version = '3.0.0';
+define('OLDEST_FROM_VERSION', '3.0.0');
 
 // Return if we "just include it" to find out for which version the database update is responsible for
 if (defined('IN_PHPBB') && defined('IN_INSTALL'))
 {
+	$updates_to_version = UPDATES_TO_VERSION;
+	$debug_from_version = DEBUG_FROM_VERSION;
+	$oldest_from_version = OLDEST_FROM_VERSION;
+
 	return;
 }
 
@@ -30,12 +34,12 @@ define('IN_INSTALL', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 
-// Report all errors, except notices and deprecation messages
-if (!defined('E_DEPRECATED'))
-{
-	define('E_DEPRECATED', 8192);
-}
-//error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+require($phpbb_root_path . 'includes/startup.' . $phpEx);
+
+$updates_to_version = UPDATES_TO_VERSION;
+$debug_from_version = DEBUG_FROM_VERSION;
+$oldest_from_version = OLDEST_FROM_VERSION;
+
 error_reporting(E_ALL);
 
 @set_time_limit(0);
@@ -78,18 +82,11 @@ require($phpbb_root_path . 'includes/constants.' . $phpEx);
 require($phpbb_root_path . 'includes/db/' . $dbms . '.' . $phpEx);
 require($phpbb_root_path . 'includes/utf/utf_tools.' . $phpEx);
 
-// If we are on PHP >= 6.0.0 we do not need some code
-if (version_compare(PHP_VERSION, '6.0.0-dev', '>='))
+// new table constants are separately defined here in case the updater is run
+// before the files are updated
+if (!defined('LOGIN_ATTEMPT_TABLE'))
 {
-	/**
-	* @ignore
-	*/
-	define('STRIP', false);
-}
-else
-{
-	@set_magic_quotes_runtime(0);
-	define('STRIP', (get_magic_quotes_gpc()) ? true : false);
+	define('LOGIN_ATTEMPT_TABLE', $table_prefix . 'login_attempts');
 }
 
 $user = new user();
@@ -534,12 +531,23 @@ function _sql($sql, &$errored, &$error_ary, $echo_dot = true)
 
 	$db->sql_return_on_error(true);
 
-	$result = $db->sql_query($sql);
-	if ($db->sql_error_triggered)
+	if ($sql === 'begin')
 	{
-		$errored = true;
-		$error_ary['sql'][] = $db->sql_error_sql;
-		$error_ary['error_code'][] = $db->sql_error_returned;
+		$result = $db->sql_transaction('begin');
+	}
+	else if ($sql === 'commit')
+	{
+		$result = $db->sql_transaction('commit');
+	}
+	else
+	{
+		$result = $db->sql_query($sql);
+		if ($db->sql_error_triggered)
+		{
+			$errored = true;
+			$error_ary['sql'][] = $db->sql_error_sql;
+			$error_ary['error_code'][] = $db->sql_error_returned;
+		}
 	}
 
 	$db->sql_return_on_error(false);
@@ -932,9 +940,9 @@ function database_update_info()
 					),
 					'PRIMARY_KEY'		=> 'attempt_id',
 					'KEYS'				=> array(
-						'attempt_ip'			=> array('INDEX', array('attempt_ip', 'attempt_time')),
-						'attempt_forwarded_for'	=> array('INDEX', array('attempt_forwarded_for', 'attempt_time')),
-						'attempt_time'			=> array('INDEX', array('attempt_time')),
+						'att_ip'			=> array('INDEX', array('attempt_ip', 'attempt_time')),
+						'att_for'	=> array('INDEX', array('attempt_forwarded_for', 'attempt_time')),
+						'att_time'			=> array('INDEX', array('attempt_time')),
 						'user_id'				=> array('INDEX', 'user_id'),
 					),
 				),
@@ -1913,6 +1921,27 @@ function change_database_data(&$no_updates, $version)
 			}
 			$db->sql_freeresult($result);
 
+			global $db_tools, $table_prefix;
+
+			// Recover from potentially broken Q&A CAPTCHA table on firebird
+			// Q&A CAPTCHA was uninstallable, so it's safe to remove these
+			// without data loss
+			if ($db_tools->sql_layer == 'firebird')
+			{
+				$tables = array(
+					$table_prefix . 'captcha_questions',
+					$table_prefix . 'captcha_answers',
+					$table_prefix . 'qa_confirm',
+				);
+				foreach ($tables as $table)
+				{
+					if ($db_tools->sql_table_exists($table))
+					{
+						$db_tools->sql_table_drop($table);
+					}
+				}
+			}
+
 			$no_updates = false;
 		break;
 	}
@@ -2319,6 +2348,11 @@ class updater_db_tools
 			// here lies an array, filled with information compiled on the column's data
 			$prepared_column = $this->sql_prepare_column_data($table_name, $column_name, $column_data);
 
+			if (isset($prepared_column['auto_increment']) && strlen($column_name) > 26) // "${column_name}_gen"
+			{
+				trigger_error("Index name '${column_name}_gen' on table '$table_name' is too long. The maximum auto increment column length is 26 characters.", E_USER_ERROR);
+			}
+
 			// here we add the definition of the new column to the list of columns
 			switch ($this->sql_layer)
 			{
@@ -2440,7 +2474,7 @@ class updater_db_tools
 			break;
 
 			case 'oracle':
-				$table_sql .= "\n);";
+				$table_sql .= "\n)";
 				$statements[] = $table_sql;
 
 				// do we need to add a sequence and a tigger for auto incrementing columns?
@@ -2458,7 +2492,7 @@ class updater_db_tools
 					$trigger .= "BEGIN\n";
 					$trigger .= "\tSELECT {$table_name}_seq.nextval\n";
 					$trigger .= "\tINTO :new.{$create_sequence}\n";
-					$trigger .= "\tFROM dual\n";
+					$trigger .= "\tFROM dual;\n";
 					$trigger .= "END;";
 
 					$statements[] = $trigger;
@@ -2468,7 +2502,13 @@ class updater_db_tools
 			case 'firebird':
 				if ($create_sequence)
 				{
-					$statements[] = "CREATE SEQUENCE {$table_name}_seq;";
+					$statements[] = "CREATE GENERATOR {$table_name}_gen;";
+					$statements[] = "SET GENERATOR {$table_name}_gen TO 0;";
+
+					$trigger = "CREATE TRIGGER t_$table_name FOR $table_name\n";
+					$trigger .= "BEFORE INSERT\nAS\nBEGIN\n";
+					$trigger .= "\tNEW.{$create_sequence} = GEN_ID({$table_name}_gen, 1);\nEND;";
+					$statements[] = $trigger;
 				}
 			break;
 		}
@@ -3302,6 +3342,11 @@ class updater_db_tools
 	*/
 	function sql_prepare_column_data($table_name, $column_name, $column_data)
 	{
+		if (strlen($column_name) > 30)
+		{
+			trigger_error("Column name '$column_name' on table '$table_name' is too long. The maximum is 30 characters.", E_USER_ERROR);
+		}
+
 		// Get type
 		if (strpos($column_data[0], ':') !== false)
 		{
@@ -3875,6 +3920,13 @@ class updater_db_tools
 	{
 		$statements = array();
 
+		$table_prefix = substr(CONFIG_TABLE, 0, -6); // strlen(config)
+		if (strlen($table_name . $index_name) - strlen($table_prefix) > 24)
+		{
+			$max_length = $table_prefix + 24;
+			trigger_error("Index name '{$table_name}_$index_name' on table '$table_name' is too long. The maximum is $max_length characters.", E_USER_ERROR);
+		}
+
 		switch ($this->sql_layer)
 		{
 			case 'firebird':
@@ -3904,6 +3956,13 @@ class updater_db_tools
 	function sql_create_index($table_name, $index_name, $column)
 	{
 		$statements = array();
+
+		$table_prefix = substr(CONFIG_TABLE, 0, -6); // strlen(config)
+		if (strlen($table_name . $index_name) - strlen($table_prefix) > 24)
+		{
+			$max_length = $table_prefix + 24;
+			trigger_error("Index name '{$table_name}_$index_name' on table '$table_name' is too long. The maximum is $max_length characters.", E_USER_ERROR);
+		}
 
 		// remove index length unless MySQL4
 		if ('mysql_40' != $this->sql_layer)
