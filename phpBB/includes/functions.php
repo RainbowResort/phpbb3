@@ -266,6 +266,27 @@ function phpbb_mt_rand($min, $max)
 }
 
 /**
+* Wrapper for getdate() which returns the equivalent array for UTC timestamps.
+*
+* @param int $time		Unix timestamp (optional)
+*
+* @return array			Returns an associative array of information related to the timestamp.
+*						See http://www.php.net/manual/en/function.getdate.php
+*/
+function phpbb_gmgetdate($time = false)
+{
+	if ($time === false)
+	{
+		$time = time();
+	}
+
+	// getdate() interprets timestamps in local time.
+	// What follows uses the fact that getdate() and
+	// date('Z') balance each other out.
+	return getdate($time - date('Z'));
+}
+
+/**
 * Return formatted string for filesizes
 *
 * @param int	$value			filesize in bytes
@@ -596,6 +617,34 @@ function _hash_crypt_private($password, $setting, &$itoa64)
 function phpbb_email_hash($email)
 {
 	return sprintf('%u', crc32(strtolower($email))) . strlen($email);
+}
+
+/**
+* Wrapper for version_compare() that allows using uppercase A and B
+* for alpha and beta releases.
+*
+* See http://www.php.net/manual/en/function.version-compare.php
+*
+* @param string $version1		First version number
+* @param string $version2		Second version number
+* @param string $operator		Comparison operator (optional)
+*
+* @return mixed					Boolean (true, false) if comparison operator is specified.
+*								Integer (-1, 0, 1) otherwise.
+*/
+function phpbb_version_compare($version1, $version2, $operator = null)
+{
+	$version1 = strtolower($version1);
+	$version2 = strtolower($version2);
+
+	if (is_null($operator))
+	{
+		return version_compare($version1, $version2);
+	}
+	else
+	{
+		return version_compare($version1, $version2, $operator);
+	}
 }
 
 /**
@@ -2659,12 +2708,6 @@ function send_status_line($code, $message)
 		{
 			$version = $_SERVER['SERVER_PROTOCOL'];
 		}
-		else if (!empty($_SERVER['HTTP_VERSION']))
-		{
-			// I cannot remember where I got this from.
-			// This code path may never be reachable in reality.
-			$version = $_SERVER['HTTP_VERSION'];
-		}
 		else
 		{
 			$version = 'HTTP/1.0';
@@ -3710,10 +3753,19 @@ function phpbb_checkdnsrr($host, $type = 'MX')
 					{
 						return true;
 					}
+				break;
 
 				default:
-				case 'A':
 				case 'AAAA':
+					// AAAA records returned by nslookup on Windows XP/2003 have this format.
+					// Later Windows versions use the A record format below for AAAA records.
+					if (stripos($line, "$host AAAA IPv6 address") === 0)
+					{
+						return true;
+					}
+				// No break
+
+				case 'A':
 					if (!empty($host_matches))
 					{
 						// Second line
