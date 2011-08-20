@@ -1,0 +1,9 @@
+p.linkkrr {
+	margin: 0;
+	float: left;
+	white-space: nowrap;
+}
+
+.rtl p.linkkrr {
+	float: right;
+}
