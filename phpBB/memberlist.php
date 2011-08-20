@@ -1697,7 +1697,7 @@ function show_profile($data, $user_notes_enabled = false, $warn_user_enabled = f
 				$diff = ($diff < 0) ? 1 : 0;
 			}
 
-			$age = (int) ($now['year'] - $bday_year - $diff);
+			$age = max(0, (int) ($now['year'] - $bday_year - $diff));
 //-- mod: Prime Birthdate ---------------------------------------------------//
 			include($phpbb_root_path . 'includes/prime_birthdate.' . $phpEx);
 			$prime_birthdate->memberlist_show_age($data, $age);
