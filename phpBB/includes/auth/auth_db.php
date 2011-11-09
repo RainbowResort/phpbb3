@@ -124,6 +124,15 @@ function login_db(&$loginname, &$password, $ip = '', $browser = '', $forwarded_f
 
 	if (!$row)
 	{
+		if ($config['ip_login_limit_max'] && $attempts >= $config['ip_login_limit_max'])
+		{
+			return array(
+				'status'		=> LOGIN_ERROR_ATTEMPTS,
+				'error_msg'		=> 'LOGIN_ERROR_ATTEMPTS',
+				'user_row'		=> array('user_id' => ANONYMOUS),
+			);
+		}
+
 		return array(
 			// Start Sep Login Name Mod
 			// 'status'	=> LOGIN_ERROR_USERNAME,
