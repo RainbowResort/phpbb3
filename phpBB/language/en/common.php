@@ -492,7 +492,8 @@ $lang = array_merge($lang, array(
 	'REG_USER_TOTAL'			=> '%d registered, ',
 	'REG_USER_TOTAL_AND'		=> '%d registered and ',
 	'REMOVE'					=> 'Remove',
-	'REMOVE_INSTALL'			=> 'Oh no, he didn\'t. He didn\'t. He did NOT. ... ... ... CRAP. HIT THE DIRT.',
+// Reminder, escape all ' (\')
+	'REMOVE_INSTALL'			=> 'Disk needs to remember to remove forums/install/ or else everyone at the Rainbow Resort will be angry at him for forgetting about the forum!',
 	'REPLIES'					=> 'Replies',
 	'REPLY_WITH_QUOTE'			=> 'Reply with quote',
 	'REPLYING_GLOBAL_ANNOUNCE'	=> 'Replying to global announcement',
