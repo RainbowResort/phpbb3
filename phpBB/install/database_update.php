@@ -8,7 +8,7 @@
 *
 */
 
-define('UPDATES_TO_VERSION', '3.0.10-git-g937c0b0');
+define('UPDATES_TO_VERSION', '3.0.11-dev');
 
 // Enter any version to update from to test updates. The version within the db will not be updated.
 define('DEBUG_FROM_VERSION', false);
@@ -951,7 +951,7 @@ function database_update_info()
 						// this column was removed from the database updater
 						// after 3.0.9-RC3 was released. It might still exist
 						// in 3.0.9-RCX installations and has to be dropped in
-						// 3.0.10 after the db_tools class is capable of properly
+						// 3.0.11 after the db_tools class is capable of properly
 						// removing a primary key.
 						// 'attempt_id'			=> array('UINT', NULL, 'auto_increment'),
 						'attempt_ip'			=> array('VCHAR:40', ''),
@@ -985,8 +985,14 @@ function database_update_info()
 		'3.0.9-RC3'     => array(),
 		// No changes from 3.0.9-RC4 to 3.0.9
 		'3.0.9-RC4'     => array(),
+		// No changes from 3.0.9 to 3.0.10-RC1
+		'3.0.9'			=> array(),
+		// No changes from 3.0.10-RC1 to 3.0.10-RC2
+		'3.0.10-RC1'	=> array(),
+		// No changes from 3.0.10-RC2 to 3.0.10-RC3
+		'3.0.10-RC2'	=> array(),
 
-		/** @todo DROP LOGIN_ATTEMPT_TABLE.attempt_id in 3.0.10-RC1 */
+		/** @todo DROP LOGIN_ATTEMPT_TABLE.attempt_id in 3.0.11-RC1 */
 	);
 }
 
@@ -1997,7 +2003,20 @@ function change_database_data(&$no_updates, $version)
 
 		// Changes from 3.0.9 to 3.0.10-RC1
 		case '3.0.9':
-			set_config('email_max_chunk_size', '50');
+			if (!isset($config['email_max_chunk_size']))
+			{
+				set_config('email_max_chunk_size', '50');
+			}
+
+			$no_updates = false;
+		break;
+
+		// No changes from 3.0.10-RC1 to 3.0.10-RC2
+		case '3.0.10-RC1':
+		break;
+
+		// No changes from 3.0.10-RC2 to 3.0.10-RC3
+		case '3.0.10-RC2':
 		break;
 	}
 }

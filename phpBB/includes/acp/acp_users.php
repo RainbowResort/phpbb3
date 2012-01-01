@@ -348,10 +348,7 @@ class acp_users
 
 								$messenger->to($user_row['user_email'], $user_row['username']);
 
-								$messenger->headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
-								$messenger->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-								$messenger->headers('X-AntiAbuse: Username - ' . $user->data['username']);
-								$messenger->headers('X-AntiAbuse: User IP - ' . $user->ip);
+								$messenger->anti_abuse_headers($config, $user);
 
 								$messenger->assign_vars(array(
 									'WELCOME_MSG'	=> htmlspecialchars_decode(sprintf($user->lang['WELCOME_SUBJECT'], $config['sitename'])),
@@ -409,10 +406,7 @@ class acp_users
 
 									$messenger->to($user_row['user_email'], $user_row['username']);
 
-									$messenger->headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
-									$messenger->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-									$messenger->headers('X-AntiAbuse: Username - ' . $user->data['username']);
-									$messenger->headers('X-AntiAbuse: User IP - ' . $user->ip);
+									$messenger->anti_abuse_headers($config, $user);
 
 									$messenger->assign_vars(array(
 										'USERNAME'	=> htmlspecialchars_decode($user_row['username']))
@@ -2386,47 +2380,62 @@ class acp_users
 	}
 
 	/**
-	* Optionset replacement for this module based on $user->optionset
+	* Set option bit field for user options in a user row array.
+	*
+	* Optionset replacement for this module based on $user->optionset.
+	*
+	* @param array $user_row Row from the users table.
+	* @param int $key Option key, as defined in $user->keyoptions property.
+	* @param bool $value True to set the option, false to clear the option.
+	* @param int $data Current bit field value, or false to use $user_row['user_options']
+	* @return int|bool If $data is false, the bit field is modified and
+	*                  written back to $user_row['user_options'], and
+	*                  return value is true if the bit field changed and
+	*                  false otherwise. If $data is not false, the new
+	*                  bitfield value is returned.
 	*/
 	function optionset(&$user_row, $key, $value, $data = false)
 	{
 		global $user;
 
-		$var = ($data) ? $data : $user_row['user_options'];
+		$var = ($data !== false) ? $data : $user_row['user_options'];
 
-		if ($value && !($var & 1 << $user->keyoptions[$key]))
+		$new_var = phpbb_optionset($user->keyoptions[$key], $value, $var);
+
+		if ($data === false)
 		{
-			$var += 1 << $user->keyoptions[$key];
-		}
-		else if (!$value && ($var & 1 << $user->keyoptions[$key]))
-		{
-			$var -= 1 << $user->keyoptions[$key];
+			if ($new_var != $var)
+			{
+				$user_row['user_options'] = $new_var;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		else
 		{
-			return ($data) ? $var : false;
-		}
-
-		if (!$data)
-		{
-			$user_row['user_options'] = $var;
-			return true;
-		}
-		else
-		{
-			return $var;
+			return $new_var;
 		}
 	}
 
 	/**
-	* Optionget replacement for this module based on $user->optionget
+	* Get option bit field from user options in a user row array.
+	*
+	* Optionget replacement for this module based on $user->optionget.
+	*
+	* @param array $user_row Row from the users table.
+	* @param int $key option key, as defined in $user->keyoptions property.
+	* @param int $data bit field value to use, or false to use $user_row['user_options']
+	* @return bool true if the option is set in the bit field, false otherwise
 	*/
 	function optionget(&$user_row, $key, $data = false)
 	{
 		global $user;
 
-		$var = ($data) ? $data : $user_row['user_options'];
-		return ($var & 1 << $user->keyoptions[$key]) ? true : false;
+		$var = ($data !== false) ? $data : $user_row['user_options'];
+		return phpbb_optionget($user->keyoptions[$key], $var);
 	}
 }
 

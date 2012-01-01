@@ -163,6 +163,22 @@ class messenger
 	}
 
 	/**
+	* Adds X-AntiAbuse headers
+	*
+	* @param array $config		Configuration array
+	* @param user $user			A user object
+	*
+	* @return null
+	*/
+	function anti_abuse_headers($config, $user)
+	{
+		$this->headers('X-AntiAbuse: Board servername - ' . mail_encode($config['server_name']));
+		$this->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
+		$this->headers('X-AntiAbuse: Username - ' . mail_encode($user->data['username']));
+		$this->headers('X-AntiAbuse: User IP - ' . $user->ip);
+	}
+
+	/**
 	* Set the email priority
 	*/
 	function set_mail_priority($priority = MAIL_NORMAL_PRIORITY)
@@ -552,7 +568,7 @@ class messenger
 		if (!$use_queue)
 		{
 			include_once($phpbb_root_path . 'includes/functions_jabber.' . $phpEx);
-			$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], $config['jab_password'], $config['jab_use_ssl']);
+			$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], htmlspecialchars_decode($config['jab_password']), $config['jab_use_ssl']);
 
 			if (!$this->jabber->connect())
 			{
@@ -753,7 +769,7 @@ class queue
 					}
 
 					include_once($phpbb_root_path . 'includes/functions_jabber.' . $phpEx);
-					$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], $config['jab_password'], $config['jab_use_ssl']);
+					$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], htmlspecialchars_decode($config['jab_password']), $config['jab_use_ssl']);
 
 					if (!$this->jabber->connect())
 					{
@@ -1006,7 +1022,7 @@ function smtpmail($addresses, $subject, $message, &$err_msg, $headers = false)
 	}
 
 	// Let me in. This function handles the complete authentication process
-	if ($err_msg = $smtp->log_into_server($config['smtp_host'], $config['smtp_username'], $config['smtp_password'], $config['smtp_auth_method']))
+	if ($err_msg = $smtp->log_into_server($config['smtp_host'], $config['smtp_username'], htmlspecialchars_decode($config['smtp_password']), $config['smtp_auth_method']))
 	{
 		$smtp->close_session($err_msg);
 		return false;
