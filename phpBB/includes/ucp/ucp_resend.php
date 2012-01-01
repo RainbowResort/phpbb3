@@ -106,13 +106,7 @@ class ucp_resend
 				$messenger->to($user_row['user_email'], $user_row['loginname']);				
 				// End Sep Login Name Mod
 
-				$messenger->headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
-				$messenger->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-				// Start Sep Login Name Mod					
-				//$messenger->headers('X-AntiAbuse: Username - ' . $user->data['username']);
-				$messenger->headers('X-AntiAbuse: Loginname - ' . $user->data['loginname']);	
-				// End Sep Login Name Mod	
-				$messenger->headers('X-AntiAbuse: User IP - ' . $user->ip);
+				$messenger->anti_abuse_headers();
 
 				$messenger->assign_vars(array(
 					'WELCOME_MSG'	=> htmlspecialchars_decode(sprintf($user->lang['WELCOME_SUBJECT'], $config['sitename'])),
@@ -160,13 +154,7 @@ class ucp_resend
 					$messenger->im($row['user_jabber'], $row['loginname']);	
 					// End Sep Login Name Mod	
 
-					$messenger->headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
-					$messenger->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-					// Start Sep Login Name Mod						
-					//$messenger->headers('X-AntiAbuse: Username - ' . $user->data['username']);
-					$messenger->headers('X-AntiAbuse: Loginname - ' . $user->data['loginname']);
-					// End Sep Login Name Mod		
-					$messenger->headers('X-AntiAbuse: User IP - ' . $user->ip);
+					$messenger->anti_abuse_headers();
 
 					$messenger->assign_vars(array(
 						// Start Sep Login Name Mod			
