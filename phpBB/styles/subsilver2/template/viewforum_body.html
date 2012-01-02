@@ -89,7 +89,7 @@
 
 <!-- IF S_IS_POSTABLE or S_NO_READ_ACCESS -->
 	<div id="pageheader">
-		<h2><a class="titles" href="{U_VIEW_FORUM}">{FORUM_NAME}</a></h2>
+		<!-- IF DEADCODELOLWUT --><h2><a class="titles" href="{U_VIEW_FORUM}">{FORUM_NAME}</a></h2><!-- ENDIF -->
 
 		<!-- IF MODERATORS -->
 			<p class="moderators"><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->: {MODERATORS}</p>
