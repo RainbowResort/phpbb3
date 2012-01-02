@@ -392,12 +392,12 @@ hr {
 /* CSS spec requires a:link, a:visited, a:hover and a:active rules to be specified in this order. */
 /* See http://www.phpbb.com/bugs/phpbb3/59685 */
 a:link {
-	color: #98fffb;
+	color: #e3ca17;
 	text-decoration: none;
 }
 
 a:visited {
-	color: #98fffb;
+	color: #938525;
 	text-decoration: none;
 }
 
@@ -410,7 +410,7 @@ a:active {
 }
 
 a.forumlink {
-	color: #ff6699;
+	color: #e3ca17;
 	font-weight: bold;
 	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
 	font-size: 1.2em;
@@ -421,17 +421,17 @@ a.topictitle {
 	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
 	font-weight: bold;
 	font-size: 1.2em;
-	color: #ff6699
+	color: #e3ca17
 }
 
 a.topictitle:visited {
-	color: #5493B4;
+	color: #938525;
 	text-decoration: none;
 }
 
 th a,
 th a:visited {
-	color: #FFA34F !important;
+	color: #938525 !important;
 	text-decoration: none;
 }
 
