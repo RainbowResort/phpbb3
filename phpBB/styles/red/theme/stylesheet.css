@@ -397,7 +397,7 @@ a:link {
 }
 
 a:visited {
-	color: #938525;
+	color: #a4a28e;
 	text-decoration: none;
 }
 
@@ -425,13 +425,13 @@ a.topictitle {
 }
 
 a.topictitle:visited {
-	color: #938525;
+	color: #a4a28e;
 	text-decoration: none;
 }
 
 th a,
 th a:visited {
-	color: #938525 !important;
+	color: #a4a28e !important;
 	text-decoration: none;
 }
 
