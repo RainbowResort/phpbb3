@@ -26,8 +26,8 @@ body {
 	/* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
 	font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
 	color: #FFFFFF;
-	background-color: #7b4520;
-        /*background-image: url(./images/mainbg.gif);*/
+	background-color: #943900;
+        background-image: url(./images/mainbg.gif);
 	font-size: 62.5%; /* This sets the default font size to be equivalent to 10px */
 	margin: 0;
 }
@@ -52,13 +52,13 @@ body {
 	background-color: #ECECEC;
 	border-width: 1px;
 	border-style: solid;
-	border-color: #A9B8C2;
+	border-color: #683817;
 }
 
 #logodesc {
-	background-color: #7b4520; /* The third padding amount, remember, Disk! */
-	/*background-image: url('./images/background.png');*/
-	background-repeat: repeat-x;
+	background-color: #94634A; /* The third padding amount, remember, Disk! */
+	/*background-image: url('./images/background.gif');
+	background-repeat: repeat; */
 	background-position: center bottom;
         padding: 0 25px 0px 25px;
 	/* color: #FFFFFF;
@@ -142,7 +142,7 @@ p {
 p.moderators {
 	margin: 0;
 	float: left;
-	color: black;
+	color: #FFFFFF;
 	font-weight: bold;
 }
 
@@ -309,7 +309,7 @@ th {
 	color: #FFFFFF;
 	font-size: 1.1em;
 	font-weight: bold;
-	background-color: #332012;
+	background-color: #844f35;
 	/* background-image: url('./images/cellpic3.gif'); */
 	white-space: nowrap;
 	padding: 7px 5px;
@@ -332,11 +332,11 @@ td.profile {
 	padding: 0;
 	border: 0;
 	/* background: #563016 url('./images/cellpic1.gif') repeat scroll top left; */
-	background-color: #452713;
+	background-color: #84553E;
 }
 .rtl .catdiv {
 	/* background: #563016 url('./images/cellpic1.gif') repeat scroll top right; */
-	background-color: #452713;
+	background-color: #84553E;
 }
 
 .cat {
@@ -344,23 +344,23 @@ td.profile {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	background-color: #452713;
+	background-color: #84553E;
 	/* background-image: url('./images/cellpic1.gif'); */
 	text-indent: 4px;
 }
 
 .row1 {
-	background-color: #563016;
+	background-color: #94634A;
 	padding: 4px;
 }
 
 .row2 {
-	background-color: #563016;
+	background-color: #94634A;
 	padding: 4px;
 }
 
 .row3 {
-	background-color: #563016;
+	background-color: #94634A;
 	padding: 4px;
 }
 
@@ -392,12 +392,12 @@ hr {
 /* CSS spec requires a:link, a:visited, a:hover and a:active rules to be specified in this order. */
 /* See http://www.phpbb.com/bugs/phpbb3/59685 */
 a:link {
-	color: #e3ca17;
+	color: #FFDE84;
 	text-decoration: none;
 }
 
 a:visited {
-	color: #a4a28e;
+	color: #FFDE84;
 	text-decoration: none;
 }
 
@@ -410,7 +410,7 @@ a:active {
 }
 
 a.forumlink {
-	color: #e3ca17;
+	color: #FFDE84;
 	font-weight: bold;
 	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
 	font-size: 1.2em;
@@ -421,17 +421,17 @@ a.topictitle {
 	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
 	font-weight: bold;
 	font-size: 1.2em;
-	color: #e3ca17
+	color: #FFDE84
 }
 
 a.topictitle:visited {
-	color: #a4a28e;
+	color: #FF6B00;
 	text-decoration: none;
 }
 
 th a,
 th a:visited {
-	color: #a4a28e !important;
+	color: #FF6B00 !important;
 	text-decoration: none;
 }
 
