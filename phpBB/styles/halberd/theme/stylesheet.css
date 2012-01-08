@@ -365,7 +365,7 @@ td.profile {
 }
 
 .spacer {
-	background-color: #000000;
+	background-color: #84553E;
 }
 
 hr {
@@ -552,7 +552,7 @@ input.radio {
 	border-style: dotted;
 	border-color: #3b3b3b;
 	color: #FFFFFF;
-	background-color: #1a1a1a;
+	background-color: #844f35;
 	font-size: 0.85em;
 	font-weight: bold;
 }
@@ -564,14 +564,14 @@ input.radio {
 .quotecontent, .attachcontent {
 	margin: 0 5px 10px 5px;
 	padding: 5px;
-	border-color: #3b3b3b;
+	border-color: #683817;
 	border-width: 0 1px 1px 1px;
 	border-style: dotted;
 	font-weight: normal;
 	font-size: 1em;
 	line-height: 1.4em;
 	font-family: "Lucida Grande", "Trebuchet MS", Helvetica, Arial, sans-serif;
-	background-color: #000000;
+	background-color: #94634a;
 	color: #FFFFFF;
 }
 
@@ -584,9 +584,9 @@ input.radio {
 	padding: 2px 4px;
 	border-width: 1px 1px 0 1px;
 	border-style: solid;
-	border-color: #3b3b3b;
+	border-color: #683817;
 	color: #FFFFFF;
-	background-color: #1a1a1a;
+	background-color: #844f35;
 	font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
 	font-size: 0.8em;
 }
@@ -595,14 +595,14 @@ input.radio {
 	direction: ltr;
 	margin: 0 5px 10px 5px;
 	padding: 5px;
-	border-color: #3b3b3b;
+	border-color: #683817;
 	border-width: 0 1px 1px 1px;
 	border-style: solid;
 	font-weight: normal;
 	color: #00ff12;
 	font-size: 0.85em;
 	font-family: Terminus, Fixedsys, Monaco, 'Courier New', monospace;
-	background-color: #000000;
+	background-color: #333333;
 }
 
 .syntaxbg {
