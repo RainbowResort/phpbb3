@@ -1,13 +1,14 @@
 /* Hidden: make text and background the same color, for when JavaScript is unavailable. */
+/* Disk adds: We don't quite do that here, the initial spoiler color is darker on purpose. */
 .spoiler-box, .spoiler-hidden {
-	color:#000000;
-	background-color:#000000;
+	color:#683817;
+	background-color:#683817;
 }
 
 /* Visible */
 .spoiler-visible {
-	color:#000000;
-	background-color:#FFFFFF;
+	color:#FFFFFF;
+	background-color:#94634A;
 	visibility:visible;
 }
 
@@ -18,7 +19,7 @@ div.spoiler-visible {
 /* Common */
 div.spoiler {
 	margin: 0.5em 1px 0 25px;
-	border: 1px solid #A9B8C2;
+	border: 1px solid #683817;
 }
 
 div.spoiler-top {
@@ -26,7 +27,7 @@ div.spoiler-top {
 	font-weight: bold;
 	font-size: 0.9em;
 	padding: 0 4px;
-	background-color: #A9B8C2;
+	background-color: #683817;
 }
 
 div.spoiler-box {
