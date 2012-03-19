@@ -3,7 +3,7 @@
 *
 * @package testing
 * @copyright (c) 2008 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -356,5 +356,30 @@ class phpbb_dbal_select_test extends phpbb_database_test_case
 		$db->sql_freeresult($result);
 
 		$this->assertSame(false, $row);
+	}
+
+	public function test_get_row_count()
+	{
+		$this->assertSame(
+			3,
+			(int) $this->new_dbal()->get_row_count('phpbb_users'),
+			"Failed asserting that user table has exactly 3 rows."
+		);
+	}
+
+	public function test_get_estimated_row_count()
+	{
+		$actual = $this->new_dbal()->get_estimated_row_count('phpbb_users');
+
+		if (is_string($actual) && isset($actual[0]) && $actual[0] === '~')
+		{
+			$actual = substr($actual, 1);
+		}
+
+		$this->assertGreaterThan(
+			1,
+			$actual,
+			"Failed asserting that estimated row count of user table is greater than 1."
+		);
 	}
 }
