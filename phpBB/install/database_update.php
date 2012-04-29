@@ -8,7 +8,7 @@
 *
 */
 
-define('UPDATES_TO_VERSION', '3.0.10-214-g3c040e7');
+define('UPDATES_TO_VERSION', '3.0.10-337-g74307cc');
 
 // Enter any version to update from to test updates. The version within the db will not be updated.
 define('DEBUG_FROM_VERSION', false);
