@@ -8,7 +8,8 @@
 *
 */
 
-define('UPDATES_TO_VERSION', '3.0.10-337-g74307cc');
+// 408-g06f7037
+define('UPDATES_TO_VERSION', '3.0.10-408-g06f7037');
 
 // Enter any version to update from to test updates. The version within the db will not be updated.
 define('DEBUG_FROM_VERSION', false);
@@ -2028,7 +2029,7 @@ function change_database_data(&$no_updates, $version)
 		break;
 
 		// Changes from 3.0.10 to 3.0.11-RC1
-		case '3.0.10':
+		case '3.0.10-337-g74307cc':
 			// Updates users having current style a deactivated one
 			$sql = 'SELECT style_id
 				FROM ' . STYLES_TABLE . '
