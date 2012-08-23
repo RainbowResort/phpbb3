@@ -59,8 +59,8 @@ $lang = array_merge($lang, array(
 	'ACP'							=> 'Administration Control Panel',
 	'ACTIVE'						=> 'active',
 	// Start Sep Login Name Mod
-	//'ACTIVE_ERROR'					=> 'The specified username is currently inactive. If you have problems activating your account, please contact a board administrator.',
-	'ACTIVE_ERROR'					=> 'The specified loginname is currently inactive. If you have problems activating your account, please contact a board administrator.',
+	// 'LOGIN_ERROR_ATTEMPTS'			=> 'You exceeded the maximum allowed number of login attempts. In addition to your username and password you now also have to solve the CAPTCHA below.',	
+	'LOGIN_ERROR_ATTEMPTS'				=> 'You exceeded the maximum allowed number of login attempts. In addition to your login name and password you now also have to solve the CAPTCHA below.',
 	// End Sep Login Name Mod
 	'ADMINISTRATOR'					=> 'Administrator',
 	'ADMINISTRATORS'				=> 'Administrators',
