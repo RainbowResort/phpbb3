@@ -79,7 +79,9 @@ $lang = array_merge($lang, array(
 	'ACP_DATABASE'				=> 'Database management',
 	'ACP_DISALLOW'				=> 'Disallow',
 	'ACP_DISALLOW_USERNAMES'	=> 'Disallow usernames',
-
+	// Start Sep Login Name Mod
+	'ACP_DISALLOW_LOGINNAMES'	=> 'Disallow Loginnames',
+	// End Sep Login Name Mod
 	'ACP_EMAIL_SETTINGS'		=> 'E-mail settings',
 	'ACP_EXTENSION_GROUPS'		=> 'Manage extension groups',
 
