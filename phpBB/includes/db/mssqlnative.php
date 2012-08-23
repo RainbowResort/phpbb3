@@ -436,7 +436,7 @@ class dbal_mssqlnative extends dbal
 				unset($row['line2'], $row['line3']);
 			}
 		}
-		return $row;
+		return (sizeof($row)) ? $row : false;
 	}
 
 	/**
@@ -490,6 +490,14 @@ class dbal_mssqlnative extends dbal
 	function sql_escape($msg)
 	{
 		return str_replace(array("'", "\0"), array("''", ''), $msg);
+	}
+
+	/**
+	* {@inheritDoc}
+	*/
+	function sql_lower_text($column_name)
+	{
+		return "LOWER(SUBSTRING($column_name, 1, DATALENGTH($column_name)))";
 	}
 
 	/**

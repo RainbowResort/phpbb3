@@ -8,8 +8,12 @@
 *
 */
 
+
 // 408-g06f7037
-define('UPDATES_TO_VERSION', '3.0.10-408-g06f7037');
+// Nothing to update from 408.
+// 418-g291c39d
+define('UPDATES_TO_VERSION', '3.0.12-418-g291c39d');
+
 
 // Enter any version to update from to test updates. The version within the db will not be updated.
 define('DEBUG_FROM_VERSION', false);
@@ -952,7 +956,7 @@ function database_update_info()
 						// this column was removed from the database updater
 						// after 3.0.9-RC3 was released. It might still exist
 						// in 3.0.9-RCX installations and has to be dropped in
-						// 3.0.11 after the db_tools class is capable of properly
+						// 3.0.12 after the db_tools class is capable of properly
 						// removing a primary key.
 						// 'attempt_id'			=> array('UINT', NULL, 'auto_increment'),
 						'attempt_ip'			=> array('VCHAR:40', ''),
@@ -996,8 +1000,16 @@ function database_update_info()
 		'3.0.10-RC3'	=> array(),
 		// No changes from 3.0.10 to 3.0.11-RC1
 		'3.0.10'		=> array(),
+		// Changes from 3.0.11-RC1 to 3.0.11-RC2
+		'3.0.11-RC1'	=> array(
+			'add_columns'		=> array(
+				PROFILE_FIELDS_TABLE			=> array(
+					'field_show_novalue'		=> array('BOOL', 0),
+				),
+			),
+		),
 
-		/** @todo DROP LOGIN_ATTEMPT_TABLE.attempt_id in 3.0.11-RC1 */
+		/** @todo DROP LOGIN_ATTEMPT_TABLE.attempt_id in 3.0.12-RC1 */
 	);
 }
 
@@ -2029,7 +2041,7 @@ function change_database_data(&$no_updates, $version)
 		break;
 
 		// Changes from 3.0.10 to 3.0.11-RC1
-		case '3.0.10-337-g74307cc':
+		case '3.0.10':
 			// Updates users having current style a deactivated one
 			$sql = 'SELECT style_id
 				FROM ' . STYLES_TABLE . '
@@ -2090,6 +2102,10 @@ function change_database_data(&$no_updates, $version)
 			while (sizeof($delete_pms) == $batch_size);
 
 			$no_updates = false;
+		break;
+
+		// No changes from 3.0.11-RC1 to 3.0.11-RC2
+		case '3.0.11-RC1':
 		break;
 	}
 }
