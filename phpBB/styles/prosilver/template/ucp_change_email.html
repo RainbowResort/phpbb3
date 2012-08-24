@@ -1,0 +1,40 @@
+<!-- INCLUDE overall_header.html -->
+
+<div class="rules">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<strong>{L_CHANGE_EMAIL_REQUIRED}{USER_EMAIL}.</strong><br />
+		{L_CHANGE_EMAIL_REQUIRED_EXPLAIN}
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<form action="{S_PROFILE_ACTION}" method="post" id="change_email">
+
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+
+	<div class="content">
+		<h2>{L_UCP_CHANGE_EMAIL}</h2>
+
+		<fieldset>
+		<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+		<dl>
+			<dt><label for="email">{L_NEW_EMAIL_ADDRESS}:</label></dt>
+			<dd><input type="text" tabindex="1" name="email" id="email" size="25" maxlength="100" value="{EMAIL}" class="inputbox autowidth" title="{L_EMAIL_ADDRESS}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="email_confirm">{L_NEW_CONFIRM_EMAIL}:</label></dt>
+			<dd><input type="text" tabindex="2" name="email_confirm" id="email_confirm" size="25" maxlength="100" value="{EMAIL_CONFIRM}" class="inputbox autowidth" title="{L_CONFIRM_EMAIL}" /></dd>
+		</dl>
+		<dl>
+			<dt>&nbsp;</dt>
+			<dd>{S_HIDDEN_FIELDS}{S_FORM_TOKEN}<input type="submit" name="submit" id="submit" class="button1" value="{L_SUBMIT}" tabindex="3" />&nbsp; <input type="reset" value="{L_RESET}" name="reset" class="button2" /></dd>
+		</dl>
+		</fieldset>
+	</div>
+
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+</form>
+
+<!-- INCLUDE overall_footer.html -->

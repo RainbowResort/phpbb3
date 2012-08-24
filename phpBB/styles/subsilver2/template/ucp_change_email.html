@@ -1,0 +1,40 @@
+<!-- INCLUDE overall_header.html -->
+
+<div class="forumrules">
+	<h3>{L_CHANGE_EMAIL_REQUIRED}{USER_EMAIL}.</h3><br />
+	{L_CHANGE_EMAIL_REQUIRED_EXPLAIN}
+</div>
+
+<br />
+
+<div align="center">
+
+<form action="{S_PROFILE_ACTION}" method="post">
+
+<table class="tablebg" width="50%" cellspacing="1" cellpadding="4" border="0">
+<tr> 
+	<th colspan="2">{L_UCP_CHANGE_EMAIL}</th>
+</tr>
+<!-- IF ERROR -->
+<tr>
+	<td class="row2" colspan="2" align="center"><span class="genmed error">{ERROR}</span></td>
+</tr>
+<!-- ENDIF -->
+<tr> 
+	<td class="row1" width="38%"><b class="genmed">{L_NEW_EMAIL_ADDRESS}: </b></td>
+	<td class="row2"><input type="text" class="post" name="email" size="25" value="" /></td>
+</tr>
+<tr> 
+	<td class="row1"><b class="genmed">{L_NEW_CONFIRM_EMAIL}: </b></td>
+	<td class="row2"><input type="text" class="post" name="email_confirm" size="25" value="" /></td>
+</tr>
+<tr> 
+	<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="submit" value="{L_SUBMIT}" class="btnmain" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="btnlite" /></td>
+</tr>
+</table>
+{S_FORM_TOKEN}
+</form>
+
+</div>
+
+<!-- INCLUDE overall_footer.html -->

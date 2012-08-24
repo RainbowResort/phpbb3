@@ -1,0 +1,33 @@
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+
+<h2>{L_CHANGE_EMAIL}</h2>
+
+<p>{L_CHANGE_EMAIL_EXPLAIN}</p>
+
+<form id="change_email" method="post" action="{U_ACTION}">
+
+<div class="clearfix"></div>
+
+<table cellspacing="1">
+<thead>
+<tr>
+	<th>{L_EMAIL_ADDRESS}</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row1">
+	<td>&nbsp;<textarea name="email" id="email" rows="25" cols="25"></textarea>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+
+	<fieldset class="quick">
+		<input class="button2" type="submit" name="submit" value="{L_SUBMIT}" />
+		{S_FORM_TOKEN}
+	</fieldset>
+
+</form>
+
+<!-- INCLUDE overall_footer.html -->
