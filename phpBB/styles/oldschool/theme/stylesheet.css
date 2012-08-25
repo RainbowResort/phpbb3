@@ -26,7 +26,7 @@ html {
 body {
 	/* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
 	font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
-	color: #323D4F;
+	color: #FFFFFF;
 	background: #FFFFFF url(./images/mainbg.gif);
 	font-size: 62.5%; /* This sets the default font size to be equivalent to 10px */
 	margin: 0;
@@ -227,11 +227,11 @@ p.topicdetails {
 }
 
 .postauthor {
-	color: #000000;
+	color: #FFFFFF;
 }
 
 .postdetails {
-	color: #000000;
+	color: #FFFFFF;
 }
 
 .postbody {
@@ -254,13 +254,13 @@ p.topicdetails {
 
 .nav {
 	margin: 0;
-	color: black;
+	color: #FFFFFF;
 	font-weight: bold;
 }
 
 .pagination {
 	padding: 4px;
-	color: black;
+	color: #FFFFFF;
 	font-size: 1em;
 	font-weight: bold;
 }
@@ -308,7 +308,7 @@ th {
 	color: #000000;
 	font-size: 1.1em;
 	font-weight: bold;
-	background-color: #006699;
+	background-color: #3366ff;
 	background-image: url('./images/cellpic3.gif');
 	white-space: nowrap;
 	padding: 7px 5px;
@@ -347,29 +347,29 @@ td.profile {
 }
 
 .row1 {
-	background-color: #FFFFFF;
+	background-color: #000099;
 	padding: 4px;
 }
 
 .row2 {
-	background-color: #fff4f8;
+	background-color: #000066;
 	padding: 4px;
 }
 
 .row3 {
-	background-color: #ddf5ff;
+	background-color: #000033;
 	padding: 4px;
 }
 
 .spacer {
-	background-color: #fff2dd;
+	background-color: #000000;
 }
 
 hr {
 	height: 1px;
 	border-width: 0;
 	background-color: #D1D7DC;
-	color: #D1D7DC;
+	color: #FFFFFF;
 }
 
 .legend {
