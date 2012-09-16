@@ -1,13 +1,13 @@
 /* Hidden: make text and background the same color, for when JavaScript is unavailable. */
 .spoiler-box, .spoiler-hidden {
-	color:#000000;
-	background-color:#000000;
+	color:#000033;
+	background-color:#000033;
 }
 
 /* Visible */
 .spoiler-visible {
-	color:#000000;
-	background-color:#FFFFFF;
+	color:#FFFFFF;
+	background-color:#000066;
 	visibility:visible;
 }
 
@@ -18,7 +18,7 @@ div.spoiler-visible {
 /* Common */
 div.spoiler {
 	margin: 0.5em 1px 0 25px;
-	border: 1px solid #A9B8C2;
+	border: 1px solid #33ffff;
 }
 
 div.spoiler-top {
@@ -26,7 +26,7 @@ div.spoiler-top {
 	font-weight: bold;
 	font-size: 0.9em;
 	padding: 0 4px;
-	background-color: #A9B8C2;
+	background-color: #33ffff;
 }
 
 div.spoiler-box {

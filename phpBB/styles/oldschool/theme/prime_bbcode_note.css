@@ -16,8 +16,8 @@
 
 #info_note table
 {
-	border:1px solid #222222;
-	background-color:#E9EEF3;
+	border:1px solid #33ffff;
+	background-color:#000066;
 	padding:2px 2px;
 }
 
@@ -75,5 +75,5 @@
 	cursor:pointer;
 	padding-right:16px; /* width of the icon, plus padding */
 	width:16px; /* same as padding-right, for IE */
-	background: url("./images/prime_bbcode_note.gif") no-repeat center right;
+	background: url("./images/icon_post_target_unread.gif") no-repeat center right;
 }
