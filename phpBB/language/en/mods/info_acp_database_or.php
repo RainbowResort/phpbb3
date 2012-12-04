@@ -1,10 +1,10 @@
 <?php
 /**
 *
-* acp_database_or [English]
+* info_acp_database_or [English]
 *
-* @package language
-* @version $Id: acp_database_or.php 11 10/5/10 12:06 AM VSE $
+* @package Database Optimize & Repair Tool
+* @version $Id$
 * @copyright (c) 2010 Matt Friedman
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

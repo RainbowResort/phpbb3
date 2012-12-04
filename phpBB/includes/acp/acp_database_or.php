@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @package acp
-* @version $Id: acp_database_or.php 15 11/22/10 9:14 AM VSE $
+* @package Database Optimize & Repair Tool
+* @version $Id$
 * @copyright (c) 2010 Matt Friedman
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -120,6 +120,12 @@ class acp_database_or
 			$table['Engine'] = (!empty($table['Type']) ? $table['Type'] : $table['Engine']);
 			if (in_array(strtolower($table['Engine']), array('myisam', 'innodb', 'archive')))
 			{
+				// Data_free should always be 0 for InnoDB tables
+				if (strtolower($table['Engine']) == 'innodb')
+				{
+					$table['Data_free'] = 0;
+				}
+				
 				$data_size = ($table['Data_length'] + $table['Index_length']);
 				$total_data_size = $total_data_size + $data_size;
 				$total_data_free = $total_data_free + $table['Data_free'];
