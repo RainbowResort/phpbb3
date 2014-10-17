@@ -8,12 +8,7 @@
 *
 */
 
-
-// 408-g06f7037
-// Nothing to update from 408.
-// 418-g291c39d
-define('UPDATES_TO_VERSION', '3.0.12-418-g291c39d');
-
+define('UPDATES_TO_VERSION', '3.0.12');
 
 // Enter any version to update from to test updates. The version within the db will not be updated.
 define('DEBUG_FROM_VERSION', false);
@@ -954,7 +949,7 @@ function database_update_info()
 						// this column was removed from the database updater
 						// after 3.0.9-RC3 was released. It might still exist
 						// in 3.0.9-RCX installations and has to be dropped in
-						// 3.0.12 after the db_tools class is capable of properly
+						// 3.0.13 after the db_tools class is capable of properly
 						// removing a primary key.
 						// 'attempt_id'			=> array('UINT', NULL, 'auto_increment'),
 						'attempt_ip'			=> array('VCHAR:40', ''),
@@ -1010,8 +1005,14 @@ function database_update_info()
 		'3.0.11-RC2'	=> array(),
 		// No changes from 3.0.11 to 3.0.12-RC1
 		'3.0.11'		=> array(),
+		// No changes from 3.0.12-RC1 to 3.0.12-RC2
+		'3.0.12-RC1'	=> array(),
+		// No changes from 3.0.12-RC2 to 3.0.12-RC3
+		'3.0.12-RC2'	=> array(),
+		// No changes from 3.0.12-RC3 to 3.0.12
+		'3.0.12-RC3'	=> array(),
 
-		/** @todo DROP LOGIN_ATTEMPT_TABLE.attempt_id in 3.0.12-RC1 */
+		/** @todo DROP LOGIN_ATTEMPT_TABLE.attempt_id in 3.0.13-RC1 */
 	);
 }
 
@@ -1022,7 +1023,7 @@ function database_update_info()
 *****************************************************************************/
 function change_database_data(&$no_updates, $version)
 {
-	global $db, $errored, $error_ary, $config, $phpbb_root_path, $phpEx;
+	global $db, $db_tools, $errored, $error_ary, $config, $table_prefix, $phpbb_root_path, $phpEx;
 
 	switch ($version)
 	{
@@ -1336,8 +1337,6 @@ function change_database_data(&$no_updates, $version)
 					ACL_OPTIONS_TABLE		=> array('auth_option'),
 				),
 			);
-
-			global $db_tools;
 
 			$statements = $db_tools->perform_schema_changes($changes);
 
@@ -1980,26 +1979,41 @@ function change_database_data(&$no_updates, $version)
 			}
 			$db->sql_freeresult($result);
 
-			global $db_tools, $table_prefix;
-
-			// Recover from potentially broken Q&A CAPTCHA table on firebird
-			// Q&A CAPTCHA was uninstallable, so it's safe to remove these
-			// without data loss
+			/*
+			* Due to a bug, vanilla phpbb could not create captcha tables
+			* in 3.0.8 on firebird. It was possible for board administrators
+			* to adjust the code to work. If code was manually adjusted by
+			* board administrators, index names would not be the same as
+			* what 3.0.9 and newer expect. This code fragment drops captcha
+			* tables, destroying all entered Q&A captcha configuration, such
+			* that when Q&A is configured next the respective tables will be
+			* created with correct index names.
+			*
+			* If you wish to preserve your Q&A captcha configuration, you can
+			* manually rename indexes to the currently expected name:
+			* 	phpbb_captcha_questions_lang_iso	=> phpbb_captcha_questions_lang
+			* 	phpbb_captcha_answers_question_id	=> phpbb_captcha_answers_qid
+			*
+			* Again, this needs to be done only if a board was manually modified
+			* to fix broken captcha code.
+			*
 			if ($db_tools->sql_layer == 'firebird')
 			{
-				$tables = array(
-					$table_prefix . 'captcha_questions',
-					$table_prefix . 'captcha_answers',
-					$table_prefix . 'qa_confirm',
+				$changes = array(
+					'drop_tables'	=> array(
+						$table_prefix . 'captcha_questions',
+						$table_prefix . 'captcha_answers',
+						$table_prefix . 'qa_confirm',
+					),
 				);
-				foreach ($tables as $table)
+				$statements = $db_tools->perform_schema_changes($changes);
+
+				foreach ($statements as $sql)
 				{
-					if ($db_tools->sql_table_exists($table))
-					{
-						$db_tools->sql_table_drop($table);
-					}
+					_sql($sql, $errored, $error_ary);
 				}
 			}
+			*/
 
 			$no_updates = false;
 		break;
@@ -2196,7 +2210,49 @@ function change_database_data(&$no_updates, $version)
 				_sql($sql, $errored, $error_ary);
 			}
 
+			/**
+			* Update BBCodes that currently use the LOCAL_URL tag
+			*
+			* To fix http://tracker.phpbb.com/browse/PHPBB3-8319 we changed
+			* the second_pass_replace value, so that needs updating for existing ones
+			*/
+			$sql = 'SELECT *
+				FROM ' . BBCODES_TABLE . '
+				WHERE bbcode_match ' . $db->sql_like_expression($db->any_char . 'LOCAL_URL' . $db->any_char);
+			$result = $db->sql_query($sql);
+
+			while ($row = $db->sql_fetchrow($result))
+			{
+				if (!class_exists('acp_bbcodes'))
+				{
+					phpbb_require_updated('includes/acp/acp_bbcodes.' . $phpEx);
+				}
+				$bbcode_match = $row['bbcode_match'];
+				$bbcode_tpl = $row['bbcode_tpl'];
+
+				$acp_bbcodes = new acp_bbcodes();
+				$sql_ary = $acp_bbcodes->build_regexp($bbcode_match, $bbcode_tpl);
+
+				$sql = 'UPDATE ' . BBCODES_TABLE . '
+					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE bbcode_id = ' . (int) $row['bbcode_id'];
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
 			$no_updates = false;
+		break;
+
+		// No changes from 3.0.12-RC1 to 3.0.12-RC2
+		case '3.0.12-RC1':
+		break;
+
+		// No changes from 3.0.12-RC2 to 3.0.12-RC3
+		case '3.0.12-RC2':
+		break;
+
+		// No changes from 3.0.12-RC3 to 3.0.12
+		case '3.0.12-RC3':
 		break;
 	}
 }

@@ -137,7 +137,18 @@ function request_var($var_name, $default, $multibyte = false, $cookie = false)
 }
 
 /**
-* Set config value. Creates missing config entry.
+* Sets a configuration option's value.
+*
+* Please note that this function does not update the is_dynamic value for
+* an already existing config option.
+*
+* @param string $config_name   The configuration option's name
+* @param string $config_value  New configuration value
+* @param bool   $is_dynamic    Whether this variable should be cached (false) or
+*                              if it changes too frequently (true) to be
+*                              efficiently cached.
+*
+* @return null
 */
 function set_config($config_name, $config_value, $is_dynamic = false)
 {
@@ -166,7 +177,15 @@ function set_config($config_name, $config_value, $is_dynamic = false)
 }
 
 /**
-* Set dynamic config value with arithmetic operation.
+* Increments an integer config value directly in the database.
+*
+* @param string $config_name   The configuration option's name
+* @param int    $increment     Amount to increment by
+* @param bool   $is_dynamic    Whether this variable should be cached (false) or
+*                              if it changes too frequently (true) to be
+*                              efficiently cached.
+*
+* @return null
 */
 function set_config_count($config_name, $increment, $is_dynamic = false)
 {
@@ -483,6 +502,13 @@ function phpbb_hash($password)
 */
 function phpbb_check_hash($password, $hash)
 {
+	if (strlen($password) > 4096)
+	{
+		// If the password is too huge, we will simply reject it
+		// and not let the server try to hash it.
+		return false;
+	}
+
 	$itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 	if (strlen($hash) == 34)
 	{
@@ -986,7 +1012,7 @@ if (!function_exists('stripos'))
 */
 function is_absolute($path)
 {
-	return ($path[0] == '/' || (DIRECTORY_SEPARATOR == '\\' && preg_match('#^[a-z]:[/\\\]#i', $path))) ? true : false;
+	return (isset($path[0]) && $path[0] == '/' || preg_match('#^[a-z]:[/\\\]#i', $path)) ? true : false;
 }
 
 /**
@@ -2721,7 +2747,7 @@ function meta_refresh($time, $url, $disable_cd_check = false)
 
 	// For XHTML compatibility we change back & to &amp;
 	$template->assign_vars(array(
-		'META' => '<meta http-equiv="refresh" content="' . $time . ';url=' . $url . '" />')
+		'META' => '<meta http-equiv="refresh" content="' . $time . '; url=' . $url . '" />')
 	);
 
 	return $url;
@@ -3277,6 +3303,7 @@ function login_forum_box($forum_data)
 	page_header($user->lang['LOGIN'], false);
 
 	$template->assign_vars(array(
+		'FORUM_NAME'			=> isset($forum_data['forum_name']) ? $forum_data['forum_name'] : '',
 		'S_LOGIN_ACTION'		=> build_url(array('f')),
 		'S_HIDDEN_FIELDS'		=> build_hidden_fields(array('f' => $forum_data['forum_id'])))
 	);
