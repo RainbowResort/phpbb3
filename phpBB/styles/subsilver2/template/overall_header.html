@@ -162,7 +162,7 @@ function marklist(id, name, state)
 			<td class="genmed">
 				<!-- IF not S_IS_BOT --><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a>&nbsp;<!-- ENDIF -->
 				<!-- IF U_RESTORE_PERMISSIONS --> | <a href="{U_RESTORE_PERMISSIONS}">{L_RESTORE_PERMISSIONS}</a><!-- ENDIF -->
-				<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN --> | <span style="color: red;">{L_BOARD_DISABLED}</span><!-- ENDIF -->
+				<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN --> | <span class="error">{L_BOARD_DISABLED}</span><!-- ENDIF -->
 				<!-- IF not S_IS_BOT -->
 					<!-- IF S_USER_LOGGED_IN -->
 						<!-- IF S_DISPLAY_PM --> | <a href="{U_PRIVATEMSGS}">{PRIVATE_MESSAGE_INFO}<!-- IF PRIVATE_MESSAGE_INFO_UNREAD -->, {PRIVATE_MESSAGE_INFO_UNREAD}<!-- ENDIF --></a><!-- ENDIF -->

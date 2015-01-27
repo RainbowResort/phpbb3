@@ -111,6 +111,8 @@ class ucp_remind
 			$messenger->im($user_row['user_jabber'], $user_row['loginname']);
 			// End Sep Login Name Mod
 
+			$messenger->anti_abuse_headers($config, $user);
+
 			$messenger->assign_vars(array(
 				// Start Sep Login Name Mod
 				//'USERNAME'		=> htmlspecialchars_decode($user_row['username']),

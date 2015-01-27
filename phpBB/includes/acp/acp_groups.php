@@ -307,10 +307,7 @@ class acp_groups
 
 				$avatar_select = basename(request_var('avatar_select', ''));
 				$category = basename(request_var('category', ''));
-//-- mod: Prime Age Group ---------------------------------------------------//
-				include($phpbb_root_path . 'includes/prime_age_group.' . $phpEx);
-				$prime_age_group->acp_display_options($group_row);
-//-- end: Prime Age Group ---------------------------------------------------//
+
 				// Did we submit?
 				if ($update)
 				{
@@ -473,9 +470,7 @@ class acp_groups
 								$group_attributes['group_' . $test] = $group_row['group_' . $test] = $submit_ary[$test];
 							}
 						}
-//-- mod: Prime Age Group ---------------------------------------------------//
-						$prime_age_group->acp_set_options($group_row, $group_attributes, $action);
-//-- end: Prime Age Group ---------------------------------------------------//
+
 						if (!($error = group_create($group_id, $group_type, $group_name, $group_desc, $group_attributes, $allow_desc_bbcode, $allow_desc_urls, $allow_desc_smilies)))
 						{
 							$group_perm_from = request_var('group_perm_from', 0);
