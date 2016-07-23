@@ -14,7 +14,7 @@ OR mail it to:
 
 ------------------------------ CUT HERE ------------------------------
 Permission to participate at "{SITENAME}" - {U_BOARD}
-Login name: {LOGINNAME}
+
 Username: {USERNAME}
 E-mail: {EMAIL_ADDRESS}
 

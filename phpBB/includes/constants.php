@@ -62,10 +62,7 @@ define('LOGIN_CONTINUE', 1);
 define('LOGIN_BREAK', 2);
 define('LOGIN_SUCCESS', 3);
 define('LOGIN_SUCCESS_CREATE_PROFILE', 20);
-// Start Sep Login Name Mod 
-//define('LOGIN_ERROR_USERNAME', 10);
-define('LOGIN_ERROR_LOGINNAME', 10);
-// End Sep Login Name Mod
+define('LOGIN_ERROR_USERNAME', 10);
 define('LOGIN_ERROR_PASSWORD', 11);
 define('LOGIN_ERROR_ACTIVE', 12);
 define('LOGIN_ERROR_ATTEMPTS', 13);
@@ -229,9 +226,6 @@ define('BOTS_TABLE',				$table_prefix . 'bots');
 define('CONFIG_TABLE',				$table_prefix . 'config');
 define('CONFIRM_TABLE',				$table_prefix . 'confirm');
 define('DISALLOW_TABLE',			$table_prefix . 'disallow');
-// Start Sep Login Name Mod
-define('DISALLOW_LOGIN_TABLE',			$table_prefix . 'disallow_login');
-//End Sep Login Name Mod
 define('DRAFTS_TABLE',				$table_prefix . 'drafts');
 define('EXTENSIONS_TABLE',			$table_prefix . 'extensions');
 define('EXTENSION_GROUPS_TABLE',	$table_prefix . 'extension_groups');
@@ -249,9 +243,6 @@ define('MODULES_TABLE',				$table_prefix . 'modules');
 define('POLL_OPTIONS_TABLE',		$table_prefix . 'poll_options');
 define('POLL_VOTES_TABLE',			$table_prefix . 'poll_votes');
 define('POSTS_TABLE',				$table_prefix . 'posts');
-//-- mod: Prime Post Revisions ----------------------------------------------//
-define('POST_REVISIONS_TABLE',		$table_prefix . 'post_revisions');
-//-- end: Prime Post Revisions ----------------------------------------------//
 define('PRIVMSGS_TABLE',			$table_prefix . 'privmsgs');
 define('PRIVMSGS_FOLDER_TABLE',		$table_prefix . 'privmsgs_folder');
 define('PRIVMSGS_RULES_TABLE',		$table_prefix . 'privmsgs_rules');

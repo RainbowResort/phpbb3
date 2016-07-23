@@ -89,7 +89,7 @@
 
 <!-- IF S_IS_POSTABLE or S_NO_READ_ACCESS -->
 	<div id="pageheader">
-		<!-- IF DEADCODELOLWUT --><h2><a class="titles" href="{U_VIEW_FORUM}">{FORUM_NAME}</a></h2><!-- ENDIF -->
+		<h2><a class="titles" href="{U_VIEW_FORUM}">{FORUM_NAME}</a></h2>
 
 		<!-- IF MODERATORS -->
 			<p class="moderators"><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->: {MODERATORS}</p>
@@ -122,9 +122,7 @@
 			<td class="cat"><h4><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a></h4></td>
 		</tr>
 		<tr>
-        <!-- Start Sep Login Name Mod -->
-			<td class="row1" align="center"><span class="genmed">{L_LOGINNAME}:</span> <input class="post" type="text" name="loginname" size="10" />&nbsp;
-        <!-- End Sep Login Name Mod --> <span class="genmed">{L_PASSWORD}:</span> <input class="post" type="password" name="password" size="10" /><!-- IF S_AUTOLOGIN_ENABLED -->&nbsp; <span class="gensmall">{L_LOG_ME_IN}</span> <input type="checkbox" class="radio" name="autologin" /><!-- ENDIF -->&nbsp; <input type="submit" class="btnmain" name="login" value="{L_LOGIN}" /></td>
+			<td class="row1" align="center"><span class="genmed">{L_USERNAME}:</span> <input class="post" type="text" name="username" size="10" />&nbsp; <span class="genmed">{L_PASSWORD}:</span> <input class="post" type="password" name="password" size="10" /><!-- IF S_AUTOLOGIN_ENABLED -->&nbsp; <span class="gensmall">{L_LOG_ME_IN}</span> <input type="checkbox" class="radio" name="autologin" /><!-- ENDIF -->&nbsp; <input type="submit" class="btnmain" name="login" value="{L_LOGIN}" /></td>
 		</tr>
 		</table>
 		{S_LOGIN_REDIRECT}

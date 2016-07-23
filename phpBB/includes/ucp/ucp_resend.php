@@ -30,10 +30,7 @@ class ucp_resend
 		global $config, $phpbb_root_path, $phpEx;
 		global $db, $user, $auth, $template;
 
-		// Start Sep Login Name Mod
-		//$username	= request_var('username', '', true);
-		$loginname	= request_var('loginname', '', true);
-		// End Sep Login Name Mod
+		$username	= request_var('username', '', true);
 		$email		= strtolower(request_var('email', ''));
 		$submit		= (isset($_POST['submit'])) ? true : false;
 
@@ -46,16 +43,10 @@ class ucp_resend
 				trigger_error('FORM_INVALID');
 			}
 
-			// Start Sep Login Name Mod
-			//$sql = 'SELECT user_id, group_id, username, user_email, user_type, user_lang, user_actkey, user_inactive_reason
-			//	FROM ' . USERS_TABLE . "
-			//	WHERE user_email_hash = '" . $db->sql_escape(phpbb_email_hash($email)) . "'
-			//		AND username_clean = '" . $db->sql_escape(utf8_clean_string($username)) . "'";
-			// End Sep Login Name Mod	
-			$sql = 'SELECT user_id, group_id, loginname, user_email, user_type, user_lang, user_actkey, user_inactive_reason
+			$sql = 'SELECT user_id, group_id, username, user_email, user_type, user_lang, user_actkey, user_inactive_reason
 				FROM ' . USERS_TABLE . "
 				WHERE user_email_hash = '" . $db->sql_escape(phpbb_email_hash($email)) . "'
-					AND loginname_clean = '" . $db->sql_escape(utf8_clean_string($loginname)) . "'";
+					AND username_clean = '" . $db->sql_escape(utf8_clean_string($username)) . "'";
 			$result = $db->sql_query($sql);
 			$user_row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -101,19 +92,13 @@ class ucp_resend
 			if ($config['require_activation'] == USER_ACTIVATION_SELF || $coppa)
 			{
 				$messenger->template(($coppa) ? 'coppa_resend_inactive' : 'user_resend_inactive', $user_row['user_lang']);
-				// Start Sep Login Name Mod				
-				//$messenger->to($user_row['user_email'], $user_row['username']);
-				$messenger->to($user_row['user_email'], $user_row['loginname']);				
-				// End Sep Login Name Mod
+				$messenger->to($user_row['user_email'], $user_row['username']);
 
-				$messenger->anti_abuse_headers();
+				$messenger->anti_abuse_headers($config, $user);
 
 				$messenger->assign_vars(array(
 					'WELCOME_MSG'	=> htmlspecialchars_decode(sprintf($user->lang['WELCOME_SUBJECT'], $config['sitename'])),
-					// Start Sep Login Name Mod
-					//'USERNAME'		=> htmlspecialchars_decode($user_row['username']),
-					'LOGINNAME'		=> htmlspecialchars_decode($user_row['loginname']),
-					// End Sep Login Name Mod
+					'USERNAME'		=> htmlspecialchars_decode($user_row['username']),
 					'U_ACTIVATE'	=> generate_board_url() . "/ucp.$phpEx?mode=activate&u={$user_row['user_id']}&k={$user_row['user_actkey']}")
 				);
 
@@ -134,33 +119,21 @@ class ucp_resend
 				// Grab an array of user_id's with a_user permissions ... these users can activate a user
 				$admin_ary = $auth->acl_get_list(false, 'a_user', false);
 
-				// Start Sep Login Name Mod
-				//$sql = 'SELECT user_id, username, user_email, user_lang, user_jabber, user_notify_type
-				//	FROM ' . USERS_TABLE . '
-				//	WHERE ' . $db->sql_in_set('user_id', $admin_ary[0]['a_user']);				
-				$sql = 'SELECT user_id, loginname, user_email, user_lang, user_jabber, user_notify_type					
+				$sql = 'SELECT user_id, username, user_email, user_lang, user_jabber, user_notify_type
 					FROM ' . USERS_TABLE . '
 					WHERE ' . $db->sql_in_set('user_id', $admin_ary[0]['a_user']);
-				// End Sep Login Name Mod
 				$result = $db->sql_query($sql);
 
 				while ($row = $db->sql_fetchrow($result))
 				{
 					$messenger->template('admin_activate', $row['user_lang']);
-					// Start Sep Login Name Mod					
-					//$messenger->to($row['user_email'], $row['username']);
-					//$messenger->im($row['user_jabber'], $row['username']);
-					$messenger->to($row['user_email'], $row['loginname']);
-					$messenger->im($row['user_jabber'], $row['loginname']);	
-					// End Sep Login Name Mod	
+					$messenger->to($row['user_email'], $row['username']);
+					$messenger->im($row['user_jabber'], $row['username']);
 
-					$messenger->anti_abuse_headers();
+					$messenger->anti_abuse_headers($config, $user);
 
 					$messenger->assign_vars(array(
-						// Start Sep Login Name Mod			
-						//'USERNAME'			=> htmlspecialchars_decode($user_row['username']),
-						'LOGINNAME'			=> htmlspecialchars_decode($user_row['loginname']),		
-						// End Sep Login Name Mod	
+						'USERNAME'			=> htmlspecialchars_decode($user_row['username']),
 						'U_USER_DETAILS'	=> generate_board_url() . "/memberlist.$phpEx?mode=viewprofile&u={$user_row['user_id']}",
 						'U_ACTIVATE'		=> generate_board_url() . "/ucp.$phpEx?mode=activate&u={$user_row['user_id']}&k={$user_row['user_actkey']}")
 					);
@@ -178,10 +151,7 @@ class ucp_resend
 		}
 
 		$template->assign_vars(array(
-			// Start Sep Login Name Mod		
-			//'USERNAME'			=> $username,
-			'LOGINNAME'			=> $loginname,	
-			// End Sep Login Name Mod	
+			'USERNAME'			=> $username,
 			'EMAIL'				=> $email,
 			'S_PROFILE_ACTION'	=> append_sid($phpbb_root_path . 'ucp.' . $phpEx, 'mode=resend_act'))
 		);

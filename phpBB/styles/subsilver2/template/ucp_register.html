@@ -32,12 +32,7 @@
 		<td class="row2" colspan="2"><span class="gensmall">{L_REG_COND}</span></td>
 	</tr>
 <!-- ENDIF -->
-<!-- Start Sep Login Name Mod -->
-<tr>
-	<td class="row1" width="38%"><b class="genmed">{L_LOGINNAME}: </b><br /><span class="gensmall">{L_LOGINNAME_EXPLAIN}</span></td>
-	<td class="row2"><input class="post" type="text" name="loginname" size="25" value="{LOGINNAME}" /></td>
-</tr>
-<!-- End Sep Login Name Mod -->
+
 <tr>
 	<td class="row1" width="38%"><b class="genmed">{L_USERNAME}: </b><br /><span class="gensmall">{L_USERNAME_EXPLAIN}</span></td>
 	<td class="row2"><input class="post" type="text" name="username" size="25" value="{USERNAME}" /></td>
@@ -66,7 +61,6 @@
 	<td class="row1"><b class="genmed">{L_TIMEZONE}: </b></td>
 	<td class="row2"><select name="tz">{S_TZ_OPTIONS}</select></td>
 </tr>
-<!-- INCLUDE prime_birthdate.html -->
 <!-- IF .profile_fields -->
 	<tr>
 		<td class="row2" colspan="2"><span class="gensmall">{L_ITEMS_REQUIRED}</span></td>
@@ -88,8 +82,8 @@
 		<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 		<!-- ENDIF -->
 
-<!-- IF S_COPPA or S_COPPA === 0 -->
-	<tr id="coppa_area"<!-- IF not S_COPPA --> style="display:none"<!-- ENDIF -->>
+<!-- IF S_COPPA -->
+	<tr>
 		<th colspan="2" valign="middle">{L_COPPA_COMPLIANCE}</th>
 	</tr>
 	<tr>

@@ -6,7 +6,6 @@ Please follow the steps listed here to reactivate your account.
 Please keep this e-mail for your records. Your account information is as follows:
 
 ----------------------------
-Login name: {LOGINNAME}
 Username: {USERNAME}
 ----------------------------
 

@@ -37,10 +37,7 @@ if (!defined('IN_PHPBB'))
 *								'user_row' => array
 *							)
 */
-// Start Sep Login Name Mod
-//function login_db(&$username, &$password, $ip = '', $browser = '', $forwarded_for = '')
-function login_db(&$loginname, &$password, $ip = '', $browser = '', $forwarded_for = '')
-// End Sep Login Name Mod
+function login_db($username, $password, $ip = '', $browser = '', $forwarded_for = '')
 {
 	global $db, $config;
 
@@ -54,34 +51,20 @@ function login_db(&$loginname, &$password, $ip = '', $browser = '', $forwarded_f
 		);
 	}
 
-	// Start Sep Login Name Mod
-	// if (!$username)
-	if (!$loginname)
-	// End Sep Login Name Mod	
+	if (!$username)
 	{
 		return array(
-			// Start Sep Login Name Mod
-			// 'status'	=> LOGIN_ERROR_USERNAME,
-			// 'error_msg'	=> 'LOGIN_ERROR_USERNAME',
-			'status'	=> LOGIN_ERROR_LOGINNAME,
-			'error_msg'	=> 'LOGIN_ERROR_LOGINNAME',
-			// End Sep Login Name Mod
+			'status'	=> LOGIN_ERROR_USERNAME,
+			'error_msg'	=> 'LOGIN_ERROR_USERNAME',
 			'user_row'	=> array('user_id' => ANONYMOUS),
 		);
 	}
 
-	$loginname_clean = utf8_clean_string($loginname);
+	$username_clean = utf8_clean_string($username);
 
-	// Start Sep Login Name mod
-	/*
 	$sql = 'SELECT user_id, username, user_password, user_passchg, user_pass_convert, user_email, user_type, user_login_attempts
 		FROM ' . USERS_TABLE . "
 		WHERE username_clean = '" . $db->sql_escape($username_clean) . "'";
-	*/
-	$sql = 'SELECT user_id, loginname, user_password, user_passchg, user_pass_convert, user_email, user_type, user_login_attempts
-		FROM ' . USERS_TABLE . "
-		WHERE loginname_clean = '" . $db->sql_escape($loginname_clean) . "'";
-	// End Sep Login Name Mod
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
@@ -111,8 +94,8 @@ function login_db(&$loginname, &$password, $ip = '', $browser = '', $forwarded_f
 			'attempt_forwarded_for'	=> $forwarded_for,
 			'attempt_time'			=> time(),
 			'user_id'				=> ($row) ? (int) $row['user_id'] : 0,
-			'username'				=> $loginname,
-			'username_clean'		=> $loginname_clean,
+			'username'				=> $username,
+			'username_clean'		=> $username_clean,
 		);
 		$sql = 'INSERT INTO ' . LOGIN_ATTEMPT_TABLE . $db->sql_build_array('INSERT', $attempt_data);
 		$result = $db->sql_query($sql);
@@ -134,12 +117,8 @@ function login_db(&$loginname, &$password, $ip = '', $browser = '', $forwarded_f
 		}
 
 		return array(
-			// Start Sep Login Name Mod
-			// 'status'	=> LOGIN_ERROR_USERNAME,
-			// 'error_msg'	=> 'LOGIN_ERROR_USERNAME',
-			'status'	=> LOGIN_ERROR_LOGINNAME,
-			'error_msg'	=> 'LOGIN_ERROR_LOGINNAME',
-			// End Sep Login Name Mod
+			'status'	=> LOGIN_ERROR_USERNAME,
+			'error_msg'	=> 'LOGIN_ERROR_USERNAME',
 			'user_row'	=> array('user_id' => ANONYMOUS),
 		);
 	}

@@ -375,34 +375,6 @@ class cache extends acm
 		return $parsed_items;
 	}
 
-	// Start Sep Login Name Mod
-	/**
-	* Obtain disallowed login names
-	*/
-	function obtain_disallowed_loginnames()
-	{
-		if (($loginnames = $this->get('_disallowed_loginnames')) === false)
-		{
-			global $db;
-
-			$sql = 'SELECT disallow_loginname
-				FROM ' . DISALLOW_LOGIN_TABLE;
-			$result = $db->sql_query($sql);
-
-			$loginnames = array();
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$loginnames[] = str_replace('%', '.*?', preg_quote(utf8_clean_string($row['disallow_loginname']), '#'));
-			}
-			$db->sql_freeresult($result);
-
-			$this->put('_disallowed_loginnames', $loginnames);
-		}
-
-		return $loginnames;
-	}
-	// End Sep Login Name Mod
-
 	/**
 	* Obtain disallowed usernames
 	*/

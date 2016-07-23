@@ -34,10 +34,8 @@
 		<!-- ENDIF -->
 
 		<tr>
-        	<!-- Start Sep Login Name Mod -->
-			<td valign="top" <!-- IF S_ADMIN_AUTH -->style="width: 50%; text-align: {S_CONTENT_FLOW_END};"<!-- ENDIF -->><b class="gensmall">{L_LOGINNAME}:</b></td>
-			<td><input class="post" type="text" name="{LOGINNAME_CREDENTIAL}" size="25" value="{LOGINNAME}" tabindex="1" />
-            <!-- End Sep Login Name Mod -->
+			<td valign="top" <!-- IF S_ADMIN_AUTH -->style="width: 50%; text-align: {S_CONTENT_FLOW_END};"<!-- ENDIF -->><b class="gensmall">{L_USERNAME}:</b></td>
+			<td><input class="post" type="text" name="{USERNAME_CREDENTIAL}" size="25" value="{USERNAME}" tabindex="1" />
 				<!-- IF not S_ADMIN_AUTH and S_REGISTER_ENABLED -->
 					<br /><a class="gensmall" href="{U_REGISTER}">{L_REGISTER}</a>
 				<!-- ENDIF -->

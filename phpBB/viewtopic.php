@@ -991,10 +991,7 @@ if (!sizeof($post_list))
 // Holding maximum post time for marking topic read
 // We need to grab it because we do reverse ordering sometimes
 $max_post_time = 0;
-//-- mod: Prime Post Revisions ----------------------------------------------//
-include($phpbb_root_path . 'includes/prime_post_revisions.' . $phpEx);
-$prime_post_revisions = new prime_post_revisions($post_list, $forum_id, $topic_id, $post_id);
-//-- end: Prime Post Revisions ----------------------------------------------//
+
 $sql = $db->sql_build_query('SELECT', array(
 	'SELECT'	=> 'u.*, z.friend, z.foe, p.*',
 
@@ -1017,18 +1014,11 @@ $sql = $db->sql_build_query('SELECT', array(
 $result = $db->sql_query($sql);
 
 $now = phpbb_gmgetdate(time() + $user->timezone + $user->dst);
-//-- mod: Prime Post Revisions ----------------------------------------------//
-$prime_post_revisions->get_revision_info($post_list, $result, $viewtopic_url, $viewtopic_title);
-//-- end: Prime Post Revisions ----------------------------------------------//
 
 // Posts are stored in the $rowset array while $attach_list, $user_cache
 // and the global bbcode_bitfield are built
 while ($row = $db->sql_fetchrow($result))
 {
-//-- mod: Prime Post Revisions ----------------------------------------------//
-	$prime_post_revisions->merge_revision_info($post_list, $result, $row);
-//-- end: Prime Post Revisions ----------------------------------------------//
-
 	// Set max_post_time
 	if ($row['post_time'] > $max_post_time)
 	{
@@ -1221,10 +1211,6 @@ while ($row = $db->sql_fetchrow($result))
 					}
 
 					$user_cache[$poster_id]['age'] = (int) ($now['year'] - $bday_year - $diff);
-//-- mod: Prime Birthdate ---------------------------------------------------//
-					include($phpbb_root_path . 'includes/prime_birthdate.' . $phpEx);
-					$prime_birthdate->alter_user_cache($user_cache, $row);
-//-- end: Prime Birthdate ---------------------------------------------------//
 				}
 			}
 		}
@@ -1418,9 +1404,6 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		$message = preg_replace('#(?!<.*)(?<!\w)(' . $highlight_match . ')(?!\w|[^<>]*(?:</s(?:cript|tyle))?>)#is', '<span class="posthilit">\1</span>', $message);
 		$row['post_subject'] = preg_replace('#(?!<.*)(?<!\w)(' . $highlight_match . ')(?!\w|[^<>]*(?:</s(?:cript|tyle))?>)#is', '<span class="posthilit">\1</span>', $row['post_subject']);
 	}
-//-- mod: Prime Post Revisions ----------------------------------------------//
-	$prime_post_revisions->set_edit_count($row);
-//-- end: Prime Post Revisions ----------------------------------------------//
 
 	// Editing information
 	if (($row['post_edit_count'] && $config['display_last_edited']) || $row['post_edit_reason'])
@@ -1446,9 +1429,6 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 
 			unset($post_storage_list);
 		}
-//-- mod: Prime Post Revisions ----------------------------------------------//
-		$prime_post_revisions->inject_user_data($row);
-//-- end: Prime Post Revisions ----------------------------------------------//
 
 		$l_edit_time_total = ($row['post_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
 
@@ -1617,9 +1597,6 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		'S_IGNORE_POST'		=> ($row['hide_post']) ? true : false,
 		'L_IGNORE_POST'		=> ($row['hide_post']) ? sprintf($user->lang['POST_BY_FOE'], get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username']), '<a href="' . $viewtopic_url . "&amp;p={$row['post_id']}&amp;view=show#p{$row['post_id']}" . '">', '</a>') : '',
 	);
-//-- mod: Prime Post Revisions ----------------------------------------------//
-	$prime_post_revisions->update_postrow($post_list, $i, $rowset, $postrow);
-//-- end: Prime Post Revisions ----------------------------------------------//
 
 	if (isset($cp_row['row']) && sizeof($cp_row['row']))
 	{
@@ -1803,9 +1780,7 @@ if (empty($_REQUEST['t']) && !empty($topic_id))
 
 // Output the page
 page_header($user->lang['VIEW_TOPIC'] . ' - ' . $topic_data['topic_title'], true, $forum_id);
-//-- mod: Prime Post Revisions ----------------------------------------------//
-$prime_post_revisions->assign_template_variables($viewtopic_url, $viewtopic_title);
-//-- end: Prime Post Revisions ----------------------------------------------//
+
 $template->set_filenames(array(
 	'body' => ($view == 'print') ? 'viewtopic_print.html' : 'viewtopic_body.html')
 );

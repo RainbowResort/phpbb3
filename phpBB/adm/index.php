@@ -109,9 +109,6 @@ function adm_page_header($page_title)
 	$template->assign_vars(array(
 		'PAGE_TITLE'			=> $page_title,
 		'USERNAME'				=> $user->data['username'],
-// Start Sep Login Name Mod
-		'LOGINNAME'				=> $user->data['loginname'],
-// End Sep Login Name Mod
 
 		'SID'					=> $SID,
 		'_SID'					=> $_SID,

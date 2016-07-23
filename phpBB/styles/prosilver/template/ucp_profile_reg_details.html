@@ -12,12 +12,6 @@
 
 	<fieldset>
 	<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
-    <!-- Start Sep Login Name Mod -->
-	<dl>
-		<dt><label <!-- IF S_CHANGE_LOGINNAME -->for="loginname"<!-- ENDIF -->>{L_LOGINNAME}:</label><br /><span>{L_LOGINNAME_EXPLAIN}</span></dt>
-		<dd><!-- IF S_CHANGE_LOGINNAME --><input type="text" name="loginname" id="loginname" value="{LOGINNAME}" class="inputbox" title="{L_LOGINNAME}" /><!-- ELSE --><strong>{LOGINNAME}</strong><!-- ENDIF --></dd>
-	</dl>
-    <!-- End Sep Login Name Mod -->
 	<dl>
 		<dt><label <!-- IF S_CHANGE_USERNAME -->for="username"<!-- ENDIF -->>{L_USERNAME}:</label><br /><span>{L_USERNAME_EXPLAIN}</span></dt>
 		<dd><!-- IF S_CHANGE_USERNAME --><input type="text" name="username" id="username" value="{USERNAME}" class="inputbox" title="{L_USERNAME}" /><!-- ELSE --><strong>{USERNAME}</strong><!-- ENDIF --></dd>

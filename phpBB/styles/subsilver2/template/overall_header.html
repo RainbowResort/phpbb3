@@ -138,11 +138,9 @@ function marklist(id, name, state)
 
 // ]]>
 </script>
-<link href="{T_THEME_PATH}/prime_bbcode_note.css" rel="stylesheet" type="text/css" />
-<!-- INCLUDE prime_bbcode_spoiler.html -->
 </head>
 <body class="{S_CONTENT_DIRECTION}">
-<!-- INCLUDE prime_bbcode_note.html -->
+
 <a name="top"></a>
 
 <div id="wrapheader">
@@ -160,46 +158,33 @@ function marklist(id, name, state)
 		<table width="100%" cellspacing="0">
 		<tr>
 			<td class="genmed">
-				<!-- IF not S_IS_BOT --><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a>&nbsp;<!-- ENDIF -->
-				<!-- IF U_RESTORE_PERMISSIONS --> | <a href="{U_RESTORE_PERMISSIONS}">{L_RESTORE_PERMISSIONS}</a><!-- ENDIF -->
-				<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN --> | <span class="error">{L_BOARD_DISABLED}</span><!-- ENDIF -->
+				<!-- IF not S_IS_BOT --><a href="{U_LOGIN_LOGOUT}"><img src="{T_THEME_PATH}/images/icon_mini_login.gif" width="12" height="13" alt="*" /> {L_LOGIN_LOGOUT}</a>&nbsp;<!-- ENDIF -->
+				<!-- IF U_RESTORE_PERMISSIONS --> &nbsp;<a href="{U_RESTORE_PERMISSIONS}"><img src="{T_THEME_PATH}/images/icon_mini_login.gif" width="12" height="13" alt="*" /> {L_RESTORE_PERMISSIONS}</a><!-- ENDIF -->
+				<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN --> &nbsp;<span class="error">{L_BOARD_DISABLED}</span><!-- ENDIF -->
 				<!-- IF not S_IS_BOT -->
 					<!-- IF S_USER_LOGGED_IN -->
-						<!-- IF S_DISPLAY_PM --> | <a href="{U_PRIVATEMSGS}">{PRIVATE_MESSAGE_INFO}<!-- IF PRIVATE_MESSAGE_INFO_UNREAD -->, {PRIVATE_MESSAGE_INFO_UNREAD}<!-- ENDIF --></a><!-- ENDIF -->
-					<!-- ELSEIF S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) --> | <a href="{U_REGISTER}">{L_REGISTER}</a>
+						<!-- IF S_DISPLAY_PM --> &nbsp;<a href="{U_PRIVATEMSGS}"><img src="{T_THEME_PATH}/images/icon_mini_message.gif" width="12" height="13" alt="*" /> {PRIVATE_MESSAGE_INFO}<!-- IF PRIVATE_MESSAGE_INFO_UNREAD -->, {PRIVATE_MESSAGE_INFO_UNREAD}<!-- ENDIF --></a><!-- ENDIF -->
+					<!-- ELSEIF S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) --> &nbsp;<a href="{U_REGISTER}"><img src="{T_THEME_PATH}/images/icon_mini_register.gif" width="12" height="13" alt="*" /> {L_REGISTER}</a>
 					<!-- ENDIF -->
 				<!-- ENDIF -->
 			</td>
 			<td class="genmed" align="{S_CONTENT_FLOW_END}">
-				<a href="{U_FAQ}">{L_FAQ}</a>
-				<!-- IF S_DISPLAY_SEARCH --> | <a href="{U_SEARCH}">{L_SEARCH}</a><!-- ENDIF -->
+				<a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_FAQ}</a>
+				<!-- IF S_DISPLAY_SEARCH -->&nbsp; &nbsp;<a href="{U_SEARCH}"><img src="{T_THEME_PATH}/images/icon_mini_search.gif" width="12" height="13" alt="*" /> {L_SEARCH}</a><!-- ENDIF -->
 				<!-- IF not S_IS_BOT -->
-					<!-- IF S_DISPLAY_MEMBERLIST --> | <a href="{U_MEMBERLIST}">{L_MEMBERLIST}</a><!-- ENDIF -->
-					<!-- IF S_USER_LOGGED_IN --> | <a href="{U_PROFILE}">{L_PROFILE}</a><!-- ENDIF -->
+					<!-- IF S_DISPLAY_MEMBERLIST -->&nbsp; &nbsp;<a href="{U_MEMBERLIST}"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" alt="*" /> {L_MEMBERLIST}</a><!-- ENDIF -->
+					<!-- IF S_USER_LOGGED_IN -->&nbsp; &nbsp;<a href="{U_PROFILE}"><img src="{T_THEME_PATH}/images/icon_mini_profile.gif" width="12" height="13" alt="*" /> {L_PROFILE}</a><!-- ENDIF -->
 				<!-- ENDIF -->
-			</td>
-		</tr>
-		</table>
-	</div>	
-	
-	<div id="menubar">
-		<table width="100%" cellspacing="0">
-		<tr>
-			<td>
-			<!-- IF U_TEAM --><a href="{U_TEAM}">{L_THE_TEAM}</a><!-- ENDIF --><!-- IF U_MCP --> | <a href="{U_MCP}">{L_MCP}</a><!-- ENDIF --><!-- IF U_ACP --> | <a href="{U_ACP}">{L_ACP}</a><!-- ENDIF -->
-			</td>
-			<td align="{S_CONTENT_FLOW_END}">
-			<!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ENDIF -->
 			</td>
 		</tr>
 		</table>
 	</div>
 
-	<div id="menubar">
+	<div id="datebar">
 		<table width="100%" cellspacing="0">
 		<tr>
-			<td class="gensmall"><a href="/index2.html">Return to the Main Site</a> | <a href="/chat/">IRC Chatroom</a> | <a href="/gallery/">Fanart Gallery</a> | <a href="/oekaki/">Oekaki</a></td>
-			<td class="gensmall" align="{S_CONTENT_FLOW_END}">{CURRENT_TIME}</td>
+			<td class="gensmall"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ENDIF --></td>
+			<td class="gensmall" align="{S_CONTENT_FLOW_END}">{CURRENT_TIME}<br /></td>
 		</tr>
 		</table>
 	</div>

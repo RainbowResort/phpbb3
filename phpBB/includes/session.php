@@ -662,11 +662,7 @@ class session
 		// At this stage we should have a filled data array, defined cookie u and k data.
 		// data array should contain recent session info if we're a real user and a recent
 		// session exists in which case session_id will also be set
-//-- mod: Prime Ban to Group -----------------------------------------------//
-		global $phpbb_root_path, $phpEx;
-		include "$phpbb_root_path/includes/prime_ban_to_group.$phpEx";
-		$prime_ban_to_group = new prime_ban_to_group(null, 'unban');
-//-- end: Prime Ban to Group -----------------------------------------------//
+
 		// Is user banned? Are they excluded? Won't return on ban, exists within method
 		if ($this->data['user_type'] != USER_FOUNDER)
 		{
@@ -1928,12 +1924,6 @@ class user extends session
 			}
 		}
 
-//-- mod: Prime Ban to Group -----------------------------------------------//
-		$this->add_lang('mods/prime_ban_to_group');
-//-- end: Prime Ban to Group -----------------------------------------------//
-//-- mod: Prime BBCode Spoiler ----------------------------------------------//
-		$this->add_lang('mods/prime_bbcode_spoiler');
-//-- end: Prime BBCode Spoiler ----------------------------------------------//
 
 		// Does the user need to change their password? If so, redirect to the
 		// ucp profile reg_details page ... of course do not redirect if we're already in the ucp
@@ -1944,10 +1934,7 @@ class user extends session
 				redirect(append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=profile&amp;mode=reg_details'));
 			}
 		}
-//-- mod: Prime Birthdate ---------------------------------------------------//
-		include($phpbb_root_path . 'includes/prime_birthdate.' . $phpEx);
-		$prime_birthdate->enforce_birthdate($this);
-//-- end: Prime Birthdate ---------------------------------------------------//
+
 		return;
 	}
 

@@ -174,9 +174,7 @@ class messenger
 	{
 		$this->headers('X-AntiAbuse: Board servername - ' . mail_encode($config['server_name']));
 		$this->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-                // Tweak for username / login mod.
-		//$this->headers('X-AntiAbuse: Username - ' . mail_encode($user->data['username']));
-                $this->headers('X-AntiAbuse: Loginname - ' . mail_encode($user->data['loginname']));
+		$this->headers('X-AntiAbuse: Username - ' . mail_encode($user->data['username']));
 		$this->headers('X-AntiAbuse: User IP - ' . $user->ip);
 	}
 

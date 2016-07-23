@@ -358,9 +358,6 @@ class acp_users
 								$messenger->assign_vars(array(
 									'WELCOME_MSG'	=> htmlspecialchars_decode(sprintf($user->lang['WELCOME_SUBJECT'], $config['sitename'])),
 									'USERNAME'		=> htmlspecialchars_decode($user_row['username']),
-									// Start Sep Login Name Mod
-									'LOGINNAME'		=> htmlspecialchars_decode($user_row['loginname']),
-									// End Sep Login Name Mod
 									'U_ACTIVATE'	=> "$server_url/ucp.$phpEx?mode=activate&u={$user_row['user_id']}&k=$user_actkey")
 								);
 
@@ -763,9 +760,6 @@ class acp_users
 					// Handle registration info updates
 					$data = array(
 						'username'			=> utf8_normalize_nfc(request_var('user', $user_row['username'], true)),
-						// Start Sep Login Name Mod
-						'loginname'			=> utf8_normalize_nfc(request_var('login', $user_row['loginname'], true)),
-						// End SEp Login Name Mod
 						'user_founder'		=> request_var('user_founder', ($user_row['user_type'] == USER_FOUNDER) ? 1 : 0),
 						'email'				=> strtolower(request_var('user_email', $user_row['user_email'])),
 						'email_confirm'		=> strtolower(request_var('email_confirm', '')),
@@ -791,18 +785,7 @@ class acp_users
 							),
 						);
 					}
-					// Start Sep Login Name Mod
-					// Check login name if altered
-					if ($data['loginname'] != $user_row['loginname'])
-					{
-						$check_ary += array(
-							'loginname'			=> array(
-								array('string', false, $config['min_loginname_chars'], $config['max_loginname_chars']),
-								array('loginname', $user_row['loginname'])
-							),
-						);
-					}
-					// End Sep Login Name Mod
+
 					// Check email if altered
 					if ($data['email'] != $user_row['user_email'])
 					{
@@ -834,10 +817,7 @@ class acp_users
 
 					// Which updates do we need to do?
 					$update_username = ($user_row['username'] != $data['username']) ? $data['username'] : false;
-					// Start Sep Login Name Mod
-					$update_loginname = ($user_row['loginname'] != $data['loginname']) ? $data['loginname'] : false;
-					// End Sep Login Name Mod
-					$update_password = ($data['new_password'] && !phpbb_check_hash($user_row['user_password'], $data['new_password'])) ? true : false;
+					$update_password = ($data['new_password'] && !phpbb_check_hash($data['new_password'], $user_row['user_password'])) ? true : false;
 					$update_email = ($data['email'] != $user_row['user_email']) ? $data['email'] : false;
 
 					if (!sizeof($error))
@@ -895,15 +875,7 @@ class acp_users
 
 							add_log('user', $user_id, 'LOG_USER_UPDATE_NAME', $user_row['username'], $update_username);
 						}
-						// Start Sep Login Name Mod
-						if ($update_loginname !== false)
-						{
-						$sql_ary['loginname'] = $update_loginname;
-						$sql_ary['loginname_clean'] = utf8_clean_string($update_loginname);
 
-						add_log('user', $user_id, 'LOG_USER_UPDATE_LOGINNAME', $user_row['loginname'], $update_loginname);
-						}
-						// End Sep Login Name Mod
 						if ($update_email !== false)
 						{
 							$sql_ary += array(
@@ -1051,9 +1023,6 @@ class acp_users
 
 				$template->assign_vars(array(
 					'L_NAME_CHARS_EXPLAIN'		=> sprintf($user->lang[$config['allow_name_chars'] . '_EXPLAIN'], $config['min_name_chars'], $config['max_name_chars']),
-					// Start Sep Login Name Mod
-					'L_LOGINNAME_CHARS_EXPLAIN'		=> sprintf($user->lang[$config['allow_loginname_chars'] . '_EXPLAIN'], $config['min_loginname_chars'], $config['max_loginname_chars']),
-					// End Sep Login Name Mod
 					'L_CHANGE_PASSWORD_EXPLAIN'	=> sprintf($user->lang[$config['pass_complex'] . '_EXPLAIN'], $config['min_pass_chars'], $config['max_pass_chars']),
 					'L_POSTS_IN_QUEUE'			=> $user->lang('NUM_POSTS_IN_QUEUE', $user_row['posts_in_queue']),
 					'S_FOUNDER'					=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
@@ -1074,9 +1043,6 @@ class acp_users
 
 					'POSTS_IN_QUEUE'	=> $user_row['posts_in_queue'],
 					'USER'				=> $user_row['username'],
-					// Start Sep Login Name Mod
-					'LOGIN'				=> $user_row['loginname'],
-					// End Sep Login Name Mod
 					'USER_REGISTERED'	=> $user->format_date($user_row['user_regdate']),
 					'REGISTERED_IP'		=> ($ip == 'hostname') ? gethostbyaddr($user_row['user_ip']) : $user_row['user_ip'],
 					'USER_LASTACTIVE'	=> ($last_visit) ? $user->format_date($last_visit) : ' - ',
@@ -1382,10 +1348,7 @@ class acp_users
 				$data['bday_month']		= request_var('bday_month', $data['bday_month']);
 				$data['bday_year']		= request_var('bday_year', $data['bday_year']);
 				$data['user_birthday']	= sprintf('%2d-%2d-%4d', $data['bday_day'], $data['bday_month'], $data['bday_year']);
-//-- mod: Prime Birthdate ---------------------------------------------------//
-				include($phpbb_root_path . 'includes/prime_birthdate.' . $phpEx);
-				$prime_birthdate->acp_users_get_vars($data, $user_row);
-//-- end: Prime Birthdate ---------------------------------------------------//
+
 
 				if ($submit)
 				{
@@ -1437,9 +1400,7 @@ class acp_users
 							'user_interests'=> $data['interests'],
 							'user_birthday'	=> $data['user_birthday'],
 						);
-//-- mod: Prime Birthdate ---------------------------------------------------//
-						$prime_birthdate->acp_users_inject_sql($sql_ary, $data);
-//-- end: Prime Birthdate ---------------------------------------------------//
+
 						$sql = 'UPDATE ' . USERS_TABLE . '
 							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
 							WHERE user_id = $user_id";
@@ -1478,9 +1439,7 @@ class acp_users
 					$s_birthday_year_options .= "<option value=\"$i\"$selected>$i</option>";
 				}
 				unset($now);
-//-- mod: Prime Birthdate ---------------------------------------------------//
-				$prime_birthdate->acp_users_format_fields($data, $s_birthday_day_options, $s_birthday_month_options, $s_birthday_year_options);
-//-- end: Prime Birthdate ---------------------------------------------------//
+
 				$template->assign_vars(array(
 					'ICQ'			=> $data['icq'],
 					'YIM'			=> $data['yim'],
