@@ -320,7 +320,7 @@ p.topicdetails {
 }
 
 th {
-	color: #FFA34F;
+	color: #000000;
 	font-size: 1.1em;
 	font-weight: bold;
 	background-color: #006699;
@@ -381,7 +381,7 @@ td.profile {
 }
 
 .spacer {
-	background-color: #fff2dd;
+	background-color: #ffffff;
 }
 
 .current {
@@ -417,13 +417,12 @@ a:link {
 }
 
 a:visited {
-	color: #006b9d;
+	color: #004f73;
 	text-decoration: none;
 }
 
-/* FIXME */
 a:hover {
-	color: #D46400;
+	color: #007cb5;
 	text-decoration: underline;
 }
 
