@@ -1,12 +1,13 @@
 <?php
 /**
 *
-* acp_attachments [English]
+* This file is part of the phpBB Forum Software package.
 *
-* @package language
-* @version $Id$
-* @copyright (c) 2005 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+* For full copyright and license information, please see
+* the docs/CREDITS.txt file.
 *
 */
 
@@ -62,6 +63,7 @@ $lang = array_merge($lang, array(
 	'ATTACH_MAX_PM_FILESIZE_EXPLAIN'	=> 'Maximum size of each file, with 0 being unlimited, attached to a private message.',
 	'ATTACH_ORPHAN_URL'					=> 'Orphan attachments',
 	'ATTACH_POST_ID'					=> 'Post ID',
+	'ATTACH_POST_TYPE'					=> 'Post type',
 	'ATTACH_QUOTA'						=> 'Total attachment quota',
 	'ATTACH_QUOTA_EXPLAIN'				=> 'Maximum drive space available for attachments for the whole board, with 0 being unlimited.',
 	'ATTACH_TO_POST'					=> 'Attach file to post',
@@ -107,12 +109,15 @@ $lang = array_merge($lang, array(
 	'EXT_GROUP_REAL_MEDIA'			=> 'Real Media',
 	'EXT_GROUP_WINDOWS_MEDIA'		=> 'Windows Media',
 
+	'FILES_GONE'			=> 'Some of the attachments you selected for deletion do not exist. They may have been already deleted. Attachments that did exist were deleted.',
+	'FILES_STATS_WRONG'		=> 'Your file statistics are likely inaccurate and need to be resynchronised. Actual values: number of attachments = %1$d, total size of attachments = %2$s.<br />Click %3$shere%4$s to resynchronise them.',
+
 	'GO_TO_EXTENSIONS'		=> 'Go to extension management screen',
 	'GROUP_NAME'			=> 'Group name',
 
 	'IMAGE_LINK_SIZE'			=> 'Image link dimensions',
 	'IMAGE_LINK_SIZE_EXPLAIN'	=> 'Display image attachment as an inline text link if image is larger than this. To disable this behaviour, set the values to 0px by 0px.',
-	'IMAGICK_PATH'				=> 'Imagemagick path',
+	'IMAGICK_PATH'				=> 'ImageMagick path',
 	'IMAGICK_PATH_EXPLAIN'		=> 'Full path to the imagemagick convert application, e.g. <samp>/usr/bin/</samp>.',
 
 	'MAX_ATTACHMENTS'				=> 'Maximum number of attachments per post',
@@ -130,6 +135,7 @@ $lang = array_merge($lang, array(
 	'NOT_ALLOWED_IN_PM'			=> 'Only allowed in posts',
 	'NOT_ALLOWED_IN_PM_POST'	=> 'Not allowed',
 	'NOT_ASSIGNED'				=> 'Not assigned',
+	'NO_ATTACHMENTS'			=> 'No attachments found for this period.',
 	'NO_EXT_GROUP'				=> 'None',
 	'NO_EXT_GROUP_NAME'			=> 'No group name entered',
 	'NO_EXT_GROUP_SPECIFIED'	=> 'No extension group specified.',
@@ -143,10 +149,11 @@ $lang = array_merge($lang, array(
 	'ORDER_ALLOW_DENY'		=> 'Allow',
 	'ORDER_DENY_ALLOW'		=> 'Deny',
 
-	'REMOVE_ALLOWED_IPS'		=> 'Remove or un-exclude <em>allowed</em> IPs/hostnames',
-	'REMOVE_DISALLOWED_IPS'		=> 'Remove or un-exclude <em>disallowed</em> IPs/hostnames',
+	'REMOVE_ALLOWED_IPS'			=> 'Remove or un-exclude <em>allowed</em> IPs/hostnames',
+	'REMOVE_DISALLOWED_IPS'			=> 'Remove or un-exclude <em>disallowed</em> IPs/hostnames',
+	'RESYNC_FILES_STATS_CONFIRM'	=> 'Are you sure you wish to resynchronise file statistics?',
 
-	'SEARCH_IMAGICK'				=> 'Search for Imagemagick',
+	'SEARCH_IMAGICK'				=> 'Search for ImageMagick',
 	'SECURE_ALLOW_DENY'				=> 'Allow/Deny list',
 	'SECURE_ALLOW_DENY_EXPLAIN'		=> 'Change the default behaviour when secure downloads are enabled of the Allow/Deny list to that of a <strong>whitelist</strong> (Allow) or a <strong>blacklist</strong> (Deny).',
 	'SECURE_DOWNLOADS'				=> 'Enable secure downloads',
@@ -170,5 +177,3 @@ $lang = array_merge($lang, array(
 	'UPLOAD_ICON'					=> 'Upload icon',
 	'UPLOAD_NOT_DIR'				=> 'The upload location you specified does not appear to be a directory.',
 ));
-
-?>

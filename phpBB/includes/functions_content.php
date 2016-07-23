@@ -1,10 +1,13 @@
 <?php
 /**
 *
-* @package phpBB3
-* @version $Id$
-* @copyright (c) 2005 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* This file is part of the phpBB Forum Software package.
+*
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+* For full copyright and license information, please see
+* the docs/CREDITS.txt file.
 *
 */
 
@@ -44,7 +47,7 @@ if (!defined('IN_PHPBB'))
 */
 function gen_sort_selects(&$limit_days, &$sort_by_text, &$sort_days, &$sort_key, &$sort_dir, &$s_limit_days, &$s_sort_key, &$s_sort_dir, &$u_sort_param, $def_st = false, $def_sk = false, $def_sd = false)
 {
-	global $user;
+	global $user, $phpbb_dispatcher;
 
 	$sort_dir_text = array('a' => $user->lang['ASCENDING'], 'd' => $user->lang['DESCENDING']);
 
@@ -75,7 +78,7 @@ function gen_sort_selects(&$limit_days, &$sort_by_text, &$sort_days, &$sort_key,
 	foreach ($sorts as $name => $sort_ary)
 	{
 		$key = $sort_ary['key'];
-		$selected = $$sort_ary['key'];
+		$selected = ${$sort_ary['key']};
 
 		// Check if the key is selectable. If not, we reset to the default or first key found.
 		// This ensures the values are always valid. We also set $sort_dir/sort_key/etc. to the
@@ -84,12 +87,12 @@ function gen_sort_selects(&$limit_days, &$sort_by_text, &$sort_days, &$sort_key,
 		{
 			if ($sort_ary['default'] !== false)
 			{
-				$selected = $$key = $sort_ary['default'];
+				$selected = ${$key} = $sort_ary['default'];
 			}
 			else
 			{
 				@reset($sort_ary['options']);
-				$selected = $$key = key($sort_ary['options']);
+				$selected = ${$key} = key($sort_ary['options']);
 			}
 		}
 
@@ -103,6 +106,42 @@ function gen_sort_selects(&$limit_days, &$sort_by_text, &$sort_days, &$sort_key,
 		$u_sort_param .= ($selected !== $sort_ary['default']) ? ((strlen($u_sort_param)) ? '&amp;' : '') . "{$name}={$selected}" : '';
 	}
 
+	/**
+	 * Run code before generated sort selects are returned
+	 *
+	 * @event core.gen_sort_selects_after
+	 * @var	int      limit_days     Days limit
+	 * @var	array    sort_by_text   Sort by text options
+	 * @var	int      sort_days      Sort by days flag
+	 * @var	string   sort_key       Sort key
+	 * @var	string   sort_dir       Sort dir
+	 * @var	string   s_limit_days   String of days limit
+	 * @var	string   s_sort_key     String of sort key
+	 * @var	string   s_sort_dir     String of sort dir
+	 * @var	string   u_sort_param   Sort URL params
+	 * @var	bool     def_st         Default sort days
+	 * @var	bool     def_sk         Default sort key
+	 * @var	bool     def_sd         Default sort dir
+	 * @var	array    sorts          Sorts
+	 * @since 3.1.9-RC1
+	 */
+	$vars = array(
+		'limit_days',
+		'sort_by_text',
+		'sort_days',
+		'sort_key',
+		'sort_dir',
+		's_limit_days',
+		's_sort_key',
+		's_sort_dir',
+		'u_sort_param',
+		'def_st',
+		'def_sk',
+		'def_sd',
+		'sorts',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.gen_sort_selects_after', compact($vars)));
+
 	return;
 }
 
@@ -111,7 +150,7 @@ function gen_sort_selects(&$limit_days, &$sort_by_text, &$sort_days, &$sort_key,
 */
 function make_jumpbox($action, $forum_id = false, $select_all = false, $acl_list = false, $force_display = false)
 {
-	global $config, $auth, $template, $user, $db;
+	global $config, $auth, $template, $user, $db, $phpbb_path_helper, $phpbb_dispatcher;
 
 	// We only return if the jumpbox is not forced to be displayed (in case it is needed for functionality)
 	if (!$config['load_jumpbox'] && $force_display === false)
@@ -166,27 +205,48 @@ function make_jumpbox($action, $forum_id = false, $select_all = false, $acl_list
 			continue;
 		}
 
+		$tpl_ary = array();
 		if (!$display_jumpbox)
 		{
-			$template->assign_block_vars('jumpbox_forums', array(
+			$tpl_ary[] = array(
 				'FORUM_ID'		=> ($select_all) ? 0 : -1,
 				'FORUM_NAME'	=> ($select_all) ? $user->lang['ALL_FORUMS'] : $user->lang['SELECT_FORUM'],
-				'S_FORUM_COUNT'	=> $iteration)
+				'S_FORUM_COUNT'	=> $iteration,
+				'LINK'			=> $phpbb_path_helper->append_url_params($action, array('f' => $forum_id)),
 			);
 
 			$iteration++;
 			$display_jumpbox = true;
 		}
 
-		$template->assign_block_vars('jumpbox_forums', array(
+		$tpl_ary[] = array(
 			'FORUM_ID'		=> $row['forum_id'],
 			'FORUM_NAME'	=> $row['forum_name'],
 			'SELECTED'		=> ($row['forum_id'] == $forum_id) ? ' selected="selected"' : '',
 			'S_FORUM_COUNT'	=> $iteration,
 			'S_IS_CAT'		=> ($row['forum_type'] == FORUM_CAT) ? true : false,
 			'S_IS_LINK'		=> ($row['forum_type'] == FORUM_LINK) ? true : false,
-			'S_IS_POST'		=> ($row['forum_type'] == FORUM_POST) ? true : false)
+			'S_IS_POST'		=> ($row['forum_type'] == FORUM_POST) ? true : false,
+			'LINK'			=> $phpbb_path_helper->append_url_params($action, array('f' => $row['forum_id'])),
 		);
+
+		/**
+		 * Modify the jumpbox before it is assigned to the template
+		 *
+		 * @event core.make_jumpbox_modify_tpl_ary
+		 * @var	array	row				The data of the forum
+		 * @var	array	tpl_ary			Template data of the forum
+		 * @since 3.1.10-RC1
+		 */
+		$vars = array(
+			'row',
+			'tpl_ary',
+		);
+		extract($phpbb_dispatcher->trigger_event('core.make_jumpbox_modify_tpl_ary', compact($vars)));
+
+		$template->assign_block_vars_array('jumpbox_forums', $tpl_ary);
+
+		unset($tpl_ary);
 
 		for ($i = 0; $i < $padding; $i++)
 		{
@@ -197,10 +257,13 @@ function make_jumpbox($action, $forum_id = false, $select_all = false, $acl_list
 	$db->sql_freeresult($result);
 	unset($padding_store);
 
+	$url_parts = $phpbb_path_helper->get_url_parts($action);
+
 	$template->assign_vars(array(
-		'S_DISPLAY_JUMPBOX'	=> $display_jumpbox,
-		'S_JUMPBOX_ACTION'	=> $action)
-	);
+		'S_DISPLAY_JUMPBOX'			=> $display_jumpbox,
+		'S_JUMPBOX_ACTION'			=> $action,
+		'HIDDEN_FIELDS_FOR_JUMPBOX'	=> build_hidden_fields($url_parts['params']),
+	));
 
 	return;
 }
@@ -384,7 +447,7 @@ function phpbb_clean_search_string($search_string)
 */
 function decode_message(&$message, $bbcode_uid = '')
 {
-	global $config;
+	global $config, $phpbb_dispatcher;
 
 	if ($bbcode_uid)
 	{
@@ -397,12 +460,38 @@ function decode_message(&$message, $bbcode_uid = '')
 		$replace = array("\n");
 	}
 
+	/**
+	* Use this event to modify the message before it is decoded
+	*
+	* @event core.decode_message_before
+	* @var string	message_text	The message content
+	* @var string	bbcode_uid		The message BBCode UID
+	* @since 3.1.9-RC1
+	*/
+	$message_text = $message;
+	$vars = array('message_text', 'bbcode_uid');
+	extract($phpbb_dispatcher->trigger_event('core.decode_message_before', compact($vars)));
+	$message = $message_text;
+
 	$message = str_replace($match, $replace, $message);
 
 	$match = get_preg_expression('bbcode_htm');
 	$replace = array('\1', '\1', '\2', '\1', '', '');
 
 	$message = preg_replace($match, $replace, $message);
+
+	/**
+	* Use this event to modify the message after it is decoded
+	*
+	* @event core.decode_message_after
+	* @var string	message_text	The message content
+	* @var string	bbcode_uid		The message BBCode UID
+	* @since 3.1.9-RC1
+	*/
+	$message_text = $message;
+	$vars = array('message_text', 'bbcode_uid');
+	extract($phpbb_dispatcher->trigger_event('core.decode_message_after', compact($vars)));
+	$message = $message_text;
 }
 
 /**
@@ -427,16 +516,34 @@ function strip_bbcode(&$text, $uid = '')
 * For display of custom parsed text on user-facing pages
 * Expects $text to be the value directly from the database (stored value)
 */
-function generate_text_for_display($text, $uid, $bitfield, $flags)
+function generate_text_for_display($text, $uid, $bitfield, $flags, $censor_text = true)
 {
 	static $bbcode;
+	global $phpbb_dispatcher;
 
 	if ($text === '')
 	{
 		return '';
 	}
 
-	$text = censor_text($text);
+	/**
+	* Use this event to modify the text before it is parsed
+	*
+	* @event core.modify_text_for_display_before
+	* @var string	text			The text to parse
+	* @var string	uid				The BBCode UID
+	* @var string	bitfield		The BBCode Bitfield
+	* @var int		flags			The BBCode Flags
+	* @var bool		censor_text		Whether or not to apply word censors
+	* @since 3.1.0-a1
+	*/
+	$vars = array('text', 'uid', 'bitfield', 'flags', 'censor_text');
+	extract($phpbb_dispatcher->trigger_event('core.modify_text_for_display_before', compact($vars)));
+
+	if ($censor_text)
+	{
+		$text = censor_text($text);
+	}
 
 	// Parse bbcode if bbcode uid stored and bbcode enabled
 	if ($uid && ($flags & OPTION_FLAG_BBCODE))
@@ -462,6 +569,19 @@ function generate_text_for_display($text, $uid, $bitfield, $flags)
 	$text = bbcode_nl2br($text);
 	$text = smiley_text($text, !($flags & OPTION_FLAG_SMILIES));
 
+	/**
+	* Use this event to modify the text after it is parsed
+	*
+	* @event core.modify_text_for_display_after
+	* @var string	text		The text to parse
+	* @var string	uid			The BBCode UID
+	* @var string	bitfield	The BBCode Bitfield
+	* @var int		flags		The BBCode Flags
+	* @since 3.1.0-a1
+	*/
+	$vars = array('text', 'uid', 'bitfield', 'flags');
+	extract($phpbb_dispatcher->trigger_event('core.modify_text_for_display_after', compact($vars)));
+
 	return $text;
 }
 
@@ -469,10 +589,44 @@ function generate_text_for_display($text, $uid, $bitfield, $flags)
 * For parsing custom parsed text to be stored within the database.
 * This function additionally returns the uid and bitfield that needs to be stored.
 * Expects $text to be the value directly from request_var() and in it's non-parsed form
+*
+* @param string $text The text to be replaced with the parsed one
+* @param string $uid The BBCode uid for this parse
+* @param string $bitfield The BBCode bitfield for this parse
+* @param int $flags The allow_bbcode, allow_urls and allow_smilies compiled into a single integer.
+* @param bool $allow_bbcode If BBCode is allowed (i.e. if BBCode is parsed)
+* @param bool $allow_urls If urls is allowed
+* @param bool $allow_smilies If smilies are allowed
+*
+* @return array	An array of string with the errors that occurred while parsing
 */
 function generate_text_for_storage(&$text, &$uid, &$bitfield, &$flags, $allow_bbcode = false, $allow_urls = false, $allow_smilies = false)
 {
-	global $phpbb_root_path, $phpEx;
+	global $phpbb_root_path, $phpEx, $phpbb_dispatcher;
+
+	/**
+	* Use this event to modify the text before it is prepared for storage
+	*
+	* @event core.modify_text_for_storage_before
+	* @var string	text			The text to parse
+	* @var string	uid				The BBCode UID
+	* @var string	bitfield		The BBCode Bitfield
+	* @var int		flags			The BBCode Flags
+	* @var bool		allow_bbcode	Whether or not to parse BBCode
+	* @var bool		allow_urls		Whether or not to parse URLs
+	* @var bool		allow_smilies	Whether or not to parse Smilies
+	* @since 3.1.0-a1
+	*/
+	$vars = array(
+		'text',
+		'uid',
+		'bitfield',
+		'flags',
+		'allow_bbcode',
+		'allow_urls',
+		'allow_smilies',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.modify_text_for_storage_before', compact($vars)));
 
 	$uid = $bitfield = '';
 	$flags = (($allow_bbcode) ? OPTION_FLAG_BBCODE : 0) + (($allow_smilies) ? OPTION_FLAG_SMILIES : 0) + (($allow_urls) ? OPTION_FLAG_LINKS : 0);
@@ -501,7 +655,20 @@ function generate_text_for_storage(&$text, &$uid, &$bitfield, &$flags, $allow_bb
 
 	$bitfield = $message_parser->bbcode_bitfield;
 
-	return;
+	/**
+	* Use this event to modify the text after it is prepared for storage
+	*
+	* @event core.modify_text_for_storage_after
+	* @var string	text			The text to parse
+	* @var string	uid				The BBCode UID
+	* @var string	bitfield		The BBCode Bitfield
+	* @var int		flags			The BBCode Flags
+	* @since 3.1.0-a1
+	*/
+	$vars = array('text', 'uid', 'bitfield', 'flags');
+	extract($phpbb_dispatcher->trigger_event('core.modify_text_for_storage_after', compact($vars)));
+
+	return $message_parser->warn_msg;
 }
 
 /**
@@ -510,9 +677,32 @@ function generate_text_for_storage(&$text, &$uid, &$bitfield, &$flags, $allow_bb
 */
 function generate_text_for_edit($text, $uid, $flags)
 {
-	global $phpbb_root_path, $phpEx;
+	global $phpbb_root_path, $phpEx, $phpbb_dispatcher;
+
+	/**
+	* Use this event to modify the text before it is decoded for editing
+	*
+	* @event core.modify_text_for_edit_before
+	* @var string	text			The text to parse
+	* @var string	uid				The BBCode UID
+	* @var int		flags			The BBCode Flags
+	* @since 3.1.0-a1
+	*/
+	$vars = array('text', 'uid', 'flags');
+	extract($phpbb_dispatcher->trigger_event('core.modify_text_for_edit_before', compact($vars)));
 
 	decode_message($text, $uid);
+
+	/**
+	* Use this event to modify the text after it is decoded for editing
+	*
+	* @event core.modify_text_for_edit_after
+	* @var string	text			The text to parse
+	* @var int		flags			The BBCode Flags
+	* @since 3.1.0-a1
+	*/
+	$vars = array('text', 'flags');
+	extract($phpbb_dispatcher->trigger_event('core.modify_text_for_edit_after', compact($vars)));
 
 	return array(
 		'allow_bbcode'	=> ($flags & OPTION_FLAG_BBCODE) ? 1 : 0,
@@ -603,7 +793,7 @@ function make_clickable_callback($type, $whitespace, $url, $relative_url, $class
 		break;
 	}
 
-	$short_url = (strlen($url) > 55) ? substr($url, 0, 39) . ' ... ' . substr($url, -10) : $url;
+	$short_url = (utf8_strlen($url) > 55) ? utf8_substr($url, 0, 39) . ' ... ' . utf8_substr($url, -10) : $url;
 
 	switch ($type)
 	{
@@ -663,37 +853,62 @@ function make_clickable($text, $server_url = false, $class = 'postlink')
 		$server_url = generate_board_url();
 	}
 
-	static $magic_url_match;
-	static $magic_url_replace;
 	static $static_class;
+	static $magic_url_match_args;
 
-	if (!is_array($magic_url_match) || $static_class != $class)
+	if (!isset($magic_url_match_args[$server_url]) || $static_class != $class)
 	{
 		$static_class = $class;
 		$class = ($static_class) ? ' class="' . $static_class . '"' : '';
 		$local_class = ($static_class) ? ' class="' . $static_class . '-local"' : '';
 
-		$magic_url_match = $magic_url_replace = array();
-		// Be sure to not let the matches cross over. ;)
+		if (!is_array($magic_url_match_args))
+		{
+			$magic_url_match_args = array();
+		}
 
 		// relative urls for this board
-		$magic_url_match[] = '#(^|[\n\t (>.])(' . preg_quote($server_url, '#') . ')/(' . get_preg_expression('relative_url_inline') . ')#ie';
-		$magic_url_replace[] = "make_clickable_callback(MAGIC_URL_LOCAL, '\$1', '\$2', '\$3', '$local_class')";
+		$magic_url_match_args[$server_url][] = array(
+			'#(^|[\n\t (>.])(' . preg_quote($server_url, '#') . ')/(' . get_preg_expression('relative_url_inline') . ')#iu',
+			MAGIC_URL_LOCAL,
+			$local_class,
+		);
 
 		// matches a xxxx://aaaaa.bbb.cccc. ...
-		$magic_url_match[] = '#(^|[\n\t (>.])(' . get_preg_expression('url_inline') . ')#ie';
-		$magic_url_replace[] = "make_clickable_callback(MAGIC_URL_FULL, '\$1', '\$2', '', '$class')";
+		$magic_url_match_args[$server_url][] = array(
+			'#(^|[\n\t (>.])(' . get_preg_expression('url_inline') . ')#iu',
+			MAGIC_URL_FULL,
+			$class,
+		);
 
 		// matches a "www.xxxx.yyyy[/zzzz]" kinda lazy URL thing
-		$magic_url_match[] = '#(^|[\n\t (>])(' . get_preg_expression('www_url_inline') . ')#ie';
-		$magic_url_replace[] = "make_clickable_callback(MAGIC_URL_WWW, '\$1', '\$2', '', '$class')";
+		$magic_url_match_args[$server_url][] = array(
+			'#(^|[\n\t (>])(' . get_preg_expression('www_url_inline') . ')#iu',
+			MAGIC_URL_WWW,
+			$class,
+		);
 
 		// matches an email@domain type address at the start of a line, or after a space or after what might be a BBCode.
-		$magic_url_match[] = '/(^|[\n\t (>])(' . get_preg_expression('email') . ')/ie';
-		$magic_url_replace[] = "make_clickable_callback(MAGIC_URL_EMAIL, '\$1', '\$2', '', '')";
+		$magic_url_match_args[$server_url][] = array(
+			'/(^|[\n\t (>])(' . get_preg_expression('email') . ')/iu',
+			MAGIC_URL_EMAIL,
+			'',
+		);
 	}
 
-	return preg_replace($magic_url_match, $magic_url_replace, $text);
+	foreach ($magic_url_match_args[$server_url] as $magic_args)
+	{
+		if (preg_match($magic_args[0], $text, $matches))
+		{
+			$text = preg_replace_callback($magic_args[0], function($matches) use ($magic_args)
+			{
+				$relative_url = isset($matches[3]) ? $matches[3] : '';
+				return make_clickable_callback($magic_args[1], $matches[1], $matches[2], $relative_url, $magic_args[2]);
+			}, $text);
+		}
+	}
+
+	return $text;
 }
 
 /**
@@ -749,7 +964,7 @@ function bbcode_nl2br($text)
 */
 function smiley_text($text, $force_option = false)
 {
-	global $config, $user, $phpbb_root_path;
+	global $config, $user, $phpbb_path_helper;
 
 	if ($force_option || !$config['allow_smilies'] || !$user->optionget('viewsmilies'))
 	{
@@ -757,8 +972,8 @@ function smiley_text($text, $force_option = false)
 	}
 	else
 	{
-		$root_path = (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? generate_board_url() . '/' : $phpbb_root_path;
-		return preg_replace('#<!\-\- s(.*?) \-\-><img src="\{SMILIES_PATH\}\/(.*?) \/><!\-\- s\1 \-\->#', '<img src="' . $root_path . $config['smilies_path'] . '/\2 />', $text);
+		$root_path = (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? generate_board_url() . '/' : $phpbb_path_helper->get_web_root_path();
+		return preg_replace('#<!\-\- s(.*?) \-\-><img src="\{SMILIES_PATH\}\/(.*?) \/><!\-\- s\1 \-\->#', '<img class="smilies" src="' . $root_path . $config['smilies_path'] . '/\2 />', $text);
 	}
 }
 
@@ -778,7 +993,7 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 		return;
 	}
 
-	global $template, $cache, $user;
+	global $template, $cache, $user, $phpbb_dispatcher;
 	global $extensions, $config, $phpbb_root_path, $phpEx;
 
 	//
@@ -840,17 +1055,8 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 		unset($new_attachment_data);
 	}
 
-	// Sort correctly
-	if ($config['display_order'])
-	{
-		// Ascending sort
-		krsort($attachments);
-	}
-	else
-	{
-		// Descending sort
-		ksort($attachments);
-	}
+	// Make sure attachments are properly ordered
+	ksort($attachments);
 
 	foreach ($attachments as $attachment)
 	{
@@ -956,12 +1162,12 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 			}
 
 			$download_link = append_sid("{$phpbb_root_path}download/file.$phpEx", 'id=' . $attachment['attach_id']);
+			$l_downloaded_viewed = 'VIEWED_COUNTS';
 
 			switch ($display_cat)
 			{
 				// Images
 				case ATTACHMENT_CATEGORY_IMAGE:
-					$l_downloaded_viewed = 'VIEWED_COUNT';
 					$inline_link = append_sid("{$phpbb_root_path}download/file.$phpEx", 'id=' . $attachment['attach_id']);
 					$download_link .= '&amp;mode=view';
 
@@ -975,7 +1181,6 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 
 				// Images, but display Thumbnail
 				case ATTACHMENT_CATEGORY_THUMB:
-					$l_downloaded_viewed = 'VIEWED_COUNT';
 					$thumbnail_link = append_sid("{$phpbb_root_path}download/file.$phpEx", 'id=' . $attachment['attach_id'] . '&amp;t=1');
 					$download_link .= '&amp;mode=view';
 
@@ -989,7 +1194,6 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 
 				// Windows Media Streams
 				case ATTACHMENT_CATEGORY_WM:
-					$l_downloaded_viewed = 'VIEWED_COUNT';
 
 					// Giving the filename directly because within the wm object all variables are in local context making it impossible
 					// to validate against a valid session (all params can differ)
@@ -1008,7 +1212,6 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 				// Real Media Streams
 				case ATTACHMENT_CATEGORY_RM:
 				case ATTACHMENT_CATEGORY_QUICKTIME:
-					$l_downloaded_viewed = 'VIEWED_COUNT';
 
 					$block_array += array(
 						'S_RM_FILE'			=> ($display_cat == ATTACHMENT_CATEGORY_RM) ? true : false,
@@ -1025,8 +1228,6 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 				case ATTACHMENT_CATEGORY_FLASH:
 					list($width, $height) = @getimagesize($filename);
 
-					$l_downloaded_viewed = 'VIEWED_COUNT';
-
 					$block_array += array(
 						'S_FLASH_FILE'	=> true,
 						'WIDTH'			=> $width,
@@ -1039,7 +1240,7 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 				break;
 
 				default:
-					$l_downloaded_viewed = 'DOWNLOAD_COUNT';
+					$l_downloaded_viewed = 'DOWNLOAD_COUNTS';
 
 					$block_array += array(
 						'S_FILE'		=> true,
@@ -1047,13 +1248,44 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 				break;
 			}
 
-			$l_download_count = (!isset($attachment['download_count']) || $attachment['download_count'] == 0) ? $user->lang[$l_downloaded_viewed . '_NONE'] : (($attachment['download_count'] == 1) ? sprintf($user->lang[$l_downloaded_viewed], $attachment['download_count']) : sprintf($user->lang[$l_downloaded_viewed . 'S'], $attachment['download_count']));
+			if (!isset($attachment['download_count']))
+			{
+				$attachment['download_count'] = 0;
+			}
 
 			$block_array += array(
 				'U_DOWNLOAD_LINK'		=> $download_link,
-				'L_DOWNLOAD_COUNT'		=> $l_download_count
+				'L_DOWNLOAD_COUNT'		=> $user->lang($l_downloaded_viewed, (int) $attachment['download_count']),
 			);
 		}
+
+		/**
+		* Use this event to modify the attachment template data.
+		*
+		* This event is triggered once per attachment.
+		*
+		* @event core.parse_attachments_modify_template_data
+		* @var array	attachment		Array with attachment data
+		* @var array	block_array		Template data of the attachment
+		* @var int		display_cat		Attachment category data
+		* @var string	download_link	Attachment download link
+		* @var array	extensions		Array with attachment extensions data
+		* @var mixed 	forum_id 		The forum id the attachments are displayed in (false if in private message)
+		* @var bool		preview			Flag indicating if we are in post preview mode
+		* @var array	update_count	Array with attachment ids to update download count
+		* @since 3.1.0-RC5
+		*/
+		$vars = array(
+			'attachment',
+			'block_array',
+			'display_cat',
+			'download_link',
+			'extensions',
+			'forum_id',
+			'preview',
+			'update_count',
+		);
+		extract($phpbb_dispatcher->trigger_event('core.parse_attachments_modify_template_data', compact($vars)));
 
 		$template->assign_block_vars('_file', $block_array);
 
@@ -1063,8 +1295,6 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 	$attachments = $compiled_attachments;
 	unset($compiled_attachments);
 
-	$tpl_size = sizeof($attachments);
-
 	$unset_tpl = array();
 
 	preg_match_all('#<!\-\- ia([0-9]+) \-\->(.*?)<!\-\- ia\1 \-\->#', $message, $matches, PREG_PATTERN_ORDER);
@@ -1072,8 +1302,7 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 	$replace = array();
 	foreach ($matches[0] as $num => $capture)
 	{
-		// Flip index if we are displaying the reverse way
-		$index = ($config['display_order']) ? ($tpl_size-($matches[1][$num] + 1)) : $matches[1][$num];
+		$index = $matches[1][$num];
 
 		$replace['from'][] = $matches[0][$num];
 		$replace['to'][] = (isset($attachments[$index])) ? $attachments[$index] : sprintf($user->lang['MISSING_INLINE_ATTACHMENT'], $matches[2][array_search($index, $matches[1])]);
@@ -1087,6 +1316,18 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count, 
 	}
 
 	$unset_tpl = array_unique($unset_tpl);
+
+	// Sort correctly
+	if ($config['display_order'])
+	{
+		// Ascending sort
+		krsort($attachments);
+	}
+	else
+	{
+		// Descending sort
+		ksort($attachments);
+	}
 
 	// Needed to let not display the inlined attachments at the end of the post again
 	foreach ($unset_tpl as $index)
@@ -1124,8 +1365,8 @@ function extension_allowed($forum_id, $extension, &$extensions)
 * @param string $string The text to truncate to the given length. String is specialchared.
 * @param int $max_length Maximum length of string (multibyte character count as 1 char / Html entity count as 1 char)
 * @param int $max_store_length Maximum character length of string (multibyte character count as 1 char / Html entity count as entity chars).
-* @param bool $allow_reply Allow Re: in front of string 
-* 	NOTE: This parameter can cause undesired behavior (returning strings longer than $max_store_length) and is deprecated. 
+* @param bool $allow_reply Allow Re: in front of string
+* 	NOTE: This parameter can cause undesired behavior (returning strings longer than $max_store_length) and is deprecated.
 * @param string $append String to be appended
 */
 function truncate_string($string, $max_length = 60, $max_store_length = 255, $allow_reply = false, $append = '')
@@ -1191,11 +1432,11 @@ function truncate_string($string, $max_length = 60, $max_store_length = 255, $al
 * @param string $custom_profile_url optional parameter to specify a profile url. The user id get appended to this url as &amp;u={user_id}
 *
 * @return string A string consisting of what is wanted based on $mode.
-* @author BartVB, Acyd Burn
 */
 function get_username_string($mode, $user_id, $username, $username_colour = '', $guest_username = false, $custom_profile_url = false)
 {
 	static $_profile_cache;
+	global $phpbb_dispatcher;
 
 	// We cache some common variables we need within this function
 	if (empty($_profile_cache))
@@ -1203,9 +1444,9 @@ function get_username_string($mode, $user_id, $username, $username_colour = '', 
 		global $phpbb_root_path, $phpEx;
 
 		$_profile_cache['base_url'] = append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=viewprofile&amp;u={USER_ID}');
-		$_profile_cache['tpl_noprofile'] = '{USERNAME}';
+		$_profile_cache['tpl_noprofile'] = '<span class="username">{USERNAME}</span>';
 		$_profile_cache['tpl_noprofile_colour'] = '<span style="color: {USERNAME_COLOUR};" class="username-coloured">{USERNAME}</span>';
-		$_profile_cache['tpl_profile'] = '<a href="{PROFILE_URL}">{USERNAME}</a>';
+		$_profile_cache['tpl_profile'] = '<a href="{PROFILE_URL}" class="username">{USERNAME}</a>';
 		$_profile_cache['tpl_profile_colour'] = '<a href="{PROFILE_URL}" style="color: {USERNAME_COLOUR};" class="username-coloured">{USERNAME}</a>';
 	}
 
@@ -1224,7 +1465,8 @@ function get_username_string($mode, $user_id, $username, $username_colour = '', 
 			// Return colour
 			if ($mode == 'colour')
 			{
-				return $username_colour;
+				$username_string = $username_colour;
+				break;
 			}
 
 		// no break;
@@ -1244,7 +1486,8 @@ function get_username_string($mode, $user_id, $username, $username_colour = '', 
 			// Return username
 			if ($mode == 'username')
 			{
-				return $username;
+				$username_string = $username;
+				break;
 			}
 
 		// no break;
@@ -1265,23 +1508,108 @@ function get_username_string($mode, $user_id, $username, $username_colour = '', 
 			// Return profile
 			if ($mode == 'profile')
 			{
-				return $profile_url;
+				$username_string = $profile_url;
+				break;
 			}
 
 		// no break;
 	}
 
-	if (($mode == 'full' && !$profile_url) || $mode == 'no_profile')
+	if (!isset($username_string))
 	{
-		return str_replace(array('{USERNAME_COLOUR}', '{USERNAME}'), array($username_colour, $username), (!$username_colour) ? $_profile_cache['tpl_noprofile'] : $_profile_cache['tpl_noprofile_colour']);
+		if (($mode == 'full' && !$profile_url) || $mode == 'no_profile')
+		{
+			$username_string = str_replace(array('{USERNAME_COLOUR}', '{USERNAME}'), array($username_colour, $username), (!$username_colour) ? $_profile_cache['tpl_noprofile'] : $_profile_cache['tpl_noprofile_colour']);
+		}
+		else
+		{
+			$username_string = str_replace(array('{PROFILE_URL}', '{USERNAME_COLOUR}', '{USERNAME}'), array($profile_url, $username_colour, $username), (!$username_colour) ? $_profile_cache['tpl_profile'] : $_profile_cache['tpl_profile_colour']);
+		}
 	}
 
-	return str_replace(array('{PROFILE_URL}', '{USERNAME_COLOUR}', '{USERNAME}'), array($profile_url, $username_colour, $username), (!$username_colour) ? $_profile_cache['tpl_profile'] : $_profile_cache['tpl_profile_colour']);
+	/**
+	* Use this event to change the output of get_username_string()
+	*
+	* @event core.modify_username_string
+	* @var string mode				profile|username|colour|full|no_profile
+	* @var int user_id				String or array of additional url
+	*								parameters
+	* @var string username			The user's username
+	* @var string username_colour	The user's colour
+	* @var string guest_username	Optional parameter to specify the
+	*								guest username.
+	* @var string custom_profile_url Optional parameter to specify a
+	*								profile url.
+	* @var string username_string	The string that has been generated
+	* @var array _profile_cache		Array of original return templates
+	* @since 3.1.0-a1
+	*/
+	$vars = array(
+		'mode',
+		'user_id',
+		'username',
+		'username_colour',
+		'guest_username',
+		'custom_profile_url',
+		'username_string',
+		'_profile_cache',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.modify_username_string', compact($vars)));
+
+	return $username_string;
 }
 
 /**
-* @package phpBB3
+ * Add an option to the quick-mod tools.
+ *
+ * @param string $url The recepting URL for the quickmod actions.
+ * @param string $option The language key for the value of the option.
+ * @param string $lang_string The language string to use.
+ */
+function phpbb_add_quickmod_option($url, $option, $lang_string)
+{
+	global $template, $user, $phpbb_path_helper;
+
+	$lang_string = $user->lang($lang_string);
+	$template->assign_block_vars('quickmod', array(
+		'VALUE'		=> $option,
+		'TITLE'		=> $lang_string,
+		'LINK'		=> $phpbb_path_helper->append_url_params($url, array('action' => $option)),
+	));
+}
+
+/**
+* Concatenate an array into a string list.
+*
+* @param array $items Array of items to concatenate
+* @param object $user The phpBB $user object.
+*
+* @return string String list. Examples: "A"; "A and B"; "A, B, and C"
 */
+function phpbb_generate_string_list($items, $user)
+{
+	if (empty($items))
+	{
+		return '';
+	}
+
+	$count = sizeof($items);
+	$last_item = array_pop($items);
+	$lang_key = 'STRING_LIST_MULTI';
+
+	if ($count == 1)
+	{
+		return $last_item;
+	}
+	else if ($count == 2)
+	{
+		$lang_key = 'STRING_LIST_SIMPLE';
+	}
+	$list = implode($user->lang['COMMA_SEPARATOR'], $items);
+
+	return $user->lang($lang_key, $list, $last_item);
+}
+
 class bitfield
 {
 	var $data;
@@ -1372,5 +1700,3 @@ class bitfield
 		$this->data = $this->data | $bitfield->get_blob();
 	}
 }
-
-?>

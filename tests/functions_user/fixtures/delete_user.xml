@@ -148,15 +148,17 @@
 		<column>post_id</column>
 		<column>poster_id</column>
 		<column>post_edit_user</column>
+		<column>post_delete_user</column>
 		<column>post_username</column>
 		<column>topic_id</column>
 		<column>forum_id</column>
-		<column>post_approved</column>
+		<column>post_visibility</column>
 		<column>post_time</column>
 		<column>post_text</column>
 		<column>post_reported</column>
 		<row>
 			<value>1</value>
+			<value>2</value>
 			<value>2</value>
 			<value>2</value>
 			<value></value>
@@ -169,6 +171,7 @@
 		</row>
 		<row>
 			<value>2</value>
+			<value>1</value>
 			<value>1</value>
 			<value>1</value>
 			<value>Other</value>
@@ -183,6 +186,7 @@
 			<value>3</value>
 			<value>2</value>
 			<value>2</value>
+			<value>2</value>
 			<value></value>
 			<value>3</value>
 			<value>3</value>
@@ -193,6 +197,7 @@
 		</row>
 		<row>
 			<value>4</value>
+			<value>1</value>
 			<value>1</value>
 			<value>1</value>
 			<value>Other</value>
@@ -258,29 +263,34 @@
 		<column>post_id</column>
 		<column>user_id</column>
 		<column>report_text</column>
+		<column>reported_post_text</column>
 		<row>
 			<value>1</value>
 			<value>1</value>
 			<value>1</value>
 			<value>Post Removed?</value>
+			<value></value>
 		</row>
 		<row>
 			<value>2</value>
 			<value>3</value>
 			<value>2</value>
 			<value>Post Removed?</value>
+			<value></value>
 		</row>
 		<row>
 			<value>3</value>
 			<value>2</value>
 			<value>1</value>
 			<value>Keep</value>
+			<value></value>
 		</row>
 		<row>
 			<value>4</value>
 			<value>4</value>
 			<value>2</value>
 			<value>Remove Report</value>
+			<value></value>
 		</row>
 	</table>
 	<table name="phpbb_sessions">
@@ -303,6 +313,7 @@
 		<column>forum_id</column>
 		<column>topic_reported</column>
 		<column>topic_poster</column>
+		<column>topic_delete_user</column>
 		<column>topic_first_poster_name</column>
 		<column>topic_first_poster_colour</column>
 		<column>topic_last_poster_id</column>
@@ -313,6 +324,7 @@
 			<value>1</value>
 			<value>1</value>
 			<value>2</value>
+			<value>2</value>
 			<value></value>
 			<value>00AA00</value>
 			<value>2</value>
@@ -322,6 +334,7 @@
 		<row>
 			<value>2</value>
 			<value>2</value>
+			<value>1</value>
 			<value>1</value>
 			<value>1</value>
 			<value>Other</value>
@@ -335,6 +348,7 @@
 			<value>3</value>
 			<value>1</value>
 			<value>2</value>
+			<value>2</value>
 			<value></value>
 			<value>00AA00</value>
 			<value>2</value>
@@ -344,6 +358,7 @@
 		<row>
 			<value>4</value>
 			<value>4</value>
+			<value>1</value>
 			<value>1</value>
 			<value>1</value>
 			<value>Other</value>
@@ -355,17 +370,15 @@
 	</table>
 	<table name="phpbb_users">
 		<column>user_id</column>
+		<column>username</column>
 		<column>username_clean</column>
 		<column>user_permissions</column>
 		<column>user_sig</column>
-		<column>user_occ</column>
-		<column>user_interests</column>
 		<column>user_posts</column>
 		<row>
 			<value>1</value>
 			<value>Anonymous</value>
-			<value></value>
-			<value></value>
+			<value>anonymous</value>
 			<value></value>
 			<value></value>
 			<value>2</value>
@@ -373,8 +386,7 @@
 		<row>
 			<value>2</value>
 			<value>Foobar</value>
-			<value></value>
-			<value></value>
+			<value>foobar</value>
 			<value></value>
 			<value></value>
 			<value>2</value>
@@ -461,11 +473,17 @@
 	</table>
 	<table name="phpbb_profile_fields_data">
 		<column>user_id</column>
+		<column>pf_phpbb_interests</column>
+		<column>pf_phpbb_occupation</column>
 		<row>
 			<value>2</value>
+			<value></value>
+			<value></value>
 		</row>
 		<row>
 			<value>3</value>
+			<value></value>
+			<value></value>
 		</row>
 	</table>
 	<table name="phpbb_moderator_cache">

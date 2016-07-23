@@ -1,9 +1,13 @@
 <?php
 /**
 *
-* @package testing
-* @copyright (c) 2013 phpBB Group
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* This file is part of the phpBB Forum Software package.
+*
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+* For full copyright and license information, please see
+* the docs/CREDITS.txt file.
 *
 */
 
@@ -17,6 +21,10 @@ class phpbb_functions_get_remote_file extends phpbb_test_case
 {
 	public function test_version_phpbb_com()
 	{
+		global $phpbb_container;
+		$phpbb_container = new phpbb_mock_container_builder();
+		$phpbb_container->set('file_downloader', new \phpbb\file_downloader());
+
 		$hostname = 'version.phpbb.com';
 
 		if (!phpbb_checkdnsrr($hostname, 'A'))

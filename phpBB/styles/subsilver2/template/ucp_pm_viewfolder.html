@@ -22,15 +22,15 @@
 		<th colspan="2" valign="middle">{L_OPTIONS}</th>
 	</tr>
 	<tr>
-		<td class="row1" width="35%">{L_DELIMITER}: </td>
+		<td class="row1" width="35%">{L_DELIMITER}{L_COLON} </td>
 		<td class="row2"><input class="post" type="text" name="delimiter" value="," /></td>
 	</tr>
 	<tr>
-		<td class="row1" width="35%">{L_ENCLOSURE}: </td>
+		<td class="row1" width="35%">{L_ENCLOSURE}{L_COLON} </td>
 		<td class="row2"><input class="post" type="text" name="enclosure" value="&#034;" /></td>
 	</tr>
 	<tr>
-		<td class="cat" colspan="2" align="center"><input type="hidden" name="export_option" value="CSV" /><input class="btnmain" type="submit" name="submit_export" value="{L_EXPORT_FOLDER}" />&nbsp;&nbsp;<input class="btnlite" type="reset" value="Reset" name="reset" /></td>
+		<td class="cat" colspan="2" align="center"><input type="hidden" name="export_option" value="CSV" /><input class="btnmain" type="submit" name="submit_export" value="{L_EXPORT_FOLDER}" />&nbsp;&nbsp;<input class="btnlite" type="reset" value="{L_RESET}" name="reset" /></td>
 	</tr>
 	</table>
 	{S_FORM_TOKEN}
@@ -82,7 +82,7 @@
 					<a href="{messagerow.U_VIEW_PM}">{messagerow.SUBJECT}</a>
 				<!-- ENDIF -->
 				<!-- IF messagerow.S_PM_REPORTED -->
-					<a href="{messagerow.U_MCP_REPORT}">{REPORTED_IMG}</a>&nbsp;
+					<a href="{messagerow.U_MCP_REPORT}" class="imageset">{REPORTED_IMG}</a>&nbsp;
 				<!-- ENDIF -->
 				<!-- IF messagerow.S_AUTHOR_DELETED -->
 					<br /><em class="gensmall">{L_PM_FROM_REMOVED_AUTHOR}</em>

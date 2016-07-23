@@ -24,6 +24,7 @@ the following PHP extensions must be installed and enabled to run unit tests:
 
 - ctype (also a PHPUnit dependency)
 - dom (PHPUnit dependency)
+- json (also a phpBB dependency)
 
 Some of the functionality in phpBB and/or the test suite uses additional
 PHP extensions. If these extensions are not loaded, respective tests
@@ -31,11 +32,12 @@ will be skipped:
 
 - apc (APC cache driver)
 - bz2 (compress tests)
-- interbase, pdo_firebird (Firebird database driver)
 - mysql, pdo_mysql (MySQL database driver)
 - mysqli, pdo_mysql (MySQLi database driver)
+- pcntl (flock class)
 - pdo (any database tests)
 - pgsql, pdo_pgsql (PostgreSQL database driver)
+- redis (https://github.com/nicolasff/phpredis, Redis cache driver)
 - simplexml (any database tests)
 - sqlite, pdo_sqlite (SQLite database driver, requires SQLite 2.x support
   in pdo_sqlite)
@@ -54,7 +56,7 @@ found below. More information on configuration options can be found on the
 wiki (see below).
 
     <?php
-    $dbms = 'mysqli';
+    $dbms = 'phpbb\db\driver\mysqli';
     $dbhost = 'localhost';
     $dbport = '';
     $dbname = 'database';
@@ -79,16 +81,10 @@ Special Database Cases
 ----------------------
 In order to run tests on some of the databases that we support, it will be
 necessary to provide a custom DSN string in test_config.php. This is only
-needed for MSSQL 2000+ (PHP module), MSSQL via ODBC, and Firebird when
-PDO_Firebird does not work on your system
-(https://bugs.php.net/bug.php?id=61183). The variable must be named `$custom_dsn`.
+needed for MSSQL 2000+ (PHP module) and MSSQL via ODBC. The variable must be
+named `$custom_dsn`.
 
-Examples:
-Firebird using http://www.firebirdsql.org/en/odbc-driver/
-
-    $custom_dsn = "Driver={Firebird/InterBase(r) driver};dbname=$dbhost:$dbname";
-
-MSSQL
+Example MSSQL:
 
     $custom_dsn = "Driver={SQL Server Native Client 10.0};Server=$dbhost;Database=$dbname";
 
@@ -97,6 +93,21 @@ to connect to that database in phpBB.
 
 Additionally, you will need to be running the DbUnit fork from
 https://github.com/phpbb/dbunit/tree/phpbb.
+
+Redis
+-----
+
+In order to run tests for the Redis cache driver, at least one of Redis host
+or port must be specified in test configuration. This can be done via
+test_config.php as follows:
+
+    <?php
+    $phpbb_redis_host = 'localhost';
+    $phpbb_redis_port = 6379;
+
+Or via environment variables as follows:
+
+    $ PHPBB_TEST_REDIS_HOST=localhost PHPBB_TEST_REDIS_PORT=6379 phpunit
 
 Running
 =======

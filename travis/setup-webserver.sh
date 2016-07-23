@@ -1,7 +1,12 @@
 #!/bin/bash
 #
-# @copyright (c) 2014 phpBB Group
-# @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+# This file is part of the phpBB Forum Software package.
+#
+# @copyright (c) phpBB Limited <https://www.phpbb.com>
+# @license GNU General Public License, version 2 (GPL-2.0)
+#
+# For full copyright and license information, please see
+# the docs/CREDITS.txt file.
 #
 set -e
 set -x
@@ -59,8 +64,11 @@ echo "
 		index	index.php index.html;
 
 		location ~ \.php {
-			fastcgi_pass	unix:$APP_SOCK;
-			include			fastcgi_params;
+			include							fastcgi_params;
+			fastcgi_split_path_info			^(.+\.php)(/.*)$;
+			fastcgi_param PATH_INFO			\$fastcgi_path_info;
+			fastcgi_param SCRIPT_FILENAME	\$document_root\$fastcgi_script_name;
+			fastcgi_pass					unix:$APP_SOCK;
 		}
 	}
 " | sudo tee $NGINX_CONF > /dev/null

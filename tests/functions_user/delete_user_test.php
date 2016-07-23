@@ -10,30 +10,44 @@
 require_once dirname(__FILE__) . '/../../phpBB/includes/functions.php';
 require_once dirname(__FILE__) . '/../../phpBB/includes/functions_user.php';
 require_once dirname(__FILE__) . '/../../phpBB/includes/utf/utf_tools.php';
-require_once dirname(__FILE__) . '/../mock/null_cache.php';
 
 class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 {
-	/** @var \dbal */
+	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
 	public function getDataSet()
 	{
-		return $this->createXMLDataSet(dirname(__FILE__).'/fixtures/delete_user.xml');
+		return $this->createXMLDataSet(dirname(__FILE__) . '/fixtures/delete_user.xml');
 	}
 
 	protected function setUp()
 	{
 		parent::setUp();
 
-		global $cache, $config, $db;
+		global $cache, $config, $db, $phpbb_dispatcher, $phpbb_container;
 
 		$db = $this->db = $this->new_dbal();
-		$config = array(
+		$config = new \phpbb\config\config(array(
 			'load_online_time'	=> 5,
-			'search_type'		=> 'fulltext_mysql',
-		);
+			'search_type'		=> '\phpbb\search\fulltext_mysql',
+		));
+		set_config(false, false, false, $config);
+		set_config_count(false, false, false, $config);
 		$cache = new phpbb_mock_null_cache();
+		$phpbb_dispatcher = new phpbb_mock_event_dispatcher();
+		$phpbb_container = new phpbb_mock_container_builder();
+		$phpbb_container->set('notification_manager', new phpbb_mock_notification_manager());
+		$phpbb_container->set(
+			'auth.provider.db',
+			new phpbb_mock_auth_provider()
+		);
+		$provider_collection = new \phpbb\auth\provider_collection($phpbb_container, $config);
+		$provider_collection->add('auth.provider.db');
+		$phpbb_container->set(
+			'auth.provider_collection',
+			$provider_collection
+		);
 	}
 
 	 public function first_last_post_data()
@@ -102,18 +116,18 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 				),
 			),
 			array(
-				'retain', 'Bertie',
+				'retain', true,
 				array(
-					array('post_id' => 1, 'poster_id' => ANONYMOUS, 'post_username' => 'Bertie'),
+					array('post_id' => 1, 'poster_id' => ANONYMOUS, 'post_username' => 'Foobar'),
 					array('post_id' => 2, 'poster_id' => ANONYMOUS, 'post_username' => 'Other'),
-					array('post_id' => 3, 'poster_id' => ANONYMOUS, 'post_username' => 'Bertie'),
+					array('post_id' => 3, 'poster_id' => ANONYMOUS, 'post_username' => 'Foobar'),
 					array('post_id' => 4, 'poster_id' => ANONYMOUS, 'post_username' => 'Other'),
 				),
 				array(
 					array(
 						'topic_id' => 1,
-						'topic_poster' => ANONYMOUS, 'topic_first_poster_name' => 'Bertie', 'topic_first_poster_colour' => '',
-						'topic_last_poster_id' => ANONYMOUS, 'topic_last_poster_name' => 'Bertie', 'topic_last_poster_colour' => '',
+						'topic_poster' => ANONYMOUS, 'topic_first_poster_name' => 'Foobar', 'topic_first_poster_colour' => '',
+						'topic_last_poster_id' => ANONYMOUS, 'topic_last_poster_name' => 'Foobar', 'topic_last_poster_colour' => '',
 					),
 					array(
 						'topic_id' => 2,
@@ -122,8 +136,8 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 					),
 					array(
 						'topic_id' => 3,
-						'topic_poster' => ANONYMOUS, 'topic_first_poster_name' => 'Bertie', 'topic_first_poster_colour' => '',
-						'topic_last_poster_id' => ANONYMOUS, 'topic_last_poster_name' => 'Bertie', 'topic_last_poster_colour' => '',
+						'topic_poster' => ANONYMOUS, 'topic_first_poster_name' => 'Foobar', 'topic_first_poster_colour' => '',
+						'topic_last_poster_id' => ANONYMOUS, 'topic_last_poster_name' => 'Foobar', 'topic_last_poster_colour' => '',
 					),
 					array(
 						'topic_id' => 4,
@@ -132,14 +146,14 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 					),
 				),
 				array(
-					array('forum_id' => 1, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => 'Bertie', 'forum_last_poster_colour' => ''),
+					array('forum_id' => 1, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => 'Foobar', 'forum_last_poster_colour' => ''),
 					array('forum_id' => 2, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => 'Other', 'forum_last_poster_colour' => ''),
-					array('forum_id' => 3, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => 'Bertie', 'forum_last_poster_colour' => ''),
+					array('forum_id' => 3, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => 'Foobar', 'forum_last_poster_colour' => ''),
 					array('forum_id' => 4, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => 'Other', 'forum_last_poster_colour' => ''),
 				),
 			),
 			array(
-				'remove', 'Bertie',
+				'remove', true,
 				array(
 					array('post_id' => 2, 'poster_id' => ANONYMOUS, 'post_username' => 'Other'),
 					array('post_id' => 4, 'poster_id' => ANONYMOUS, 'post_username' => 'Other'),
@@ -169,9 +183,9 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 	/**
 	* @dataProvider first_last_post_data
 	*/
-	public function test_first_last_post_info($mode, $post_username, $expected_posts, $expected_topics, $expected_forums)
+	public function test_first_last_post_info($mode, $retain_username, $expected_posts, $expected_topics, $expected_forums)
 	{
-		$this->assertFalse(user_delete($mode, 2, $post_username));
+		$this->assertFalse(user_delete($mode, 2, $retain_username));
 
 		$sql = 'SELECT post_id, poster_id, post_username
 			FROM ' . POSTS_TABLE . '
@@ -201,20 +215,20 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 			array(
 				'retain',
 				array(
-					array('post_id' => 1, 'post_reported' => 1, 'post_edit_user' => 1),
-					array('post_id' => 2, 'post_reported' => 1, 'post_edit_user' => 1),
-					array('post_id' => 3, 'post_reported' => 0, 'post_edit_user' => 1),
-					array('post_id' => 4, 'post_reported' => 0, 'post_edit_user' => 1),
+					array('post_id' => 1, 'post_reported' => 1, 'post_edit_user' => 1, 'post_delete_user' => 1),
+					array('post_id' => 2, 'post_reported' => 1, 'post_edit_user' => 1, 'post_delete_user' => 1),
+					array('post_id' => 3, 'post_reported' => 0, 'post_edit_user' => 1, 'post_delete_user' => 1),
+					array('post_id' => 4, 'post_reported' => 0, 'post_edit_user' => 1, 'post_delete_user' => 1),
 				),
 				array(
 					array('report_id' => 1, 'post_id' => 1, 'user_id' => 1),
 					array('report_id' => 3, 'post_id' => 2, 'user_id' => 1),
 				),
 				array(
-					array('topic_id' => 1, 'topic_reported' => 1),
-					array('topic_id' => 2, 'topic_reported' => 1),
-					array('topic_id' => 3, 'topic_reported' => 0),
-					array('topic_id' => 4, 'topic_reported' => 0),
+					array('topic_id' => 1, 'topic_reported' => 1, 'topic_delete_user' => 1),
+					array('topic_id' => 2, 'topic_reported' => 1, 'topic_delete_user' => 1),
+					array('topic_id' => 3, 'topic_reported' => 0, 'topic_delete_user' => 1),
+					array('topic_id' => 4, 'topic_reported' => 0, 'topic_delete_user' => 1),
 				),
 				array(
 					array('attach_id' => 1, 'post_msg_id' => 1, 'poster_id' => 1),
@@ -225,15 +239,15 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 			array(
 				'remove',
 				array(
-					array('post_id' => 2, 'post_reported' => 1, 'post_edit_user' => 1),
-					array('post_id' => 4, 'post_reported' => 0, 'post_edit_user' => 1),
+					array('post_id' => 2, 'post_reported' => 1, 'post_edit_user' => 1, 'post_delete_user' => 1),
+					array('post_id' => 4, 'post_reported' => 0, 'post_edit_user' => 1, 'post_delete_user' => 1),
 				),
 				array(
 					array('report_id' => 3, 'post_id' => 2, 'user_id' => 1),
 				),
 				array(
-					array('topic_id' => 2, 'topic_reported' => 1),
-					array('topic_id' => 4, 'topic_reported' => 0),
+					array('topic_id' => 2, 'topic_reported' => 1, 'topic_delete_user' => 1),
+					array('topic_id' => 4, 'topic_reported' => 0, 'topic_delete_user' => 1),
 				),
 				array(
 					array('attach_id' => 2, 'post_msg_id' => 2, 'poster_id' => 1),
@@ -250,7 +264,7 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 	{
 		$this->assertFalse(user_delete($mode, 2));
 
-		$sql = 'SELECT post_id, post_reported, post_edit_user
+		$sql = 'SELECT post_id, post_reported, post_edit_user, post_delete_user
 			FROM ' . POSTS_TABLE . '
 			ORDER BY post_id ASC';
 		$result = $this->db->sql_query($sql);
@@ -264,7 +278,7 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 		$this->assertEquals($expected_reports, $this->db->sql_fetchrowset($result), 'Report table content is mismatching after deleting a user.');
 		$this->db->sql_freeresult($result);
 
-		$sql = 'SELECT topic_id, topic_reported
+		$sql = 'SELECT topic_id, topic_reported, topic_delete_user
 			FROM ' . TOPICS_TABLE . '
 			ORDER BY topic_id ASC';
 		$result = $this->db->sql_query($sql);

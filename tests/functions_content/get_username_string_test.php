@@ -1,9 +1,13 @@
 <?php
 /**
 *
-* @package testing
-* @copyright (c) 2014 phpBB Group
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* This file is part of the phpBB Forum Software package.
+*
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+* For full copyright and license information, please see
+* the docs/CREDITS.txt file.
 *
 */
 
@@ -16,14 +20,15 @@ class phpbb_functions_content_get_username_string_test extends phpbb_test_case
 	{
 		parent::setUp();
 
-		global $auth, $user;
-		$auth = $this->getMock('auth');
+		global $auth, $phpbb_dispatcher, $user;
+		$auth = $this->getMock('\phpbb\auth\auth');
 		$auth->expects($this->any())
 			->method('acl_get')
 			->with($this->stringContains('_'), $this->anything())
 			->will($this->returnValueMap(array(
 				array('u_viewprofile', true),
 			)));
+		$phpbb_dispatcher = new phpbb_mock_event_dispatcher;
 		$user->data['user_id'] = ANONYMOUS;
 		$user->lang['GUEST'] = 'Guest';
 	}
@@ -89,11 +94,11 @@ class phpbb_functions_content_get_username_string_test extends phpbb_test_case
 		global $phpbb_root_path, $phpEx;
 
 		return array(
-			array(0, '', '', false, false, 'Guest'),
-			array(ANONYMOUS, 'Anonymous', '', false, false, 'Anonymous'),
+			array(0, '', '', false, false, '<span class="username">Guest</span>'),
+			array(ANONYMOUS, 'Anonymous', '', false, false, '<span class="username">Anonymous</span>'),
 			array(2, 'Administrator', 'FF0000', false, false, '<a href="' . $phpbb_root_path . 'memberlist.' . $phpEx . '?mode=viewprofile&amp;u=2" style="color: #FF0000;" class="username-coloured">Administrator</a>'),
-			array(5, 'User5', '', false, 'http://www.example.org/user.php?mode=show', '<a href="http://www.example.org/user.php?mode=show&amp;u=5">User5</a>'),
-			array(8, 'Eight', '', false, false, '<a href="' . $phpbb_root_path . 'memberlist.php?mode=viewprofile&amp;u=8">Eight</a>'),
+			array(5, 'User5', '', false, 'http://www.example.org/user.php?mode=show', '<a href="http://www.example.org/user.php?mode=show&amp;u=5" class="username">User5</a>'),
+			array(8, 'Eight', '', false, false, '<a href="' . $phpbb_root_path . 'memberlist.php?mode=viewprofile&amp;u=8" class="username">Eight</a>'),
 		);
 	}
 
@@ -108,10 +113,10 @@ class phpbb_functions_content_get_username_string_test extends phpbb_test_case
 	public function get_username_string_no_profile_data()
 	{
 		return array(
-			array(ANONYMOUS, 'Anonymous', '', false, false, 'Anonymous'),
-			array(ANONYMOUS, 'Anonymous', '', '', false, 'Guest'),
+			array(ANONYMOUS, 'Anonymous', '', false, false, '<span class="username">Anonymous</span>'),
+			array(ANONYMOUS, 'Anonymous', '', '', false, '<span class="username">Guest</span>'),
 			array(2, 'Administrator', 'FF0000', false, false, '<span style="color: #FF0000;" class="username-coloured">Administrator</span>'),
-			array(8, 'Eight', '', false, false, 'Eight'),
+			array(8, 'Eight', '', false, false, '<span class="username">Eight</span>'),
 		);
 	}
 
