@@ -105,7 +105,7 @@ function deregister_globals()
 function phpbb_has_trailing_path($phpEx)
 {
 	// Check if path_info is being used
-	if (!empty($_SERVER['PATH_INFO']) || !empty($_SERVER['ORIG_PATH_INFO']))
+	if (!empty($_SERVER['PATH_INFO']) || (!empty($_SERVER['ORIG_PATH_INFO']) && $_SERVER['SCRIPT_NAME'] != $_SERVER['ORIG_PATH_INFO']))
 	{
 		return true;
 	}
@@ -130,7 +130,7 @@ if (phpbb_has_trailing_path($phpEx))
 	{
 		$prefix = 'Status:';
 	}
-	else if (!empty($_SERVER['SERVER_PROTOCOL']))
+	else if (!empty($_SERVER['SERVER_PROTOCOL']) && is_string($_SERVER['SERVER_PROTOCOL']) && preg_match('#^HTTP/[0-9]\.[0-9]$#', $_SERVER['SERVER_PROTOCOL']))
 	{
 		$prefix = $_SERVER['SERVER_PROTOCOL'];
 	}
