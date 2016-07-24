@@ -5,7 +5,7 @@
 	Original author:	Tom Beddard ( http://www.subblue.com/ )
 	Modified by:		phpBB Group ( http://www.phpbb.com/ )
 	Also Modified by:	Amika from Kirby's Rainbow Resort http://www.kirbysrainbowresort.net
-    Also Modified by:       Diskmaster from Kirby's Rainbow Resort http://www.kirbysrainbowresort.net
+    Also Modified by:   Diskmaster from Kirby's Rainbow Resort http://www.kirbysrainbowresort.net
     --------------------------------------------------------------
 */
 
@@ -905,83 +905,83 @@ a.imageset {
 }
 .imageset.announce_read {
 	background-image: url("./images/announce_read.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.announce_read_mine {
 	background-image: url("./images/announce_read_mine.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.announce_read_locked {
 	background-image: url("./images/announce_read_locked.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.announce_read_locked_mine {
 	background-image: url("./images/announce_read_locked_mine.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.announce_unread {
 	background-image: url("./images/announce_unread.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.announce_unread_mine {
 	background-image: url("./images/announce_unread_mine.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.announce_unread_locked {
 	background-image: url("./images/announce_unread_locked.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.announce_unread_locked_mine {
 	background-image: url("./images/announce_unread_locked_mine.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.global_read {
 	background-image: url("./images/announce_read.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.global_read_mine {
 	background-image: url("./images/announce_read_mine.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.global_read_locked {
 	background-image: url("./images/announce_read_locked.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.global_read_locked_mine {
 	background-image: url("./images/announce_read_locked_mine.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.global_unread {
 	background-image: url("./images/announce_unread.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.global_unread_mine {
 	background-image: url("./images/announce_unread_mine.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.global_unread_locked {
 	background-image: url("./images/announce_unread_locked.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.global_unread_locked_mine {
 	background-image: url("./images/announce_unread_locked_mine.gif");
-	padding-left: 19px;
-	padding-top: 18px;
+	padding-left: 23px;
+	padding-top: 20px;
 }
 .imageset.pm_read {
 	background-image: url("./images/topic_read.gif");
