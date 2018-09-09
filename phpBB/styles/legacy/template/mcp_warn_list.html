@@ -1,0 +1,48 @@
+<!-- INCLUDE mcp_header.html -->
+
+<form method="post" name="mcp" action="{U_POST_ACTION}">
+<table width="100%" cellspacing="1">
+<tr>
+	<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> [ {TOTAL_USERS} ]</td>
+	<!-- IF .pagination --><td width="100%" align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+</tr>
+</table>
+
+<table class="main" width="100%" cellspacing="1">
+<tr>
+	<td class="bg3" colspan="4" align="center"><b class="big">{L_WARNED_USERS}</b></td>
+</tr>
+<tr>
+	<th width="30%">{L_USERNAME}</th>
+	<th width="10%">{L_WARNINGS}</th>
+	<th width="30%">{L_LATEST_WARNING_TIME}</th>
+	<th width="30%"></th>
+</tr>
+<!-- BEGIN user -->
+	<tr>
+		<td class="bg1"><span class="big">{user.USERNAME_FULL}</span></td>
+		<td align="center" class="bg2"><span class="bigger">{user.WARNINGS}</span></td>
+		<td align="center" class="bg1"><span class="bigger">{user.WARNING_TIME}</span></td>
+		<td class="bg2"><a class="bigger" href="{user.U_NOTES}">{L_VIEW_NOTES}</a></td>
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td class="bg3" colspan="4" align="center"><span class="big">{L_NO_WARNINGS}</span></td>
+	</tr>
+<!-- END user -->
+<!-- IF .user -->
+	<tr>
+		<td class="bg3" colspan="4"><!-- INCLUDE display_options.html --></td>
+	</tr>
+<!-- ENDIF -->
+</table>
+
+{S_FORM_TOKEN}
+</form>
+
+<table width="100%" cellspacing="1"><tr>
+	<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> [ {TOTAL_USERS} ]</td>
+	<!-- IF .pagination --><td align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+</tr></table>
+
+<!-- INCLUDE mcp_footer.html -->

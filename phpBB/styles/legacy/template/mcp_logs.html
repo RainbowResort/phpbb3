@@ -1,0 +1,52 @@
+<!-- INCLUDE mcp_header.html -->
+
+<form method="post" id="mcp" name="mcp" action="{U_POST_ACTION}">
+
+<table width="100%" cellspacing="1"><tr>
+	<td nowrap="nowrap"><span class="bigger">{L_SEARCH_KEYWORDS}{L_COLON}</span> <input type="text" class="inputbox" name="keywords" value="{S_KEYWORDS}" /> <input type="submit" class="button2" name="filter" value="{L_SEARCH}" /></td>
+	<td align="{S_CONTENT_FLOW_END}" width="100%"><span class="nowrap">[ {TOTAL} ]</span> <!-- INCLUDE pagination.html --></td>
+</tr></table>
+
+<table width="100%" cellspacing="1" class="main">
+
+<tr>
+	<th align="{S_CONTENT_FLOW_BEGIN}" width="15%">{L_USERNAME}</th>
+	<th width="10%">{L_IP}</th>
+	<th width="15%">{L_TIME}</th>
+	<th>{L_ACTION}</th>
+	<!-- IF S_CLEAR_ALLOWED --><th width="5%">{L_MARK}</th><!-- ENDIF -->
+</tr>
+<!-- IF S_LOGS -->
+	<!-- BEGIN log -->
+		<tr class="bigger"><!-- IF log.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+			<td class="{$BG}">{log.USERNAME}</td>
+			<td align="center" class="{$BG}">{log.IP}</td>
+			<td align="center" class="{$BG}">{log.DATE}</td>
+			<td class="{$BG}">{log.ACTION}<br />{log.DATA}</td>
+			<!-- IF S_CLEAR_ALLOWED --><td align="center" class="{$BG}"><input type="checkbox" name="mark[]" value="{log.ID}" /></td><!-- ENDIF -->
+		</tr>
+	<!-- END log -->
+	<tr>
+		<td class="bg3" colspan="<!-- IF S_CLEAR_ALLOWED -->5<!-- ELSE -->4<!-- ENDIF -->"><!-- INCLUDE display_options.html --></td>
+	</tr>
+	<!-- IF S_CLEAR_ALLOWED -->
+		<tr>
+			<td align="{S_CONTENT_FLOW_END}" class="cat" colspan="5"><input class="button2" type="submit" name="action[del_all]" value="{L_DELETE_ALL}" /> <input class="button2" type="submit" name="action[del_marked]" value="{L_DELETE_MARKED}" /></td>
+		</tr>
+	<!-- ENDIF -->
+<!-- ELSE -->
+	<tr>
+		<td class="bg1" colspan="<!-- IF S_CLEAR_ALLOWED -->5<!-- ELSE -->4<!-- ENDIF -->" align="center"><span class="big">{L_NO_ENTRIES}</span></td>
+	</tr>
+<!-- ENDIF -->
+</table>
+{S_FORM_TOKEN}
+</form>
+
+<table width="100%" cellspacing="1"><tr>
+	<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> [ {TOTAL} ]</td>
+	<!-- IF S_CLEAR_ALLOWED and S_LOGS --><td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td><!-- IF .pagination --></tr><tr><!-- ENDIF --><!-- ENDIF -->
+	<!-- IF .pagination --><td align="{S_CONTENT_FLOW_END}"<!-- IF S_CLEAR_ALLOWED and S_LOGS --> colspan="2"<!-- ENDIF -->><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+</tr></table>
+
+<!-- INCLUDE mcp_footer.html -->

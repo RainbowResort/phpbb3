@@ -1,0 +1,84 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- EVENT search_body_form_before -->
+<form method="get" action="{S_SEARCH_ACTION}">
+	
+<table class="main" width="100%" cellspacing="1">
+<!-- EVENT search_body_search_query_before -->
+<tr>
+	<th colspan="4">{L_SEARCH_QUERY}</th>
+</tr>
+<!-- EVENT search_body_search_query_prepend -->
+<tr>
+	<td class="bg1" colspan="2" width="50%"><span class="bigger"><b>{L_SEARCH_KEYWORDS}{L_COLON} </b><br />{L_SEARCH_KEYWORDS_EXPLAIN}</span></td>
+	<td class="bg2" colspan="2" valign="top"><input type="text" class="inputbox" id="focus_keywords" name="keywords" size="40" style="width: 85%" /><div class="bigger"><input type="radio" name="terms" value="all" checked="checked" /> {L_SEARCH_ALL_TERMS}</div><div class="bigger"><input type="radio" name="terms" value="any" /> {L_SEARCH_ANY_TERMS}</div></td>
+</tr>
+<tr>
+	<td class="bg1" colspan="2"><span class="bigger"><b>{L_SEARCH_AUTHOR}{L_COLON} </b><br />{L_SEARCH_AUTHOR_EXPLAIN}</span></td>
+	<td class="bg2" colspan="2"><input type="text" class="inputbox" name="author" size="40" style="width: 85%" /></td>
+</tr>
+<tr>
+	<td class="bg1" colspan="2"><span class="bigger"><b>{L_SEARCH_FORUMS}{L_COLON} </b><br />{L_SEARCH_FORUMS_EXPLAIN}</span></td>
+	<td class="bg2" colspan="2"><select name="fid[]" multiple="multiple" size="5" style="width: 100%">{S_FORUM_OPTIONS}</select></td>
+</tr>
+<!-- EVENT search_body_search_query_append -->
+<!-- EVENT search_body_search_query_after -->
+<!-- EVENT search_body_search_options_before -->
+<tr>
+	<th colspan="4">{L_SEARCH_OPTIONS}</th>
+</tr>
+<!-- EVENT search_body_search_options_prepend -->
+<tr>
+	<td class="bg1" width="25%"><b class="bigger">{L_SEARCH_SUBFORUMS}{L_COLON} </b></td>
+	<td class="bg2" width="25%"><div class="bigger"><input type="radio" name="sc" value="1" checked="checked" /> {L_YES}</div><div class="bigger"><input type="radio" name="sc" value="0" /> {L_NO}</div></td>
+	<td class="bg1" width="25%"><b class="bigger">{L_SEARCH_WITHIN}{L_COLON} </b></td>
+	<td class="bg2" width="25%"><div class="bigger"><input type="radio" name="sf" value="all" checked="checked" /> {L_SEARCH_TITLE_MSG}</div><div class="bigger"><input type="radio" name="sf" value="msgonly" /> {L_SEARCH_MSG_ONLY}</div><div class="bigger"><input type="radio" name="sf" value="titleonly" /> {L_SEARCH_TITLE_ONLY}</div><div class="bigger"><input type="radio" name="sf" value="firstpost" /> {L_SEARCH_FIRST_POST}</div></td>
+</tr>
+<!-- EVENT search_body_search_options_append -->
+<!-- EVENT search_body_search_display_options_prepend -->
+<tr>
+	<td class="bg1"><b class="bigger">{L_RESULT_SORT}{L_COLON} </b></td>
+	<td class="bg2">{S_SELECT_SORT_KEY}<div class="bigger"><input type="radio" name="sd" value="a" /> {L_SORT_ASCENDING}</div><div class="bigger"><input type="radio" name="sd" value="d" checked="checked" /> {L_SORT_DESCENDING}</div></td>
+	<td class="bg1"><b class="bigger">{L_DISPLAY_RESULTS}{L_COLON} </b></td>
+	<td class="bg2"><div class="bigger"><input type="radio" name="sr" value="posts" checked="checked" /> {L_POSTS}</div><div class="bigger"><input type="radio" name="sr" value="topics" /> {L_TOPICS}</div></td>
+</tr>
+<tr>
+	<td class="bg1"><b class="bigger">{L_RESULT_DAYS}{L_COLON} </b></td>
+	<td class="bg2">{S_SELECT_SORT_DAYS}</td>
+	<td class="bg1"><b class="bigger">{L_RETURN_FIRST}{L_COLON} </b></td>
+	<td class="bg2"><select name="ch">{S_CHARACTER_OPTIONS}</select> <span class="bigger">{L_POST_CHARACTERS}</span></td>
+</tr>
+<!-- EVENT search_body_search_display_options_append -->
+<!-- EVENT search_body_search_options_after -->
+<tr>
+	<td class="cat" colspan="4" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" />&nbsp; <input class="button1" name="submit" type="submit" value="{L_SEARCH}" /></td>
+</tr>
+</table>
+	
+</form>
+
+<!-- EVENT search_body_form_after -->
+
+<!-- EVENT search_body_recent_search_before -->
+
+<!-- IF .recentsearch -->
+	<table class="main" width="100%" cellspacing="1" style="margin: 8px 0">
+	<tr>
+		<th colspan="2">{L_RECENT_SEARCHES}</th>
+	</tr>
+	<!-- BEGIN recentsearch -->
+		<tr><!-- IF recentsearch.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+			<td class="{$BG}" width="70%"><a class="bigger" href="{recentsearch.U_KEYWORDS}">{recentsearch.KEYWORDS}</a></td>
+			<td class="{$BG}" width="30%" align="center"><span class="bigger">{recentsearch.TIME}</span></td>
+		</tr>
+	<!-- END recentsearch -->
+	</table>
+<!-- ENDIF -->
+
+<!-- EVENT search_body_recent_search_after -->
+
+<script type="text/javascript"><!--
+	if (typeof getStuff === 'function') {getStuff("focus_keywords").focus();}
+//--></script>
+
+<!-- INCLUDE overall_footer.html -->

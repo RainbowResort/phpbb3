@@ -1,0 +1,112 @@
+<!-- INCLUDE mcp_header.html -->
+
+<script type="text/javascript">
+// <![CDATA[
+
+	var ban_length = new Array();
+		ban_length[-1] = '';
+	var ban_reason = new Array();
+		ban_reason[-1] = '';
+	var ban_give_reason = new Array();
+		ban_give_reason[-1] = '';
+
+	<!-- BEGIN bans -->
+		ban_length['{bans.BAN_ID}'] = '{bans.A_LENGTH}';
+		<!-- IF bans.A_REASON -->
+			ban_reason['{bans.BAN_ID}'] = '{bans.A_REASON}';
+		<!-- ELSE -->		ban_reason['{bans.BAN_ID}'] = '';	<!-- ENDIF -->
+		<!-- IF bans.A_GIVE_REASON -->
+			ban_give_reason['{bans.BAN_ID}'] = '{bans.A_GIVE_REASON}';
+		<!-- ELSE -->		ban_give_reason['{bans.BAN_ID}'] = '';	<!-- ENDIF -->
+	<!-- END bans -->
+	
+	function display_details(option)
+	{
+		getStuff('mcp_ban').unbanlength.value = ban_length[option];
+		getStuff('mcp_ban').unbanreason.value = ban_reason[option];
+		getStuff('mcp_ban').unbangivereason.value = ban_give_reason[option];
+	}
+
+// ]]>
+</script>
+
+<form id="mcp_ban" method="post" action="{U_ACTION}">
+
+<table width="100%" class="main" cellspacing="1">
+<tr>
+	<th colspan="2">{L_TITLE}</th>
+</tr>
+<tr>
+	<td class="bg3" colspan="2"><span class="bigger">{L_EXPLAIN}</span></td>
+</tr>
+<!-- EVENT mcp_ban_fields_before -->
+<tr>
+	<td class="bg1" valign="top" width="45%"><b class="bigger">{L_BAN_CELL}{L_COLON}</b></td>
+	<td class="bg2">
+		<textarea name="ban" id="ban" cols="40" rows="3">{USERNAMES}</textarea>
+		<!-- IF S_USERNAME_BAN --><div class="bigger">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</div><!-- ENDIF -->
+	</td>
+</tr>
+<tr>
+	<td class="bg1" valign="top"><span class="bigger"><b>{L_BAN_EXCLUDE}{L_COLON}</b><br />{L_BAN_EXCLUDE_EXPLAIN}</span></td>
+	<td class="bg2"><input type="radio" name="banexclude" value="1" /> <span class="bigger">{L_YES}</span> &nbsp;<input type="radio" name="banexclude" value="0" checked="checked" /> <span class="bigger">{L_NO}</span></td>
+</tr>
+<tr>
+	<td class="bg1" valign="top"><b class="bigger">{L_BAN_REASON}{L_COLON}</b></td>
+	<td class="bg2"><input name="banreason" type="text" class="inputbox" maxlength="255" /></td>
+</tr>
+<tr>
+	<td class="bg1" valign="top"><b class="bigger">{L_BAN_GIVE_REASON}{L_COLON}</b></td>
+	<td class="bg2"><input name="bangivereason" type="text" class="inputbox" maxlength="255" /></td>
+</tr>
+<tr>
+	<td class="bg1" valign="top"><b class="bigger">{L_BAN_LENGTH}{L_COLON}</b></td>
+	<td class="bg2"><select name="banlength" onchange="var expire_date = getStuff('banlengthuntil'); if (this.value==-1) {expire_date.className = '';} else {expire_date.className = 'noscript';}">{S_BAN_END_OPTIONS}</select><br /><div id="banlengthuntil" class="noscript"><input type="text" class="inputbox" name="banlengthother" /> {L_YEAR_MONTH_DAY}</div></td>
+</tr>
+<!-- EVENT mcp_ban_fields_after -->
+<tr>
+	<td class="cat" colspan="2" align="center"><input type="reset" value="{L_RESET}" class="button2" onclick="getStuff('banlengthuntil').className = 'noscript';" />&nbsp; <input type="submit" name="bansubmit" value="{L_SUBMIT}" class="button1" /></td>
+</tr>
+</table>
+
+<br /><br />
+
+<table width="100%" class="main" cellspacing="1">
+<tr>
+	<th colspan="2">{L_UNBAN_TITLE}</th>
+</tr>
+<tr>
+	<td class="bg3" colspan="2"><span class="bigger">{L_UNBAN_EXPLAIN}</span></td>
+</tr>
+<!-- IF S_BANNED_OPTIONS -->
+	<!-- EVENT mcp_ban_unban_before -->
+	<tr>
+		<td class="bg1" valign="top" width="45%"><b class="bigger">{L_BAN_CELL}{L_COLON}</b></td>
+		<td class="bg2"><select name="unban[]" multiple="multiple" size="10" style="width: 50%" onchange="if (this.selectedIndex > -1) display_details(this.options[this.selectedIndex].value); else display_details(-1);">{BANNED_OPTIONS}</select></td>
+	</tr>
+	<tr>
+		<td class="bg1" valign="top"><b class="bigger">{L_BAN_LENGTH}{L_COLON}</b></td>
+		<td class="bg2"><input style="background: transparent; border: 0; width: 98%" type="text" name="unbanlength" readonly="readonly" /></td>
+	</tr>
+	<tr>
+		<td class="bg1" valign="top"><b class="bigger">{L_BAN_REASON}{L_COLON}</b></td>
+		<td class="bg2"><textarea style="background: transparent; border: 0; width: 98%" name="unbanreason" readonly="readonly" rows="5" cols="80">&nbsp;</textarea></td>
+	</tr>
+	<tr>
+		<td class="bg1" valign="top"><b class="bigger">{L_BAN_GIVE_REASON}{L_COLON}</b></td>
+		<td class="bg2"><textarea style="background: transparent; border: 0; width: 98%" name="unbangivereason" readonly="readonly" rows="5" cols="80">&nbsp;</textarea></td>
+	</tr>
+	<!-- EVENT mcp_ban_unban_after -->
+	<tr>
+		<td class="cat" colspan="2" align="center"><input type="reset" value="{L_RESET}" class="button2" onclick="getStuff('banlengthuntil').className = 'noscript';" />&nbsp; <input type="submit" name="unbansubmit" value="{L_SUBMIT}" class="button1" /></td>
+	</tr>
+<!-- ELSE -->
+	<tr>
+		<td class="bg1" colspan="2"><b class="bigger">{L_NO_BAN_CELL}</b></td>
+	</tr>
+<!-- ENDIF -->
+</table>
+{S_FORM_TOKEN}
+</form>
+
+<!-- INCLUDE mcp_footer.html -->

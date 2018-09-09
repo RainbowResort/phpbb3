@@ -1,0 +1,125 @@
+<!-- INCLUDE mcp_header.html -->
+
+<!-- EVENT mcp_front_latest_unapproved_before -->
+
+<!-- IF S_SHOW_UNAPPROVED -->
+	<form name="mcp_queue" method="post" action="{S_MCP_QUEUE_ACTION}">
+
+	<table class="main" width="100%" cellspacing="1">
+	<tr>
+		<td class="bg3" colspan="4" align="center"><b class="big">{L_LATEST_UNAPPROVED}</b></td>
+	</tr>
+	<tr>
+		<th>{L_POST}</th>
+		<th width="20%">{L_AUTHOR}</th>
+		<th width="20%">{L_POST_TIME}</th>
+		<th width="5%">{L_MARK}</th>
+	</tr>
+	<!-- BEGIN unapproved -->
+		<tr><!-- IF unapproved.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+			<td class="{$BG}"><!-- IF unapproved.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF --><a href="{unapproved.U_POST_DETAILS}" class="big">{unapproved.SUBJECT}</a> <div class="bigger">{L_FORUM}{L_COLON} <!-- IF unapproved.U_FORUM --><a href="{unapproved.U_FORUM}">{unapproved.FORUM_NAME}</a><!-- ELSE -->{unapproved.FORUM_NAME}<!-- ENDIF --></div></td>
+			<td class="{$BG}" align="center"><span class="big">{unapproved.AUTHOR_FULL}</span></td>
+			<td class="{$BG}" align="center"><span class="bigger">{unapproved.POST_TIME}</span></td>
+			<td class="{$BG}" align="center"><input type="checkbox" name="post_id_list[]" value="{unapproved.POST_ID}" /></td>
+		</tr>
+	<!-- END unapproved -->
+	<tr>
+		<td class="bg3" colspan="4"><table cellspacing="0" width="100%"><tr><td class="bigger">{L_UNAPPROVED_TOTAL}</td><!-- IF .unapproved --><td align="{S_CONTENT_FLOW_END}">{S_HIDDEN_FIELDS}<input class="button2" type="submit" name="action[disapprove]" value="{L_DISAPPROVE}" />&nbsp; <input class="button1" type="submit" name="action[approve]" value="{L_APPROVE}" /></td><!-- ENDIF --></tr></table></td>
+	</tr>
+	</table>
+	{S_FORM_TOKEN}
+	</form>
+
+	<!-- IF .unapproved -->
+		<table width="100%" cellspacing="2"><tr>
+		<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('mcp_queue', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp_queue', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+		</tr></table>
+	<!-- ENDIF -->
+	<br clear="all" /><br />
+<!-- ENDIF -->
+
+<!-- EVENT mcp_front_latest_reported_before -->
+
+<!-- IF S_SHOW_REPORTS -->
+	<table class="main" width="100%" cellspacing="1">
+	<tr>
+		<td class="bg3" colspan="3" align="center"><b class="big">{L_LATEST_REPORTED}</b></td>
+	</tr>
+	<tr>
+		<th>{L_POST}</th>
+		<th width="23%">{L_REPORTER}</th>
+		<th width="22%">{L_REPORT_TIME}</th>
+	</tr>
+	<!-- BEGIN report -->
+		<tr><!-- IF report.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+			<td class="{$BG}"><!-- IF report.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF --><a href="{report.U_POST_DETAILS}" class="big">{report.SUBJECT}</a> <div class="bigger">{L_POSTED} {L_POST_BY_AUTHOR} {report.AUTHOR_FULL} &#187; {report.POST_TIME}</div> <div class="bigger">{L_FORUM}{L_COLON} <!-- IF report.U_FORUM --><a href="{report.U_FORUM}">{report.FORUM_NAME}</a><!-- ELSE -->{report.FORUM_NAME}<!-- ENDIF --></div></td>
+			<td class="{$BG}" align="center"><span class="big">{report.REPORTER_FULL}</span></td>
+			<td class="{$BG}" align="center"><span class="bigger">{report.REPORT_TIME}</span></td>
+		</tr>
+	<!-- END report -->
+		<tr>
+			<td class="bg3" colspan="3"><table cellspacing="0" width="100%"><tr><td class="bigger">{L_REPORTS_TOTAL}</td></tr></table></td>
+		</tr>
+	</table>
+
+	<br clear="all" /><br />
+<!-- ENDIF -->
+
+<!-- EVENT mcp_front_latest_reported_pms_before -->
+
+<!-- IF S_SHOW_PM_REPORTS -->
+	<table class="main" width="100%" cellspacing="1">
+	<tr>
+		<td class="bg3" colspan="3" align="center"><b class="big">{L_LATEST_REPORTED_PMS}</b></td>
+	</tr>
+	<tr>
+		<th>{L_PM}</th>
+		<th width="23%">{L_REPORTER}</th>
+		<th width="22%">{L_REPORT_TIME}</th>
+	</tr>
+	<!-- BEGIN pm_report -->
+		<tr><!-- IF pm_report.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+			<td class="{$BG}"><!-- IF pm_report.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF --><a href="{pm_report.U_PM_DETAILS}" class="big">{pm_report.PM_SUBJECT}</a> <div class="bigger">{L_MESSAGE_BY_AUTHOR} {pm_report.PM_AUTHOR_FULL} &#187; {pm_report.PM_TIME}</div> <div class="bigger">{L_MESSAGE_TO} {pm_report.RECIPIENTS}</div></td>
+			<td class="{$BG}" align="center"><span class="big">{pm_report.REPORTER_FULL}</span></td>
+			<td class="{$BG}" align="center"><span class="bigger">{pm_report.REPORT_TIME}</span></td>
+		</tr>
+	<!-- END pm_report -->
+		<tr>
+			<td class="bg3" colspan="3"><table cellspacing="0" width="100%"><tr><td class="bigger">{L_PM_REPORTS_TOTAL}</td></tr></table></td>
+		</tr>
+	</table>
+
+	<br clear="all" /><br />
+<!-- ENDIF -->
+
+<!-- EVENT mcp_front_latest_logs_before -->
+
+<!-- IF S_SHOW_LOGS -->
+	<table class="main" width="100%" cellspacing="1">
+	<tr>
+		<td class="bg3" colspan="4" align="center"><b class="big">{L_LATEST_LOGS}</b></td>
+	</tr>
+	<tr>
+		<th align="{S_CONTENT_FLOW_BEGIN}" width="15%">{L_USERNAME}</th>
+		<th width="10%">{L_IP}</th>
+		<th width="15%">{L_TIME}</th>
+		<th>{L_ACTION}</th>
+	</tr>
+	<!-- BEGIN log -->
+		<tr class="bigger"><!-- IF log.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+			<td class="{$BG}">{log.USERNAME}</td>
+			<td align="center" class="{$BG}">{log.IP}</td>
+			<td align="center" class="{$BG}">{log.TIME}</td>
+			<td class="{$BG}">{log.ACTION}<br /><!-- IF log.U_VIEW_TOPIC --><a href="{log.U_VIEW_TOPIC}">{L_VIEW_TOPIC}</a><!-- IF log.U_VIEWLOGS --> | <!-- ENDIF --><!-- ENDIF --><!-- IF log.U_VIEWLOGS --><a href="{log.U_VIEWLOGS}">{L_VIEW_TOPIC_LOGS}</a><!-- ENDIF --></td>
+		</tr>
+	<!-- BEGINELSE -->
+		<tr>
+			<td class="bg1" colspan="4" align="center"><span class="big">{L_NO_ENTRIES}</span></td>
+		</tr>
+	<!-- END log -->
+	</table>
+<!-- ENDIF -->
+
+<!-- EVENT mcp_front_latest_logs_after -->
+
+<!-- INCLUDE mcp_footer.html -->
