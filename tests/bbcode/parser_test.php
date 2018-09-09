@@ -11,8 +11,6 @@
 *
 */
 
-require_once dirname(__FILE__) . '/../../phpBB/includes/functions.php';
-require_once dirname(__FILE__) . '/../../phpBB/includes/functions_content.php';
 require_once dirname(__FILE__) . '/../../phpBB/includes/bbcode.php';
 require_once dirname(__FILE__) . '/../../phpBB/includes/message_parser.php';
 
@@ -66,11 +64,6 @@ class phpbb_bbcode_parser_test extends \phpbb_test_case
 				'Test default bbcodes: simple code',
 				'[code]unparsed code[/code]',
 				'[code:]unparsed code[/code:]',
-			),
-			array(
-				'Test default bbcodes: simple php code',
-				'[code=php]unparsed code[/code]',
-				'[code=php:]<span class="syntaxdefault">unparsed&nbsp;code</span>[/code:]',
 			),
 			array(
 				'Test default bbcodes: simple list',
@@ -256,9 +249,10 @@ class phpbb_bbcode_parser_test extends \phpbb_test_case
 			$this->markTestIncomplete($incomplete);
 		}
 
-		global $user, $request;
+		global $user, $request, $symfony_request;
 		$user = new phpbb_mock_user;
 		$request = new phpbb_mock_request;
+		$symfony_request = new \phpbb\symfony_request($request);
 
 		$bbcode = new bbcode_firstpass();
 		$bbcode->message = $message;

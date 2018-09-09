@@ -11,8 +11,6 @@
 *
 */
 
-require_once dirname(__FILE__) . '/../../phpBB/includes/functions.php';
-
 class phpbb_event_md_exporter_test extends phpbb_test_case
 {
 	static public function crawl_eventsmd_data()
@@ -23,7 +21,6 @@ class phpbb_event_md_exporter_test extends phpbb_test_case
 					'event' => 'acp_bbcodes_actions_append',
 					'files' => array(
 						'prosilver' => array(),
-						'subsilver2' => array(),
 						'adm' => array('acp_bbcodes.html'),
 					),
 					'since' => '3.1.0-a3',
@@ -36,7 +33,6 @@ class phpbb_event_md_exporter_test extends phpbb_test_case
 					'event' => 'acp_bbcodes_actions_prepend',
 					'files' => array(
 						'prosilver' => array(),
-						'subsilver2' => array(),
 						'adm' => array('acp_bbcodes.html'),
 					),
 					'since' => '3.1.0-a5',
@@ -47,7 +43,6 @@ class phpbb_event_md_exporter_test extends phpbb_test_case
 					'event' => 'acp_bbcodes_actions_prepend2',
 					'files' => array(
 						'prosilver' => array(),
-						'subsilver2' => array(),
 						'adm' => array('acp_bbcodes.html'),
 					),
 					'since' => '3.1.0-a4',
@@ -63,7 +58,6 @@ class phpbb_event_md_exporter_test extends phpbb_test_case
 					'event' => 'acp_bbcodes_actions_prepend',
 					'files' => array(
 						'prosilver' => array(),
-						'subsilver2' => array(),
 						'adm' => array('acp_bbcodes.html'),
 					),
 					'since' => '3.1.0-a5',
@@ -74,7 +68,6 @@ class phpbb_event_md_exporter_test extends phpbb_test_case
 					'event' => 'acp_bbcodes_actions_prepend2',
 					'files' => array(
 						'prosilver' => array(),
-						'subsilver2' => array(),
 						'adm' => array('acp_bbcodes.html'),
 					),
 					'since' => '3.1.0-a4',
@@ -99,7 +92,7 @@ class phpbb_event_md_exporter_test extends phpbb_test_case
 	public function test_crawl_eventsmd($file, $min_version, $max_version, $events)
 	{
 		$exporter = new \phpbb\event\md_exporter(dirname(__FILE__) . '/fixtures/', null, $min_version, $max_version);
-		$this->assertSame(sizeof($events), $exporter->crawl_eventsmd($file, 'adm'));
+		$this->assertSame(count($events), $exporter->crawl_eventsmd($file, 'adm'));
 		$this->assertEquals($events, $exporter->get_events());
 	}
 
@@ -130,7 +123,6 @@ class phpbb_event_md_exporter_test extends phpbb_test_case
 		$styles = array(
 			'adm/style/' => 'adm',
 			'styles/prosilver/template/' => 'styles',
-			'styles/subsilver2/template/' => 'styles',
 		);
 		foreach ($styles as $path => $filter)
 		{
@@ -154,7 +146,7 @@ class phpbb_event_md_exporter_test extends phpbb_test_case
 		$exporter->crawl_eventsmd('docs/events.md', $filter);
 		$events = $exporter->crawl_file_for_events($file);
 
-		$this->assertGreaterThanOrEqual(0, sizeof($events));
+		$this->assertGreaterThanOrEqual(0, count($events));
 		$this->assertTrue($exporter->validate_events_from_file($file, $events));
 	}
 }

@@ -64,6 +64,7 @@ $f_permissions = array(
 	'f_vote'	=> array(1, 0),
 	'f_votechg'	=> array(1, 0),
 	'f_announce'=> array(1, 0),
+	'f_announce_global'	=> array(1, 0),
 	'f_sticky'	=> array(1, 0),
 	'f_attach'	=> array(1, 0),
 	'f_download'=> array(1, 0),
@@ -184,7 +185,7 @@ while ($row = $db->sql_fetchrow($result))
 }
 $db->sql_freeresult($result);
 
-if (sizeof($remove_auth_options))
+if (count($remove_auth_options))
 {
 	$db->sql_query('DELETE FROM ' . ACL_USERS_TABLE . ' WHERE auth_option_id IN (' . implode(', ', $remove_auth_options) . ')');
 	$db->sql_query('DELETE FROM ' . ACL_GROUPS_TABLE . ' WHERE auth_option_id IN (' . implode(', ', $remove_auth_options) . ')');
@@ -198,7 +199,7 @@ $prefixes = array('f_', 'a_', 'm_', 'u_');
 foreach ($prefixes as $prefix)
 {
 	$var = $prefix . 'permissions';
-	if (sizeof(${$var}))
+	if (count(${$var}))
 	{
 		foreach (${$var} as $auth_option => $l_ary)
 		{
@@ -378,8 +379,6 @@ function mass_auth($ug_type, $forum_id, $ug_id, $acl_list, $setting)
 						$sql = 'VALUES ' . implode(', ', preg_replace('#^(.*?)$#', '(\1)', $sql_subary));
 						break;
 
-					case 'mssql':
-					case 'sqlite':
 					case 'sqlite3':
 						$sql = implode(' UNION ALL ', preg_replace('#^(.*?)$#', 'SELECT \1', $sql_subary));
 						break;
@@ -388,7 +387,7 @@ function mass_auth($ug_type, $forum_id, $ug_id, $acl_list, $setting)
 						foreach ($sql_subary as $sql)
 						{
 							$sql = "INSERT INTO $table ($id_field, forum_id, auth_option_id, auth_setting) VALUES ($sql)";
-							$result = $db->sql_query($sql);
+							$db->sql_query($sql);
 							$sql = '';
 						}
 				}
@@ -396,7 +395,7 @@ function mass_auth($ug_type, $forum_id, $ug_id, $acl_list, $setting)
 				if ($sql != '')
 				{
 					$sql = "INSERT INTO $table ($id_field, forum_id, auth_option_id, auth_setting) $sql";
-					$result = $db->sql_query($sql);
+					$db->sql_query($sql);
 				}
 				break;
 
@@ -404,7 +403,7 @@ function mass_auth($ug_type, $forum_id, $ug_id, $acl_list, $setting)
 			case 'delete':
 				foreach ($sql_subary as $sql)
 				{
-					$result = $db->sql_query($sql);
+					$db->sql_query($sql);
 					$sql = '';
 				}
 				break;

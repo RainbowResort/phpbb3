@@ -30,28 +30,29 @@ class version_helper_remote_test extends \phpbb_test_case
 		));
 		$container = new \phpbb_mock_container_builder();
 		$db = new \phpbb\db\driver\factory($container);
-		$this->cache = $this->getMock('\phpbb\cache\service', array('get'), array(new \phpbb\cache\driver\null(), $config, $db, '../../', 'php'));
+		$this->cache = $this->getMock('\phpbb\cache\service', array('get'), array(new \phpbb\cache\driver\dummy(), $config, $db, '../../', 'php'));
 		$this->cache->expects($this->any())
 			->method('get')
 			->with($this->anything())
 			->will($this->returnValue(false));
 		$this->file_downloader = new phpbb_mock_file_downloader();
 
+		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
+
 		$this->version_helper = new \phpbb\version_helper(
 			$this->cache,
 			$config,
-			$this->file_downloader,
-			new \phpbb\user('\phpbb\datetime')
+			$this->file_downloader
 		);
-		$this->user = new \phpbb\user('\phpbb\datetime');
+		$this->user = new \phpbb\user(new \phpbb\language\language($lang_loader), '\phpbb\datetime');
 		$this->user->add_lang('acp/common');
 	}
 
 	public function provider_get_versions()
 	{
 		return array(
-			array('', false),
-			array('foobar', false),
+			array('', false, '', 'VERSIONCHECK_FAIL'),
+			array('foobar', false, '', 'VERSIONCHECK_FAIL'),
 			array('{
     "stable": {
         "1.0": {
@@ -92,7 +93,7 @@ class version_helper_remote_test extends \phpbb_test_case
             "security": false
         }
     }
-}', false),
+}', false, '', 'VERSIONCHECK_FAIL'),
 			array('{
     "stable": {
         "1.0": {
@@ -103,26 +104,7 @@ class version_helper_remote_test extends \phpbb_test_case
             "security": "<script>alert(\'foo\');</script>"
         }
     }
-}', true, array (
-				'stable' => array (
-					'1.0' => array (
-						'current' => '1.0.1&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'download' => 'https://www.phpbb.com/customise/db/download/104136&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'announcement' => 'https://www.phpbb.com/customise/db/extension/boardrules/&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'eol' => '&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'security' => '&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-					),
-				),
-				'unstable' => array (
-					'1.0' => array (
-						'current' => '1.0.1&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'download' => 'https://www.phpbb.com/customise/db/download/104136&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'announcement' => 'https://www.phpbb.com/customise/db/extension/boardrules/&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'eol' => '&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'security' => '&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-					),
-				),
-			)),
+}', false, null, 'VERSIONCHECK_INVALID_VERSION'),
 			array('{
     "unstable": {
         "1.0": {
@@ -133,25 +115,87 @@ class version_helper_remote_test extends \phpbb_test_case
             "security": "<script>alert(\'foo\');</script>"
         }
     }
+}', false, null, 'VERSIONCHECK_INVALID_VERSION'),
+			array('{
+    "unstable": {
+        "1.0<script>alert(\'foo\');</script>": {
+            "current": "1.0.1",
+            "download": "https://www.phpbb.com/customise/db/download/104136",
+            "announcement": "https://www.phpbb.com/customise/db/extension/boardrules/",
+            "eol": "",
+            "security": ""
+        }
+    }
+}', false, array('stable' => array(), 'unstable' => array()), 'VERSIONCHECK_INVALID_VERSION'),
+			array('{
+	"\"\n<script>alert(\'foo\');</script>\n": "test",
+    "stable": {
+        "1.0": {
+            "current": "1.0.1",
+            "download": "https://www.phpbb.com/customise/db/download/104136",
+            "announcement": "https://www.phpbb.com/customise/db/extension/boardrules/",
+            "eol": null,
+            "security": false
+        }
+    }
 }', true, array (
-				'unstable' => array (
+				'stable' => array (
 					'1.0' => array (
-						'current' => '1.0.1&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'download' => 'https://www.phpbb.com/customise/db/download/104136&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'announcement' => 'https://www.phpbb.com/customise/db/extension/boardrules/&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'eol' => '&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
-						'security' => '&lt;script&gt;alert(\'foo\');&lt;/script&gt;',
+						'current' => '1.0.1',
+						'download' => 'https://www.phpbb.com/customise/db/download/104136',
+						'announcement' => 'https://www.phpbb.com/customise/db/extension/boardrules/',
+						'eol' => NULL,
+						'security' => false,
 					),
 				),
-				'stable' => array(),
+				'unstable' => array (
+					'1.0' => array (
+						'current' => '1.0.1',
+						'download' => 'https://www.phpbb.com/customise/db/download/104136',
+						'announcement' => 'https://www.phpbb.com/customise/db/extension/boardrules/',
+						'eol' => NULL,
+						'security' => false,
+					),
+				),
 			)),
+			array('{
+    "unstable": {
+        "1.0": {
+            "current": "1.0.1",
+            "download": "https://www.phpbb.com/customise/db/download/104136",
+            "announcement": "https://www.phpbb.com/customise/db/extension/boardrules/",
+            "eol": null,
+            "security": false,
+            "foobar": "<script>alert(\'test\');<script>"
+        }
+    }
+}', true, array('stable' => array(), 'unstable' => array('1.0' => array(
+				'current' => '1.0.1',
+				'download'	=> 'https://www.phpbb.com/customise/db/download/104136',
+				'announcement'	=> 'https://www.phpbb.com/customise/db/extension/boardrules/',
+				'security'	=> false,
+			))), 'VERSIONCHECK_INVALID_ENTRY'),
+			array('{
+    "unstable": {
+        "1.0": {
+            "current<script>alert(\'foo\');</script>": "1.0.1",
+            "download2": "https://www.phpbb.com/customise/db/download/104136",
+            "bannouncement": "https://www.phpbb.com/customise/db/extension/boardrules/",
+            "eol": null,
+            "security": false,
+            "foobar": "<script>alert(\'test\');<script>"
+        }
+    }
+}', true, array('stable' => array(), 'unstable' => array('1.0' => array(
+				'security'	=> false,
+			))), 'VERSIONCHECK_INVALID_ENTRY'),
 		);
 	}
 
 	/**
 	 * @dataProvider provider_get_versions
 	 */
-	public function test_get_versions($input, $valid_data, $expected_return = '')
+	public function test_get_versions($input, $valid_data, $expected_return = '', $expected_exception = '')
 	{
 		$this->file_downloader->set($input);
 
@@ -159,8 +203,8 @@ class version_helper_remote_test extends \phpbb_test_case
 		{
 			try {
 				$return = $this->version_helper->get_versions();
-			} catch (\RuntimeException $e) {
-				$this->assertEquals((string)$e->getMessage(), $this->user->lang('VERSIONCHECK_FAIL'));
+			} catch (\phpbb\exception\runtime_exception $e) {
+				$this->assertEquals((string)$e->getMessage(), $expected_exception);
 			}
 		}
 		else

@@ -51,7 +51,7 @@ function check_table_flash_bbcodes($table_name, $id_field, $content_field, $uid_
 
 	$ids = get_table_flash_bbcode_pkids($table_name, $id_field, $content_field, $uid_field, $bitfield_field);
 
-	$size = sizeof($ids);
+	$size = count($ids);
 	if ($size)
 	{
 		echo "Found $size potentially dangerous flash bbcodes.\n";
@@ -140,8 +140,12 @@ function html_entity_decode_utf8($string)
 	static $trans_tbl;
 
 	// replace numeric entities
-	$string = preg_replace('~&#x([0-9a-f]+);~ei', 'code2utf8(hexdec("\\1"))', $string);
-	$string = preg_replace('~&#([0-9]+);~e', 'code2utf8(\\1)', $string);
+	$string = preg_replace_callback('~&#x([0-9a-f]+);~i', function ($match) {
+		return code2utf8(hexdec($match[1]));
+	}, $string);
+	$string = preg_replace_callback('~&#([0-9]+);~', function ($match) {
+		return code2utf8($match[1]);
+	}, $string);
 
 	// replace literal entities
 	if (!isset($trans_tbl))

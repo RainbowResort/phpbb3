@@ -11,8 +11,6 @@
 *
 */
 
-require_once dirname(__FILE__) . '/../../phpBB/includes/functions.php';
-
 class phpbb_dbal_write_test extends phpbb_database_test_case
 {
 	public function getDataSet()
@@ -69,7 +67,7 @@ class phpbb_dbal_write_test extends phpbb_database_test_case
 		$result = $db->sql_query($sql);
 		$rows = $db->sql_fetchrowset($result);
 
-		$this->assertEquals(1, sizeof($rows));
+		$this->assertEquals(1, count($rows));
 		$this->assertEquals('config2', $rows[0]['config_name']);
 
 		$db->sql_freeresult($result);

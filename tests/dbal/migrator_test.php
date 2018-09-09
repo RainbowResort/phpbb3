@@ -11,22 +11,31 @@
 *
 */
 
-require_once dirname(__FILE__) . '/../../phpBB/includes/functions.php';
 require_once dirname(__FILE__) . '/migration/dummy.php';
 require_once dirname(__FILE__) . '/migration/unfulfillable.php';
 require_once dirname(__FILE__) . '/migration/if.php';
 require_once dirname(__FILE__) . '/migration/recall.php';
 require_once dirname(__FILE__) . '/migration/revert.php';
 require_once dirname(__FILE__) . '/migration/revert_with_dependency.php';
+require_once dirname(__FILE__) . '/migration/revert_table.php';
+require_once dirname(__FILE__) . '/migration/revert_table_with_dependency.php';
 require_once dirname(__FILE__) . '/migration/fail.php';
 require_once dirname(__FILE__) . '/migration/installed.php';
 require_once dirname(__FILE__) . '/migration/schema.php';
 
 class phpbb_dbal_migrator_test extends phpbb_database_test_case
 {
+	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
+
+	/** @var \phpbb\db\tools\tools_interface */
 	protected $db_tools;
+
+	/** @var \phpbb\db\migrator */
 	protected $migrator;
+
+	/** @var \phpbb\config\config */
+	protected $config;
 
 	public function getDataSet()
 	{
@@ -38,7 +47,8 @@ class phpbb_dbal_migrator_test extends phpbb_database_test_case
 		parent::setUp();
 
 		$this->db = $this->new_dbal();
-		$this->db_tools = new \phpbb\db\tools($this->db);
+		$factory = new \phpbb\db\tools\factory();
+		$this->db_tools = $factory->get($this->db);
 
 		$this->config = new \phpbb\config\db($this->db, new phpbb_mock_cache, 'phpbb_config');
 
@@ -62,14 +72,12 @@ class phpbb_dbal_migrator_test extends phpbb_database_test_case
 		);
 		$container->set('migrator', $this->migrator);
 		$container->set('dispatcher', new phpbb_mock_event_dispatcher());
-		$user = new \phpbb\user('\phpbb\datetime');
 
 		$this->extension_manager = new \phpbb\extension\manager(
 			$container,
 			$this->db,
 			$this->config,
-			new phpbb\filesystem(),
-			$user,
+			new phpbb\filesystem\filesystem(),
 			'phpbb_ext',
 			dirname(__FILE__) . '/../../phpBB/',
 			'php',
@@ -156,6 +164,14 @@ class phpbb_dbal_migrator_test extends phpbb_database_test_case
 
 		$this->assertFalse($migrator_test_if_true_failed, 'True test failed');
 		$this->assertFalse($migrator_test_if_false_failed, 'False test failed');
+
+		while ($this->migrator->migration_state('phpbb_dbal_migration_if') !== false)
+		{
+			$this->migrator->revert('phpbb_dbal_migration_if');
+		}
+
+		$this->assertFalse($migrator_test_if_true_failed, 'True test after revert failed');
+		$this->assertFalse($migrator_test_if_false_failed, 'False test after revert failed');
 	}
 
 	public function test_recall()
@@ -233,6 +249,41 @@ class phpbb_dbal_migrator_test extends phpbb_database_test_case
 		}
 
 		$this->assertEquals(1, $migrator_test_revert_counter, 'Revert did call custom function again');
+	}
+
+	public function test_revert_table()
+	{
+		// Make sure there are no other migrations in the db, this could cause issues
+		$this->db->sql_query("DELETE FROM phpbb_migrations");
+		$this->migrator->load_migration_state();
+
+		$this->migrator->set_migrations(array('phpbb_dbal_migration_revert_table', 'phpbb_dbal_migration_revert_table_with_dependency'));
+
+		$this->assertFalse($this->migrator->migration_state('phpbb_dbal_migration_revert_table'));
+		$this->assertFalse($this->migrator->migration_state('phpbb_dbal_migration_revert_table_with_dependency'));
+
+		// Install the migration first
+		while (!$this->migrator->finished())
+		{
+			$this->migrator->update();
+		}
+
+		$this->assertTrue($this->migrator->migration_state('phpbb_dbal_migration_revert_table') !== false);
+		$this->assertTrue($this->migrator->migration_state('phpbb_dbal_migration_revert_table_with_dependency') !== false);
+
+		$this->assertTrue($this->db_tools->sql_column_exists('phpbb_foobar', 'baz_column'));
+		$this->assertFalse($this->db_tools->sql_column_exists('phpbb_foobar', 'bar_column'));
+
+		// Revert migrations
+		while ($this->migrator->migration_state('phpbb_dbal_migration_revert_table') !== false)
+		{
+			$this->migrator->revert('phpbb_dbal_migration_revert_table');
+		}
+
+		$this->assertFalse($this->migrator->migration_state('phpbb_dbal_migration_revert_table'));
+		$this->assertFalse($this->migrator->migration_state('phpbb_dbal_migration_revert_table_with_dependency'));
+
+		$this->assertFalse($this->db_tools->sql_table_exists('phpbb_foobar'));
 	}
 
 	public function test_fail()

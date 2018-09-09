@@ -11,9 +11,6 @@
 *
 */
 
-require_once dirname(__FILE__) . '/../../phpBB/includes/functions.php';
-require_once dirname(__FILE__) . '/../../phpBB/includes/functions_admin.php';
-
 /**
 * @group slow
 */
@@ -61,7 +58,7 @@ class phpbb_functions_get_remote_file extends phpbb_test_case
 
 		$this->assertGreaterThanOrEqual(
 			2,
-			sizeof($lines),
+			count($lines),
 			'Failed asserting that the version file has at least two lines.'
 		);
 
