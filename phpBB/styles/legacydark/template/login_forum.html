@@ -1,0 +1,42 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF FORUM_NAME -->
+	<div style="margin: 16px 0 4px">
+		<h2><a class="header" href="{U_VIEW_FORUM}">{FORUM_NAME}</a></h2>
+	</div>
+<!-- ENDIF -->
+
+<form name="login_forum" method="post" action="{S_LOGIN_ACTION}">
+<table class="main" width="100%" cellspacing="1">
+<tr>
+	<th>{L_LOGIN}</th>
+</tr>
+<tr class="bigger">
+	<td class="bg3" align="center">{L_LOGIN_FORUM}</td>
+</tr>
+<tr>
+	<td class="bg1" align="center">
+
+		<table cellspacing="1">
+		<!-- IF LOGIN_ERROR -->
+			<tr>
+				<td colspan="2" align="center"><p class="error">{LOGIN_ERROR}</p></td>
+			</tr>
+		<!-- ENDIF -->
+		<tr>
+			<td class="bigger"><b>{L_PASSWORD}{L_COLON}</b></td>
+			<td><input type="password" class="inputbox" name="password" size="25" tabindex="2" autocomplete="off" /></td>
+		</tr>
+		</table>
+	</td>
+</tr>
+<tr>
+	<td class="cat" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="login" class="button1" value="{L_LOGIN}" tabindex="3" /></td>
+</tr>
+</table>
+{S_FORM_TOKEN}
+{S_LOGIN_REDIRECT}
+</form>
+
+<!-- IF S_DISPLAY_JUMPBOX --><div style="margin: 8px 0"><!-- INCLUDE jumpbox.html --></div><!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->

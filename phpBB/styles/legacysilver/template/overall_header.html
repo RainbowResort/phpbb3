@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="nojs" dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+{META}
+<title><!-- IF UNREAD_NOTIFICATIONS_COUNT -->({UNREAD_NOTIFICATIONS_COUNT}) <!-- ENDIF --><!-- IF not S_VIEWTOPIC and not S_VIEWFORUM -->{SITENAME} - <!-- ENDIF --><!-- IF S_IN_MCP -->{L_MCP} - <!-- ELSEIF S_IN_UCP -->{L_UCP} - <!-- ENDIF -->{PAGE_TITLE}<!-- IF S_VIEWTOPIC or S_VIEWFORUM --> - {SITENAME}<!-- ENDIF --></title>
+
+<!-- IF S_ENABLE_FEEDS -->
+	<!-- IF S_ENABLE_FEEDS_OVERALL --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {SITENAME}" href="{{ path('phpbb_feed_index') }}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_NEWS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_NEWS}" href="{{ path('phpbb_feed_news') }}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUMS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_ALL_FORUMS}" href="{{ path('phpbb_feed_forums') }}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_NEW}" href="{{ path('phpbb_feed_topics') }}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS_ACTIVE --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_ACTIVE}" href="{{ path('phpbb_feed_topics_active') }}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUM and S_FORUM_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FORUM} - {FORUM_NAME}" href="{{ path('phpbb_feed_forum', { forum_id : S_FORUM_ID } ) }}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPIC and S_TOPIC_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_TOPIC} - {TOPIC_TITLE}" href="{{ path('phpbb_feed_topic', { topic_id : S_TOPIC_ID } ) }}" /><!-- ENDIF -->
+	<!-- EVENT overall_header_feeds -->
+<!-- ENDIF -->
+
+<!-- IF U_CANONICAL -->
+	<link rel="canonical" href="{U_CANONICAL}" />
+<!-- ENDIF -->
+
+<!--
+	phpBB style name:  Legacy
+	Based on style:    subSilver (the default phpBB 2.0.x style)
+	Original author:   Tom Beddard ( http://www.subBlue.com/ )
+	Modified by:       Big Monstro ( http://www.win3x.org/ )
+-->
+
+<link rel="stylesheet" href="{T_STYLESHEET_LINK}" type="text/css" media="all" />
+
+<!-- EVENT overall_header_head_append -->
+
+{$STYLESHEETS}
+
+<!-- EVENT overall_header_stylesheets_after -->
+
+<script type="text/javascript"><!--
+	if (document.fireEvent || window.XMLHttpRequest) {document.documentElement.className += " dropdown-enabled";}
+//--></script>
+</head>
+
+<body class="{S_CONTENT_DIRECTION}" marginwidth="25">
+
+<!-- EVENT overall_header_body_before -->
+
+<a name="top" class="anchor"></a>
+
+<!-- EVENT overall_header_headerbar_before -->
+
+<table cellspacing="0" height="100" width="100%"><tr>
+	<td class="site-logo" width="200"><a href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->"><img src="{T_THEME_PATH}/images/site_logo.gif" alt="" border="0" /></a></td>
+	<td align="center" class="site-description"><h1>{SITENAME}</h1><div class="big">{SITE_DESCRIPTION}</div></td>
+	<td align="{S_CONTENT_FLOW_END}" class="search-header" width="200">
+		<!-- EVENT overall_header_searchbox_before -->
+		<!-- IF S_DISPLAY_SEARCH and not S_IN_SEARCH -->
+			<div class="search-box">
+				<form action="{U_SEARCH}" method="get" name="global_search">
+					<input type="text" class="inputbox" name="keywords" value="{L_SEARCH_MINI}" title="{L_SEARCH_KEYWORDS}" onfocus="if (typeof this.flag == 'undefined') {this.flag = true; this.value='';}" />
+					<input type="image" src="{T_THEME_PATH}/images/icon_mini_search.gif" width="12" height="13" alt="*" title="{L_SEARCH}" style="margin-bottom: -3px" onclick="var h = document.forms['global_search'].elements[0]; if (h.value == '' || typeof h.flag == 'undefined') {h.focus(); return false;}" />
+					{S_SEARCH_HIDDEN_FIELDS}
+				</form>
+				<p><a href="{U_SEARCH}">{L_SEARCH_ADV}</a></p>
+			</div>
+		<!-- ENDIF -->
+		<!-- EVENT overall_header_searchbox_after -->
+	</td>
+</tr></table>
+
+<!-- EVENT overall_header_headerbar_after -->
+
+<!-- EVENT overall_header_navbar_before -->
+
+<div id="menubar"><table width="100%" cellspacing="0">
+	<tr class="bigger" valign="top"><td style="padding: 0">
+		<div style="padding: 4px 2px">
+			<!-- IF (S_DISPLAY_MEMBERLIST and not S_IS_BOT) or S_DISPLAY_SEARCH or (U_ACP and not U_RESTORE_PERMISSIONS) or U_MCP --><!-- DEFINE $QUICKLINKS = 1 -->
+				<span class="quicktools"><a href="#" id="quick_link"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" alt="" /> {L_QUICK_LINKS}</a>&nbsp;</span>
+			<!-- ENDIF -->
+
+			<!-- EVENT overall_header_navigation_prepend -->
+			<a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="" /> {L_FAQ}</a>
+			<!-- EVENT overall_header_navigation_append -->
+		</div>
+
+		<!-- IF $QUICKLINKS -->
+			<div id="quick_links_list" style="border-width: 0; display: none; {S_CONTENT_FLOW_BEGIN}: 0"><!--
+				<div><!-- IF U_ACP and not U_RESTORE_PERMISSIONS --><a href="{U_ACP}" title="{L_ACP}">{L_ACP_SHORT}</a><br /><!-- IF not U_MCP --><div class="separator"></div><!-- ENDIF --><!-- ENDIF -->
+				<!-- IF U_MCP --><a href="{U_MCP}" title="{L_MCP}">{L_MCP_SHORT}</a><br /><div class="separator"></div><!-- ENDIF -->
+				<!-- IF S_DISPLAY_SEARCH -->
+					<!-- IF S_REGISTERED_USER --><a href="{U_SEARCH_SELF}">{L_SEARCH_SELF}</a><br /><!-- ENDIF -->
+					<!-- IF S_USER_LOGGED_IN --><a href="{U_SEARCH_NEW}">{L_SEARCH_NEW}</a><br /><!-- ENDIF -->
+					<!-- IF S_LOAD_UNREADS --><a href="{U_SEARCH_UNREAD}">{L_SEARCH_UNREAD}</a><br /><!-- ENDIF -->
+					<a href="{U_SEARCH_UNANSWERED}">{L_SEARCH_UNANSWERED}</a><br /><a href="{U_SEARCH_ACTIVE_TOPICS}">{L_SEARCH_ACTIVE_TOPICS}</a><br /><div class="separator"></div><a href="{U_SEARCH}">{L_SEARCH}</a>
+				<!-- ENDIF -->
+				<!-- IF S_DISPLAY_MEMBERLIST and not S_IS_BOT --><!-- IF S_DISPLAY_SEARCH --><br /><div class="separator"></div><!-- ENDIF --><a href="{U_MEMBERLIST}">{L_MEMBERLIST}</a><!-- IF U_TEAM --><br /><a href="{U_TEAM}">{L_THE_TEAM}</a><!-- ENDIF --><!-- ENDIF --></div>
+			--></div>
+		<!-- ENDIF -->
+	</td>
+	<td style="padding: 0">
+		<!-- IF S_REGISTERED_USER -->
+			<div align="{S_CONTENT_FLOW_END}" style="padding: 4px 2px">
+				<!-- IF S_NOTIFICATIONS_DISPLAY -->
+					<a href="{U_VIEW_ALL_NOTIFICATIONS}" id="notification_link"><img src="{T_THEME_PATH}/images/icon_mini_notification.gif" width="12" height="13" alt="" /> {L_NOTIFICATIONS} [<b>{NOTIFICATIONS_COUNT}</b>]</a>&nbsp;
+				<!-- ENDIF -->
+
+				<!-- EVENT navbar_header_user_profile_prepend -->
+				<!-- IF S_DISPLAY_PM --><a href="{U_PRIVATEMSGS}"><img src="{T_THEME_PATH}/images/icon_mini_message.gif" width="12" height="13" alt="" /> {L_PRIVATE_MESSAGES} [<b>{PRIVATE_MESSAGE_COUNT}</b>]</a>&nbsp;<!-- ENDIF -->
+				<!-- EVENT navbar_header_user_profile_append -->
+
+				<a href="{U_PROFILE}" id="user_link" style="text-decoration: none"><img src="{T_THEME_PATH}/images/icon_mini_profile.gif" width="12" height="13" alt="" /> {CURRENT_USERNAME_SIMPLE}</a>
+			</div>
+
+			<!-- IF S_NOTIFICATIONS_DISPLAY -->
+				<div id="notification_list" style="border-width: 0; display: none; width: 270px"><!--
+					<div align="{S_CONTENT_FLOW_BEGIN}"><div style="overflow: hidden; padding: 4px 0">
+						<b style="float: {S_CONTENT_FLOW_BEGIN}; padding: 0 10px">{L_NOTIFICATIONS}</b>
+						<div align="{S_CONTENT_FLOW_END}" style="padding: 0 10px"><a href="{U_NOTIFICATION_SETTINGS}">{L_SETTINGS}</a></div>
+					</div>
+					<!-- BEGIN notifications -->
+						<!-- IF notifications.S_FIRST_ROW --><div id="notification_scroll" style="clear: both; width: 100%"><!-- ENDIF -->
+						<div class="notification <!-- IF notifications.UNREAD -->bg3<!-- ENDIF -->"<!-- IF notifications.S_FIRST_ROW --> style="border-top: 0"<!-- ENDIF -->>
+							<!-- IF notifications.URL --><a href="<!-- IF notifications.UNREAD -->{notifications.U_MARK_READ}<!-- ELSE -->{notifications.URL}<!-- ENDIF -->"><!-- ENDIF -->{notifications.FORMATTED_TITLE}<!-- IF notifications.URL --></a><!-- ENDIF -->
+							<!-- IF notifications.REFERENCE --><br />{notifications.REFERENCE}<!-- ENDIF -->
+							<!-- IF notifications.FORUM --><br />{notifications.FORUM}<!-- ENDIF -->
+							<!-- IF notifications.REASON --><br />{notifications.REASON}<!-- ENDIF -->
+							<p align="{S_CONTENT_FLOW_END}" class="small">{notifications.TIME}</p>
+							<!-- IF not notifications.URL and notifications.UNREAD --><a href="{notifications.U_MARK_READ}">{L_MARK_READ}</a><!-- ENDIF -->
+						</div>
+						<!-- IF notifications.S_LAST_ROW --></div><div align="center" style="overflow: hidden; padding: 4px"><a href="{U_VIEW_ALL_NOTIFICATIONS}">{L_SEE_ALL}</a></div><!-- ENDIF -->
+					<!-- BEGINELSE -->
+						<div align="center" style="clear: both; overflow: hidden; padding: 8px">{L_NO_NOTIFICATIONS}</div>
+					<!-- END notifications --></div>
+				--></div>
+			<!-- ENDIF -->
+
+			<div id="user_list" style="border-width: 0; display: none; {S_CONTENT_FLOW_END}: 0"><!--
+				<div align="{S_CONTENT_FLOW_BEGIN}"><!-- IF U_RESTORE_PERMISSIONS --><a href="{U_RESTORE_PERMISSIONS}">{L_RESTORE_PERMISSIONS}</a><br /><!-- ENDIF -->
+				<a href="{U_PROFILE}">{L_PROFILE}</a><!-- IF U_USER_PROFILE --><br />
+				<a href="{U_USER_PROFILE}">{L_READ_PROFILE}</a><!-- ENDIF -->
+				<br /><div class="separator"></div><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a></div>
+			--></div>
+		<!-- ELSE -->
+			<div align="{S_CONTENT_FLOW_END}" style="padding: 4px 2px">
+				<!-- EVENT navbar_header_logged_out_content -->
+
+				<!-- IF S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) -->
+					<a href="{U_REGISTER}"><img src="{T_THEME_PATH}/images/icon_mini_register.gif" width="12" height="13" alt="" /> {L_REGISTER}</a>&nbsp;
+				<!-- ENDIF -->
+
+				<a href="{U_LOGIN_LOGOUT}"><img src="{T_THEME_PATH}/images/icon_mini_login.gif" width="12" height="13" alt="" /> {L_LOGIN_LOGOUT}</a>
+			</div>
+		<!-- ENDIF -->
+	</td></tr>
+	<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN and (U_MCP or U_ACP) -->
+		<tr class="bigger"><td colspan="2"><b class="error">{L_BOARD_DISABLED}</b></td></tr>
+	<!-- ENDIF -->
+</table></div>
+
+<!-- EVENT navbar_header_quick_links_before -->
+<!-- EVENT navbar_header_quick_links_after -->
+
+<!-- IF S_REGISTERED_USER -->
+	<!-- EVENT navbar_header_username_prepend -->
+	<!-- EVENT navbar_header_profile_list_before -->
+	<!-- EVENT navbar_header_profile_list_after -->
+	<!-- EVENT navbar_header_username_append -->
+<!-- ENDIF -->
+
+<script type="text/javascript" src="{T_TEMPLATE_PATH}/forum_fn.js?assets_version={T_ASSETS_VERSION}"></script>
+
+<!-- EVENT overall_header_page_body_before -->
+
+<!-- IF S_DISPLAY_SEARCH or S_REGISTERED_USER or U_MCP -->
+	<div class="hidden_links"><table cellspacing="0" style="margin: 14px 0 0" width="100%"><tr class="bigger">
+	<!-- IF S_DISPLAY_SEARCH or U_MCP -->
+		<td>
+			<!-- IF S_DISPLAY_SEARCH --><a href="{U_SEARCH_UNANSWERED}">{L_SEARCH_UNANSWERED}</a> | <a href="{U_SEARCH_ACTIVE_TOPICS}">{L_SEARCH_ACTIVE_TOPICS}</a><!-- ENDIF -->
+			<!-- IF U_MCP --><!-- IF S_DISPLAY_SEARCH --> | <!-- ENDIF --><a href="{U_MCP}" title="{L_MCP}">{L_MCP_SHORT}</a><!-- ENDIF -->
+		</td>
+	<!-- ENDIF -->
+	<!-- IF (S_DISPLAY_SEARCH and S_LOAD_UNREADS) or (S_DISPLAY_SEARCH and S_USER_LOGGED_IN) or S_REGISTERED_USER -->
+		<td align="{S_CONTENT_FLOW_END}">
+			<!-- IF S_DISPLAY_SEARCH -->
+				<!-- IF S_LOAD_UNREADS --><a href="{U_SEARCH_UNREAD}">{L_SEARCH_UNREAD}</a><!-- IF S_USER_LOGGED_IN --> | <!-- ENDIF --><!-- ENDIF -->
+				<!-- IF S_USER_LOGGED_IN --><a href="{U_SEARCH_NEW}">{L_SEARCH_NEW}</a>
+					<!-- IF S_REGISTERED_USER --> | <a href="{U_SEARCH_SELF}">{L_SEARCH_SELF}</a> | <!-- ENDIF -->
+				<!-- ENDIF -->
+			<!-- ENDIF -->
+			<!-- IF S_REGISTERED_USER --><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a>
+				<!-- IF U_RESTORE_PERMISSIONS --> | <a href="{U_RESTORE_PERMISSIONS}">{L_RESTORE_PERMISSIONS}</a><!-- ENDIF -->
+			<!-- ENDIF -->
+		</td>
+	<!-- ENDIF -->
+	</tr></table></div>
+<!-- ENDIF -->
+
+<!-- DEFINE $MICRODATA = ' itemtype="http://data-vocabulary.org/Breadcrumb" itemscope=""' -->
+<table cellspacing="1" width="100%" class="main" style="margin: 4px 0 8px">
+<tr class="bg1"><td><table cellspacing="0" width="100%"><tr class="breadcrumbs">
+	<td><!-- EVENT overall_header_breadcrumbs_before -->
+		<b><!-- IF U_SITE_HOME --><span{$MICRODATA}><a href="{U_SITE_HOME}" data-navbar-reference="home" itemprop="url"><span itemprop="title">{L_SITE_HOME}</span></a></span> <b>&#187;</b> <!-- ENDIF -->
+		<!-- EVENT overall_header_breadcrumb_prepend --><span{$MICRODATA}><a href="{U_INDEX}" data-navbar-reference="index" itemprop="url"><span itemprop="title">{L_INDEX}</span></a></span>
+		<!-- BEGIN navlinks --><!-- EVENT overall_header_navlink_prepend --> &#187; <span{$MICRODATA}<!-- IF navlinks.MICRODATA --> {navlinks.MICRODATA}<!-- ENDIF -->><a href="{navlinks.U_VIEW_FORUM}" itemprop="url"><span itemprop="title">{navlinks.FORUM_NAME}</span></a></span><!-- EVENT overall_header_navlink_append --><!-- END navlinks -->
+		<!-- EVENT overall_header_breadcrumb_append --></b>
+		<!-- EVENT overall_header_breadcrumbs_after -->
+	</td>
+</tr></table></td></tr>
+</table>
+
+<!-- EVENT overall_header_content_before -->

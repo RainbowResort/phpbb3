@@ -1,0 +1,39 @@
+<!-- INCLUDE overall_header.html -->
+
+<form name="confirm" action="{S_CONFIRM_ACTION}" method="post">
+
+<table class="main" width="100%" cellspacing="1">
+<tr>
+	<th>{MESSAGE_TITLE}</th>
+</tr>
+<tr>
+	<td class="bg1" align="center">
+		<!-- IF ADDITIONAL_MSG -->
+			<p class="error">{ADDITIONAL_MSG}</p>
+		<!-- ENDIF -->
+		<!-- IF S_NOTIFY_POSTER -->
+			<input type="checkbox" name="notify_poster" checked="checked" /> <span class="big"><!-- IF S_APPROVE -->{L_NOTIFY_POSTER_APPROVAL}<!-- ELSE -->{L_NOTIFY_POSTER_DISAPPROVAL}<!-- ENDIF --></span><br />
+		<!-- ENDIF -->
+		<!-- IF not S_APPROVE and not S_RESTORE and .reason -->
+			<br />
+			<table width="90%" cellspacing="2" align="center">
+			<tr>
+				<td class="bg1" width="22%"><b class="big">{L_DISAPPROVE_REASON}{L_COLON}</b></td>
+				<td class="bg1" width="78%"><select name="reason_id"><!-- BEGIN reason --><option value="{reason.ID}"<!-- IF reason.S_SELECTED --> selected="selected"<!-- ENDIF -->>{reason.DESCRIPTION}</option><!-- END reason --></select></td>
+			</tr>
+			<tr>
+				<td class="bg1" valign="top"><span class="big"><b>{L_MORE_INFO}{L_COLON}</b></span><br /><span class="bigger">{L_CAN_LEAVE_BLANK}</span></td>
+				<td class="bg1"><textarea name="reason" rows="10" cols="76">{REASON}</textarea></td>
+			</tr>
+			</table>
+			<br />
+		<!-- ENDIF -->
+		<br />{S_HIDDEN_FIELDS}<span class="big">{MESSAGE_TEXT}</span><br /><br />
+		<input type="submit" name="confirm" value="{YES_VALUE}" class="button1" /> &nbsp;<input type="submit" name="cancel" value="{L_NO}" class="button2" /></span>
+	</td>
+</tr>
+</table>
+{S_FORM_TOKEN}
+</form>
+
+<!-- INCLUDE overall_footer.html -->

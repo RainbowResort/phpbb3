@@ -1,0 +1,28 @@
+<!-- IF .draftrow -->
+	<table class="main" width="100%" cellspacing="1">
+		<tr>
+			<th colspan="3">{L_LOAD_DRAFT}</th>
+		</tr>
+		<tr>
+			<td class="bg1" colspan="3" align="center"><span class="big">{L_LOAD_DRAFT_EXPLAIN}</span></td>
+		</tr>
+		<tr>
+			<th>{L_SAVE_DATE}</th>
+			<th>{L_DRAFT_TITLE}</th>
+			<th>{L_OPTIONS}</th>
+		</tr>
+		<!-- BEGIN draftrow -->
+			<tr><!-- IF draftrow.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+				<td class="{$BG}"><span class="bigger">{draftrow.DATE}</span></td>
+				<td class="{$BG}">
+					<b class="big">{draftrow.DRAFT_SUBJECT}</b><span class="bigger">
+					<!-- IF draftrow.S_LINK_TOPIC --><br />{L_TOPIC}{L_COLON} <a href="{draftrow.U_VIEW}">{draftrow.TITLE}</a>
+					<!-- ELSEIF draftrow.S_LINK_FORUM --><br />{L_FORUM}{L_COLON} <a href="{draftrow.U_VIEW}">{draftrow.TITLE}</a>
+					<!-- ELSEIF draftrow.S_LINK_PM --><br />{L_PRIVATE_MESSAGE}
+					<!-- ELSE --><br />{L_NO_TOPIC_FORUM}<!-- ENDIF --></span>
+				</td>
+				<td align="center" class="{$BG}"><a class="big" href="{draftrow.U_INSERT}">{L_LOAD_DRAFT}</a></td>
+			</tr>
+		<!-- END draftrow -->
+	</table>
+<!-- ENDIF -->

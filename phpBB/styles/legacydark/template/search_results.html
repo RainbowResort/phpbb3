@@ -1,0 +1,192 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- EVENT search_results_header_before -->
+
+<table cellspacing="1" style="margin: 6px 0" width="100%">
+	<tr>
+		<td colspan="2">
+			<h3><!-- IF SEARCH_TITLE -->{SEARCH_TITLE}<!-- ELSE -->{SEARCH_MATCHES}<!-- ENDIF --><!-- IF SEARCH_WORDS -->{L_COLON} <a href="{U_SEARCH_WORDS}">{SEARCH_WORDS}</a><!-- ENDIF --></h3>
+			<!-- IF SEARCHED_QUERY --><div class="bigger">{L_SEARCHED_QUERY}{L_COLON} <b>{SEARCHED_QUERY}</b></div><!-- ENDIF -->
+			<!-- IF IGNORED_WORDS --><div class="bigger">{L_IGNORED_TERMS}{L_COLON} <b>{IGNORED_WORDS}</b></div><!-- ENDIF -->
+			<!-- IF PHRASE_SEARCH_DISABLED --><div class="bigger"><b>{L_PHRASE_SEARCH_DISABLED}</b></div><!-- ENDIF -->
+			<!-- IF SEARCH_TOPIC --><div class="bigger">{L_SEARCHED_TOPIC}{L_COLON} <a href="{U_SEARCH_TOPIC}"><b>{SEARCH_TOPIC}</b></a></div><!-- ENDIF -->
+		</td>
+	</tr>
+	<tr valign="bottom">
+		<td>
+			<!-- IF SEARCH_IN_RESULTS and TOTAL_MATCHES > 0 -->
+				<div class="search-box">
+					<form action="{S_SEARCH_ACTION}" method="post">
+						<input type="text" class="inputbox" name="add_keywords" value="{L_SEARCH_IN_RESULTS}" onfocus="if (typeof this.flag == 'undefined') {this.flag = true; this.value='';}" />
+						<input type="submit" name="submit" class="button2" title="{L_SEARCH}" value="{L_GO}" onclick="var h = this.form.elements[0]; if (h.value == '' || typeof h.flag == 'undefined') {h.focus(); return false;}" />
+					</form>
+				</div>
+			<!-- ENDIF -->
+			<!-- EVENT search_results_searchbox_after -->
+		</td>
+		<td align="{S_CONTENT_FLOW_END}"><!-- IF U_MARK_ALL_READ and TOTAL_MATCHES > 0 --><b><a class="nowrap" href="{U_MARK_ALL_READ}">{L_MARK_ALL_READ}</a></b> <!-- ENDIF --><span class="nowrap">[ {SEARCH_MATCHES} ]</span> <!-- INCLUDE pagination.html --></td>
+	</tr>
+</table>
+
+<form method="post" action="{S_SEARCH_ACTION}">
+<!-- EVENT search_results_header_after -->
+
+<!-- IF S_SHOW_TOPICS -->
+	<table class="main" width="100%" cellspacing="1">
+	<tr>
+		<th colspan="3">{L_TOPICS}</th>
+		<th width="10%">{L_AUTHOR}</th>
+		<th width="50">{L_REPLIES}</th>
+		<th width="50">{L_VIEWS}</th>
+		<th width="10%">{L_LAST_POST}</th>
+	</tr>
+	<!-- BEGIN searchresults -->
+		<!-- EVENT search_results_topic_before -->
+		<tr>
+			<td class="bg1" width="25" align="center">
+				<!-- IF searchresults.S_UNREAD_TOPIC --><a href="{searchresults.U_NEWEST_POST}"><!-- ENDIF --><img src="{T_THEME_PATH}/images/{searchresults.TOPIC_IMG_STYLE}.gif" width="19" height="18" alt="<!-- IF searchresults.S_UNREAD_TOPIC -->+" border="0<!-- ENDIF -->" title="{searchresults.TOPIC_FOLDER_IMG_ALT}" /><!-- IF searchresults.S_UNREAD_TOPIC --></a><!-- ENDIF -->
+			</td>
+			<td class="bg1" width="25" align="center">
+			<!-- IF searchresults.TOPIC_ICON_IMG -->
+				<img src="{T_ICONS_PATH}{searchresults.TOPIC_ICON_IMG}" width="{searchresults.TOPIC_ICON_IMG_WIDTH}" height="{searchresults.TOPIC_ICON_IMG_HEIGHT}" alt="" title="" />
+			<!-- ENDIF -->
+			</td>
+			<td class="bg1">
+				<!-- EVENT topiclist_row_prepend -->
+				<!-- IF searchresults.S_UNREAD_TOPIC --><a href="{searchresults.U_NEWEST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_newest.gif" width="18" height="9" alt="&gt;&gt;&gt;" border="0" title="{L_UNREAD_POSTS}" /></a><!-- ENDIF -->
+				<!-- IF searchresults.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF --><!-- IF searchresults.S_HAS_POLL --><b>{searchresults.TOPIC_TYPE} </b><!-- ENDIF --><a title="{L_POSTED}{L_COLON} {searchresults.FIRST_POST_TIME}" href="{searchresults.U_VIEW_TOPIC}" class="topictitle">{searchresults.TOPIC_TITLE}</a>
+				<!-- IF searchresults.S_TOPIC_UNAPPROVED or searchresults.S_POSTS_UNAPPROVED -->
+					<a href="{searchresults.U_MCP_QUEUE}"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="(?)" border="0" title="<!-- IF searchresults.S_TOPIC_UNAPPROVED -->{L_TOPIC_UNAPPROVED}<!-- ELSE -->{L_POSTS_UNAPPROVED}<!-- ENDIF -->" /></a>&nbsp;
+				<!-- ENDIF -->
+				<!-- IF searchresults.S_TOPIC_DELETED -->
+					<a href="{searchresults.U_MCP_QUEUE}"><img src="{T_THEME_PATH}/images/icon_topic_deleted.gif" width="14" height="14" alt="(X)" border="0" title="{L_TOPIC_DELETED}" /></a>&nbsp;
+				<!-- ENDIF -->
+				<!-- IF searchresults.S_TOPIC_REPORTED -->
+					<a href="{searchresults.U_MCP_REPORT}"><img src="{T_THEME_PATH}/images/icon_topic_reported.gif" width="19" height="18" alt="(!)" border="0" title="{L_TOPIC_REPORTED}" /></a>&nbsp;
+				<!-- ENDIF -->
+				<!-- EVENT topiclist_row_topic_title_after -->
+				<!-- IF .searchresults.pagination -->
+					<div class="bigger"> [ <img src="{T_THEME_PATH}/images/icon_post_target.gif" width="12" height="9" alt="" />{L_GOTO_PAGE}{L_COLON} 
+					<!-- BEGIN pagination -->
+						<!-- IF searchresults.pagination.S_IS_PREV -->
+						<!-- ELSEIF searchresults.pagination.S_IS_CURRENT --><b>{searchresults.pagination.PAGE_NUMBER}</b>
+						<!-- ELSEIF searchresults.pagination.S_IS_ELLIPSIS --> {L_ELLIPSIS} 
+						<!-- ELSEIF searchresults.pagination.S_IS_NEXT -->
+						<!-- ELSE --><a href="{searchresults.pagination.PAGE_URL}">{searchresults.pagination.PAGE_NUMBER}</a>
+						<!-- ENDIF -->
+					<!-- END pagination -->
+					] </div>
+				<!-- ENDIF -->
+				<div class="bigger">{L_IN} <a href="{searchresults.U_VIEW_FORUM}">{searchresults.FORUM_TITLE}</a></div>
+				<!-- EVENT topiclist_row_append -->
+			</td>
+			<td class="bg2" align="center"><p>{searchresults.TOPIC_AUTHOR_FULL}</p></td>
+			<td class="bg1" align="center"><p>{searchresults.TOPIC_REPLIES}</p></td>
+			<td class="bg2" align="center"><p>{searchresults.TOPIC_VIEWS}</p></td>
+			<td class="bg1" align="center" nowrap="nowrap">
+				<p>{searchresults.LAST_POST_TIME}<br />{searchresults.LAST_POST_AUTHOR_FULL}<!-- IF not S_IS_BOT --> <a href="{searchresults.U_LAST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_latest.gif" width="18" height="9" alt="&gt;" border="0" title="{L_GOTO_LAST_POST}" /></a><!-- ENDIF --></p>
+			</td>
+		</tr>
+		<!-- EVENT search_results_topic_after -->
+	<!-- BEGINELSE -->
+		<tr>
+			<td colspan="7" class="bg3" align="center"><b>{L_NO_SEARCH_RESULTS}</b></td>
+		</tr>
+	<!-- END searchresults -->
+	<!-- IF .searchresults and (S_SELECT_SORT_DAYS or S_SELECT_SORT_KEY) -->
+		<tr>
+			<td class="cat" colspan="7"><!-- INCLUDE display_options.html --></td>
+		</tr>
+	<!-- ENDIF -->
+	</table>
+
+<!-- ELSE -->
+
+	<!-- BEGIN searchresults -->
+	<table class="main" width="100%" cellspacing="1">
+
+	<!-- IF searchresults.S_FIRST_ROW -->
+		<tr>
+			<th nowrap="nowrap">{L_AUTHOR}</th>
+			<th width="100%">{L_MESSAGE}</th>
+		</tr>
+	<!-- ENDIF -->
+
+		<tr class="<!-- IF searchresults.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+		<!-- EVENT search_results_post_before -->
+		<!-- IF searchresults.S_IGNORE_POST -->
+			<td align="center" class="member"<!-- IF searchresults.S_FIRST_ROW or searchresults.S_LAST_ROW --> colspan="2"<!-- ENDIF -->>{searchresults.L_IGNORE_POST}</td>
+		<!-- ELSE -->
+			<td align="center"><b>{searchresults.POST_AUTHOR_FULL}</b></td>
+			<td width="100%">
+				<table cellspacing="0" height="20" width="100%">
+				<tr>
+					<td>
+						<table cellspacing="0" width="100%"><tr><td class="bigger">
+						<!-- IF searchresults.POST_SUBJECT neq "" -->
+							<b>{L_POST_SUBJECT}{L_COLON}</b> <a href="{searchresults.U_VIEW_POST}">{searchresults.POST_SUBJECT}</a>
+						<!-- ELSE -->
+							[ <a href="{searchresults.U_VIEW_POST}">{L_JUMP_TO_POST}</a> ]
+						<!-- ENDIF -->
+						</td>
+						<td align="{S_CONTENT_FLOW_END}" class="bigger"><b>{L_POSTED}{L_COLON}</b> {searchresults.POST_DATE}</td></tr></table>
+					</td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="<!-- IF searchresults.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->" valign="top">
+			<td><br />
+				<table cellspacing="0" width="150"><tr><td>
+					<table class="profile"><tr><td>&nbsp;</td><td width="100%"><table class="fixed"><tr><td>
+						<!-- EVENT search_results_postprofile_before -->
+						<div>{L_FORUM}{L_COLON} <a href="{searchresults.U_VIEW_FORUM}">{searchresults.FORUM_TITLE}</a></div>
+						<div>{L_TOPIC}{L_COLON} <a href="{searchresults.U_VIEW_TOPIC}">{searchresults.TOPIC_TITLE}</a></div>
+						<!-- EVENT search_results_topic_title_after -->
+						<div>{L_REPLIES}{L_COLON} {searchresults.TOPIC_REPLIES}</div>
+						<div>{L_VIEWS}{L_COLON} {searchresults.TOPIC_VIEWS}</div>
+						<!-- EVENT search_results_postprofile_after -->
+					</td></tr></table></td><td>&nbsp;</td></tr></table>
+				</td></tr></table>
+			<br /><br /></td>
+			<td>
+				<table cellspacing="5" width="100%">
+				<tr>
+					<td><div class="postbody"><span class="content">{searchresults.MESSAGE}</span></div></td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+		<!-- ENDIF -->
+	<!-- EVENT search_results_post_after -->
+		<!-- IF searchresults.S_LAST_ROW and S_SELECT_SORT_KEY -->
+			<tr>
+				<td class="cat" colspan="2"><!-- INCLUDE display_options.html --></td>
+			</tr>
+		<!-- ENDIF -->
+		</table>
+		<!-- IF not searchresults.S_LAST_ROW --><div class="spacer"></div><!-- ENDIF -->
+	<!-- BEGINELSE -->
+		<table class="main" width="100%" cellspacing="1">
+		<tr>
+			<th nowrap="nowrap">{L_AUTHOR}</th>
+			<th width="100%">{L_MESSAGE}</th>
+		</tr>
+
+		<tr>
+			<td colspan="2" class="bg3" align="center"><b>{L_NO_SEARCH_RESULTS}</b></td>
+		</tr>
+		</table>
+	<!-- END searchresults -->
+
+<!-- ENDIF -->
+</form>
+
+<table cellspacing="1" style="margin: 5px 0" width="100%"><tr valign="top">
+	<td><b class="nowrap"><!-- IF SEARCH_TOPIC --><a href="{U_SEARCH_TOPIC}">{L_RETURN_TO_TOPIC}</a><!-- ELSE --><a href="{U_SEARCH}">{L_GO_TO_SEARCH_ADV}</a><!-- ENDIF --></b></td>
+	<td align="{S_CONTENT_FLOW_END}"><span class="nowrap">[ {SEARCH_MATCHES} ]</span> <!-- INCLUDE pagination.html --></td>
+</tr></table>
+
+<!-- IF S_DISPLAY_JUMPBOX --><table cellspacing="0" width="100%"><tr><td><!-- INCLUDE jumpbox.html --></td></tr></table><!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

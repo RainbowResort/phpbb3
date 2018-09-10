@@ -1,0 +1,46 @@
+<!-- INCLUDE overall_header.html -->
+
+<table width="100%" style="margin: 6px 0" cellspacing="1">
+<tr>
+	<td colspan="2"><h4>{TOTAL_REGISTERED_USERS_ONLINE}<br /> {TOTAL_GUEST_USERS_ONLINE}<!-- IF S_SWITCH_GUEST_DISPLAY --> [ <a href="{U_SWITCH_GUEST_DISPLAY}">{L_SWITCH_GUEST_DISPLAY}</a> ]<!-- ENDIF --></h4></td>
+</tr>
+<!-- IF .pagination -->
+	<tr valign="bottom">
+		<td nowrap="nowrap"><b>{PAGE_NUMBER}</b></td>
+		<td width="100%" align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td>
+	</tr>
+<!-- ENDIF -->
+</table>
+
+<table class="main" width="100%" cellspacing="1">
+<tr>
+	<th align="{S_CONTENT_FLOW_BEGIN}" width="40%"><a href="{U_SORT_USERNAME}">{L_USERNAME}</a></th>
+	<th width="20%"><a href="{U_SORT_UPDATED}">{L_LAST_UPDATED}</a></th>
+	<th width="40%"><a href="{U_SORT_LOCATION}">{L_FORUM_LOCATION}</a></th>
+</tr>
+<!-- BEGIN user_row -->
+	<tr>
+		<td class="bg1"><span class="big">{user_row.USERNAME_FULL}</span><!-- IF user_row.USER_IP --><br /><span class="bigger">{L_IP}{L_COLON} <a href="{user_row.U_USER_IP}">{user_row.USER_IP}</a> &#187; <a href="{user_row.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a></span><!-- ENDIF --><!-- IF user_row.USER_BROWSER --><br />{user_row.USER_BROWSER}<!-- ENDIF --></td>
+		<td align="center" class="bg2"><span class="bigger">{user_row.LASTUPDATE}</span></td>
+		<td class="bg1"><a class="bigger" href="{user_row.U_FORUM_LOCATION}">{user_row.FORUM_LOCATION}</a></td>
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td align="center" class="bg1" colspan="3"><span class="big">{L_NO_ONLINE_USERS}</span></td>
+	</tr>
+<!-- END user_row -->
+</table>
+
+<!-- IF LEGEND --><div class="bigger"<!-- IF S_DISPLAY_JUMPBOX and not .pagination --> style="margin-bottom: 4px"<!-- ENDIF -->><i>{L_LEGEND}{L_COLON} {LEGEND}</i></div><!-- ENDIF -->
+
+<!-- IF .pagination -->
+	<table width="100%" style="margin-top: 5px" cellspacing="1">
+	<tr valign="top">
+		<td nowrap="nowrap"><b>{PAGE_NUMBER}</b></td>
+		<td width="100%" align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td>
+	</tr>
+	</table>
+<!-- ENDIF -->
+
+<!-- IF S_DISPLAY_JUMPBOX --><div<!-- IF not (LEGEND and not .pagination) --> style="margin: 8px 0"<!-- ENDIF -->><!-- INCLUDE jumpbox.html --></div><!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->

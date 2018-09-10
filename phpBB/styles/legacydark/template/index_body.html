@@ -1,0 +1,90 @@
+<!-- INCLUDE overall_header.html -->
+
+<div id="datebar">
+	<table width="100%" cellspacing="0">
+	<tr class="bigger">
+		<!-- IF S_USER_LOGGED_IN --><td>{CURRENT_TIME}</td><!-- ENDIF -->
+		<td align="{S_CONTENT_FLOW_END}"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ELSE -->{CURRENT_TIME}<!-- ENDIF --></td>
+	</tr>
+	</table>
+</div>
+
+<div style="margin: 4px 0"><!-- EVENT index_body_markforums_before -->
+
+<!-- IF not S_IS_BOT and U_MARK_FORUMS --><div align="{S_CONTENT_FLOW_END}" style="margin-bottom: 8px"><b><a href="{U_MARK_FORUMS}">{L_MARK_FORUMS_READ}</a></b></div><!-- ENDIF -->
+
+<!-- EVENT index_body_markforums_after --></div>
+
+<!-- INCLUDE forumlist_body.html -->
+
+<!-- EVENT index_body_forumlist_body_after -->
+
+<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
+	<form method="post" action="{S_LOGIN_ACTION}">
+
+	<table class="main" width="100%" cellspacing="1" style="margin: 8px 0">
+	<tr>
+		<td class="cat"><h4><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a><!-- IF S_REGISTER_ENABLED --> :: <a href="{U_REGISTER}">{L_REGISTER}</a><!-- ENDIF --></h4></td>
+	</tr>
+	<tr>
+		<td class="bg1" align="center"><span class="bigger">{L_USERNAME}{L_COLON}</span> <input type="text" class="inputbox" name="username" size="10" />&nbsp; <span class="bigger">{L_PASSWORD}{L_COLON}</span> <input type="password" class="inputbox" name="password" size="10" autocomplete="off" />&nbsp; <!-- IF U_SEND_PASSWORD --><a href="{U_SEND_PASSWORD}" class="nowrap"><span class="bigger">{L_FORGOT_PASS}</span></a>&nbsp;<!-- IF S_AUTOLOGIN_ENABLED -->|<!-- ENDIF --><!-- ENDIF --> <!-- IF S_AUTOLOGIN_ENABLED --> <span class="nowrap"><span class="bigger">{L_LOG_ME_IN}</span> <input type="checkbox" name="autologin" /></span><!-- ENDIF -->&nbsp; <input type="submit" class="button1" name="login" value="{L_LOGIN}" /></td>
+	</tr>
+	</table>
+	{S_LOGIN_REDIRECT}
+	{S_FORM_TOKEN}
+	</form>
+<!-- ENDIF -->
+
+<!-- EVENT index_body_stat_blocks_before -->
+
+<!-- IF S_DISPLAY_ONLINE_LIST -->
+	<table class="main" width="100%" cellspacing="1" style="margin: 8px 0">
+	<tr>
+		<td class="cat"><h4><!-- IF U_VIEWONLINE --><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a><!-- ELSE -->{L_WHO_IS_ONLINE}<!-- ENDIF --></h4></td>
+	</tr>
+	<tr class="bigger">
+		<td class="bg1">
+				<!-- EVENT index_body_block_online_prepend -->
+				{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}
+				<!-- IF U_VIEWONLINE -->
+					<br /><br />{LOGGED_IN_USER_LIST}
+					<!-- IF LEGEND --><br /><i>{L_LEGEND}{L_COLON} {LEGEND}</i><!-- ENDIF -->
+				<!-- ENDIF -->
+				<!-- EVENT index_body_block_online_append -->
+		</td>
+	</tr>
+	</table>
+<!-- ENDIF -->
+
+<!-- EVENT index_body_birthday_block_before -->
+
+<!-- IF S_DISPLAY_BIRTHDAY_LIST -->
+	<table class="main" width="100%" cellspacing="1" style="margin: 8px 0">
+	<tr>
+		<td class="cat"><h4>{L_BIRTHDAYS}</h4></td>
+	</tr>
+	<tr class="bigger">
+		<td class="bg1">
+				<!-- EVENT index_body_block_birthday_prepend -->
+				<!-- IF .birthdays -->{L_CONGRATULATIONS}{L_COLON} <b><!-- BEGIN birthdays -->{birthdays.USERNAME}<!-- IF birthdays.AGE !== '' --> ({birthdays.AGE})<!-- ENDIF --><!-- IF not birthdays.S_LAST_ROW -->, <!-- ENDIF --><!-- END birthdays --></b><!-- ELSE -->{L_NO_BIRTHDAYS}<!-- ENDIF -->
+				<!-- EVENT index_body_block_birthday_append -->
+		</td>
+	</tr>
+	</table>
+<!-- ENDIF -->
+
+<table class="main" width="100%" cellspacing="1" style="margin: 8px 0">
+<tr>
+	<td class="cat"><h4>{L_STATISTICS}</h4></td>
+</tr>
+<tr class="bigger">
+	<td class="bg1">
+			<!-- EVENT index_body_block_stats_prepend -->
+			{TOTAL_POSTS} | {TOTAL_TOPICS} | {TOTAL_USERS} | {NEWEST_USER}
+			<!-- EVENT index_body_block_stats_append -->
+	</td>
+</tr>
+</table>
+
+<!-- EVENT index_body_stat_blocks_after -->
+<!-- INCLUDE overall_footer.html -->

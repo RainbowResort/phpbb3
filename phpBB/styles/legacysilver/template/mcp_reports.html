@@ -1,0 +1,65 @@
+<!-- INCLUDE mcp_header.html -->
+
+<table width="100%" cellspacing="1">
+<tr>
+	<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> [ {TOTAL_REPORTS} ]</td>
+	<!-- IF .pagination --><td width="100%" align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+</tr>
+</table>
+
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<table width="100%" class="main" cellspacing="1">
+<tr>
+	<th colspan="4">{L_TITLE}</th>
+</tr>
+<tr>
+	<td colspan="4" class="cat"><!-- INCLUDE display_options.html --></td>
+</tr>
+<tr>
+	
+	<th><!-- IF S_PM -->{L_PM}<!-- ELSE -->{L_POST}<!-- ENDIF --></th>
+	<th width="20%">{L_REPORTER}</th>
+	<th width="20%">{L_REPORT_TIME}</th>
+	<th width="5%">{L_MARK}</th>
+</tr>
+<!-- BEGIN postrow -->
+	<tr><!-- IF postrow.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+		<td class="{$BG}">
+			<!-- IF postrow.ATTACH_ICON_IMG -->
+				<img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" class="bigger" />
+			<!-- ENDIF -->
+			<!-- IF S_PM -->
+				<a href="{postrow.U_VIEW_DETAILS}" class="big">{postrow.PM_SUBJECT}</a> <div class="bigger">{L_MESSAGE_BY_AUTHOR} {postrow.PM_AUTHOR_FULL} &#187; {postrow.PM_TIME}</div> <div class="bigger">{L_MESSAGE_TO} {postrow.RECIPIENTS}</div>
+			<!-- ELSE -->
+				<a href="{postrow.U_VIEW_DETAILS}" class="big">{postrow.POST_SUBJECT}</a> <div class="bigger">{L_POSTED} {L_POST_BY_AUTHOR} {postrow.POST_AUTHOR_FULL} &#187; {postrow.POST_TIME}</div> <div class="bigger">{L_FORUM}{L_COLON} <!-- IF postrow.U_VIEWFORUM --><a href="{postrow.U_VIEWFORUM}">{postrow.FORUM_NAME}</a><!-- ELSE -->{postrow.FORUM_NAME}<!-- ENDIF --></div>
+			<!-- ENDIF -->
+		</td>
+		<td align="center" class="{$BG}"><span class="big">{postrow.REPORTER_FULL}</span></td>
+		<td align="center" class="{$BG}"><span class="bigger">{postrow.REPORT_TIME}</span></td>
+		<td align="center" class="{$BG}"><input type="checkbox" name="report_id_list[]" value="{postrow.REPORT_ID}" /></td>
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td class="bg1" colspan="4" align="center"><span class="big">{L_NO_POSTS}</span></td>
+	</tr>
+<!-- END postrow -->
+
+<!-- IF .postrow -->
+<tr>
+	<td class="cat" colspan="4" align="center">
+		<input class="button2" type="submit" value="{L_DELETE_REPORTS}" name="action[delete]" /><!-- IF not S_CLOSED --> &nbsp;<input class="button1" type="submit" name="action[close]" value="{L_CLOSE_REPORTS}" /><!-- ENDIF -->
+	</td>
+</tr>
+<!-- ENDIF -->
+</table>
+{S_FORM_TOKEN}
+</form>
+
+<table width="100%" cellspacing="1"><tr>
+	<!-- IF .postrow --><td nowrap="nowrap"><b>{PAGE_NUMBER}</b> [ {TOTAL_REPORTS} ]</td>
+	<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td><!-- IF .pagination --></tr><tr><!-- ENDIF --><!-- ENDIF -->
+	<!-- IF .pagination --><td align="{S_CONTENT_FLOW_END}"<!-- IF .postrow --> colspan="2"<!-- ENDIF -->><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+</tr></table>
+
+<!-- INCLUDE mcp_footer.html -->

@@ -1,0 +1,47 @@
+<!-- INCLUDE overall_header.html -->
+
+<a name="faqtop" class="anchor"></a>
+
+<table class="main" width="100%" cellspacing="1">
+<tr>
+	<th>{L_FAQ_TITLE}</th>
+</tr>
+<tr>
+	<td class="bg1">
+	<table width="100%" cellspacing="1"><tr class="big" valign="top"><td>
+	<!-- BEGIN faq_block -->
+		<!-- IF faq_block.SWITCH_COLUMN or (SWITCH_COLUMN_MANUALLY and faq_block.S_ROW_COUNT == 4) --></td><td width="50%"><!-- ENDIF -->
+		<b>{faq_block.BLOCK_TITLE}</b><br />
+		<!-- BEGIN faq_row -->
+			<a href="#f{faq_block.S_ROW_COUNT}r{faq_block.faq_row.S_ROW_COUNT}">{faq_block.faq_row.FAQ_QUESTION}</a><br />
+		<!-- END faq_row -->
+		<br />
+	<!-- END faq_block -->
+	</td></tr></table>
+	</td>
+</tr>
+</table>
+
+<br clear="all" />
+
+<!-- BEGIN faq_block -->
+	<table class="main" width="100%" cellspacing="1">
+	<tr>
+		<td class="cat" align="center"><h4>{faq_block.BLOCK_TITLE}</h4></td>
+	</tr>
+	<!-- BEGIN faq_row --> 
+	<tr>
+		<td class="<!-- IF faq_block.faq_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+			<div class="postbody"><span class="content">
+				<a name="f{faq_block.S_ROW_COUNT}r{faq_block.faq_row.S_ROW_COUNT}" class="anchor"></a><b>&#187; {faq_block.faq_row.FAQ_QUESTION}</b><br />
+				{faq_block.faq_row.FAQ_ANSWER}
+			</span></div>
+			<br clear="all" /> <a class="top" href="#faqtop"><b>{L_BACK_TO_TOP}</b></a>
+		</td>
+	</tr>
+	<!-- END faq_row -->
+	</table>
+<!-- END faq_block -->
+
+<!-- IF S_DISPLAY_JUMPBOX --><div style="margin: 8px 0"><!-- INCLUDE jumpbox.html --></div><!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->

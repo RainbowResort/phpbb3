@@ -1,0 +1,73 @@
+<!-- BEGIN post_review_row -->
+	<table class="main" width="100%" cellspacing="1">
+
+		<!-- IF post_review_row.S_FIRST_ROW -->
+			<tr>
+				<th align="{S_CONTENT_FLOW_BEGIN}" colspan="2">{L_POST_REVIEW}</th>
+			</tr>
+			<tr>
+				<td class="bg1" colspan="2"><div class="big">{L_POST_REVIEW_EXPLAIN}</div></td>
+			</tr>
+			<tr>
+				<th nowrap="nowrap">{L_AUTHOR}</th>
+				<th width="100%">{L_MESSAGE}</th>
+			</tr>
+		<!-- ENDIF -->
+
+		<tr class="<!-- IF post_review_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+		<!-- IF post_review_row.S_IGNORE_POST -->
+			<td align="center" class="member" colspan="2">{post_review_row.L_IGNORE_POST}</td>
+		<!-- ELSE -->
+			<td rowspan="2" valign="top"><a name="pr{post_review_row.POST_ID}" class="anchor"></a>
+				<table width="150" cellspacing="0">
+				<tr>
+					<td align="center"><b>{post_review_row.POST_AUTHOR_FULL}</b></td>
+				</tr>
+				</table>
+			</td>
+			<td width="100%">
+				<table width="100%" cellspacing="0">
+				<tr>
+					<td class="bigger"><b>{L_POST_SUBJECT}{L_COLON}</b> {post_review_row.POST_SUBJECT}</td>
+					<!-- IF post_review_row.POSTER_QUOTE and post_review_row.DECODED_MESSAGE --><td align="{S_CONTENT_FLOW_END}"><a class="button" href="#" onclick="addquote({post_review_row.POST_ID}, '{post_review_row.POSTER_QUOTE}', '{LA_WROTE}', {post_id:{post_review_row.POST_ID},time:{post_review_row.POST_TIME},user_id:{post_review_row.USER_ID}}, true); return false;" title="{L_QUOTE} {post_review_row.POST_AUTHOR}">{L_BUTTON_QUOTE}</a></td><!-- ENDIF -->
+				</tr>
+				</table>
+			</td>
+		</tr>
+
+		<tr class="<!-- IF post_review_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+			<td valign="top">
+				<table cellspacing="5" width="100%">
+				<tr>
+					<td><div class="postbody"><span class="content">{post_review_row.MESSAGE}</span></div>
+
+					<!-- IF post_review_row.S_HAS_ATTACHMENTS -->
+						<br />
+
+						<table class="main" width="100%" cellspacing="1">
+						<tr>
+							<td class="bg3"><b class="bigger">{L_ATTACHMENTS}</b></td>
+						</tr>
+						<!-- BEGIN attachment -->
+							<tr class="postbody">
+								<td class="bg1">{post_review_row.attachment.DISPLAY_ATTACHMENT}</td>
+							</tr>
+						<!-- END attachment -->
+						</table>
+					<!-- ENDIF -->
+
+						<!-- IF post_review_row.POSTER_QUOTE and post_review_row.DECODED_MESSAGE -->
+							<div id="message_{post_review_row.POST_ID}" data-content="{post_review_row.DECODED_MESSAGE}" style="display: none"></div>
+						<!-- ENDIF -->
+					</td>
+				</tr>
+				<tr>
+					<td align="{S_CONTENT_FLOW_END}" class="bigger"><b>{L_POSTED}{L_COLON}</b> {post_review_row.POST_DATE}</td>
+				</tr>
+				</table>
+			</td>
+		<!-- ENDIF -->
+		</tr>
+	</table>
+	<!-- IF not post_review_row.S_LAST_ROW --><div class="spacer"></div><!-- ENDIF -->
+<!-- END post_review_row -->

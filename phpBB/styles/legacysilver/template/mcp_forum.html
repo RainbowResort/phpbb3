@@ -1,0 +1,95 @@
+<!-- INCLUDE mcp_header.html -->
+
+<table width="100%" cellspacing="1"><tr>
+	<td class="bigger" nowrap="nowrap"><!-- IF U_VIEW_FORUM_LOGS --><b><a href="{U_VIEW_FORUM_LOGS}">{L_VIEW_FORUM_LOGS}</a></b><!-- ENDIF --></td>
+	<td width="100%" align="{S_CONTENT_FLOW_END}"><span class="nowrap">[ {TOTAL_TOPICS} ]</span> <!-- INCLUDE pagination.html --></td>
+</tr></table>
+
+<form method="post" id="mcp" action="{S_MCP_ACTION}">
+<table class="main" width="100%" cellspacing="1">
+<tr>
+	<td class="cat" colspan="<!-- IF S_MERGE_SELECT -->5<!-- ELSE -->6<!-- ENDIF -->"><!-- INCLUDE display_options.html --></td>
+</tr>
+<!-- BEGIN topicrow -->
+	<!-- IF topicrow.S_FIRST_ROW -->
+		<tr>
+			<th colspan="3">{L_TOPICS}</th>
+			<th width="50">{L_REPLIES}</th>
+			<th width="17%">{L_LAST_POST}</th>
+			<!-- IF not S_MERGE_SELECT --><th width="5%">{L_MARK}</th><!-- ENDIF -->
+		</tr>
+	<!-- ENDIF -->
+	<tr class="bigger">
+		<td class="bg1" width="25" align="center"><img src="{T_THEME_PATH}/images/{topicrow.TOPIC_IMG_STYLE}.gif" width="19" height="18" alt="<!-- IF topicrow.S_UNREAD_TOPIC -->+<!-- ENDIF -->" /></td>
+		<td class="bg1" width="25" align="center"><!-- IF topicrow.TOPIC_ICON_IMG --><img src="{T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}" width="{topicrow.TOPIC_ICON_IMG_WIDTH}" height="{topicrow.TOPIC_ICON_IMG_HEIGHT}" alt="" title="" /><!-- ENDIF --></td>
+		<td class="bg1">
+			<!-- EVENT topiclist_row_prepend -->
+			<!-- IF topicrow.S_SELECT_TOPIC -->
+				[ <a href="{topicrow.U_SELECT_TOPIC}">{L_SELECT_MERGE}</a> ]&nbsp;
+			<!-- ENDIF -->
+			<!-- IF topicrow.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF -->
+			<!-- EVENT mcp_forum_topic_title_before --><a title="{L_POSTED}{L_COLON} {topicrow.FIRST_POST_TIME}" href="{topicrow.U_VIEW_TOPIC}">{topicrow.TOPIC_TITLE}</a><!-- EVENT mcp_forum_topic_title_after -->
+			<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED -->
+				<a href="{topicrow.U_MCP_QUEUE}"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="(?)" border="0" title="<!-- IF topicrow.S_TOPIC_UNAPPROVED -->{L_TOPIC_UNAPPROVED}<!-- ELSE -->{L_POSTS_UNAPPROVED}<!-- ENDIF -->" /></a>&nbsp;
+			<!-- ENDIF -->
+			<!-- IF topicrow.S_TOPIC_DELETED or topicrow.S_POSTS_DELETED -->
+				<a href="{topicrow.U_MCP_QUEUE}"><img src="{T_THEME_PATH}/images/icon_topic_deleted.gif" width="14" height="14" alt="(X)" border="0" title="{L_TOPIC_DELETED}" /></a>&nbsp;
+			<!-- ENDIF -->
+			<!-- IF topicrow.S_TOPIC_REPORTED and topicrow.U_MCP_REPORT -->
+				<a href="{topicrow.U_MCP_REPORT}"><img src="{T_THEME_PATH}/images/icon_topic_reported.gif" width="19" height="18" alt="(!)" border="0" title="{L_TOPIC_REPORTED}" /></a>&nbsp;
+			<!-- ENDIF -->
+			<!-- IF topicrow.S_MOVED_TOPIC and S_CAN_DELETE -->
+				[ <a href="{topicrow.U_DELETE_TOPIC}">{L_DELETE_SHADOW_TOPIC}</a> ]&nbsp;
+			<!-- ENDIF -->
+			<!-- EVENT topiclist_row_topic_title_after -->
+			<br />{L_POST_BY_AUTHOR} {topicrow.TOPIC_AUTHOR_FULL} &#187; {topicrow.FIRST_POST_TIME}
+			<!-- EVENT topiclist_row_append -->
+		</td>
+		<td class="bg1" align="center">{topicrow.REPLIES}</td>
+		<td class="bg1" align="center">{topicrow.LAST_POST_TIME}<br />{topicrow.LAST_POST_AUTHOR_FULL}</td>
+		<!-- IF not S_MERGE_SELECT -->
+			<td class="bg2" align="center">
+				<!-- IF not topicrow.S_MOVED_TOPIC --><input type="checkbox" name="topic_id_list[]" value="{topicrow.TOPIC_ID}"<!-- IF topicrow.S_TOPIC_CHECKED --> checked="checked"<!-- ENDIF --> /><!-- ELSE -->&nbsp;<!-- ENDIF -->
+			</td>
+		<!-- ENDIF -->
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td class="bg1" colspan="<!-- IF S_MERGE_SELECT -->5<!-- ELSE -->6<!-- ENDIF -->" align="center"><span class="big">{L_NO_TOPICS}</span></td>
+	</tr>
+<!-- END topicrow -->
+<!-- EVENT mcp_forum_actions_before -->
+<!-- IF .topicrow and not S_MERGE_SELECT -->
+<tr>
+	<td class="cat" colspan="<!-- IF S_MERGE_SELECT -->5<!-- ELSE -->6<!-- ENDIF -->" align="{S_CONTENT_FLOW_END}">
+		<select name="action">
+			<option value="" selected="selected">{L_SELECT_ACTION}</option>
+			<!-- IF S_CAN_DELETE --><option value="delete_topic">{L_DELETE}</option><!-- ENDIF -->
+			<!-- IF S_CAN_RESTORE --><option value="restore_topic">{L_RESTORE}</option><!-- ENDIF -->
+			<!-- IF S_CAN_MERGE --><option value="merge_topics">{L_MERGE}</option><!-- ENDIF -->
+			<!-- IF S_CAN_MOVE --><option value="move">{L_MOVE}</option><!-- ENDIF -->
+			<!-- IF S_CAN_FORK --><option value="fork">{L_FORK}</option><!-- ENDIF -->
+			<!-- IF S_CAN_LOCK --><option value="lock">{L_LOCK}</option><option value="unlock">{L_UNLOCK}</option><!-- ENDIF -->
+			<!-- IF S_CAN_SYNC --><option value="resync">{L_RESYNC}</option><!-- ENDIF -->
+			<!-- IF S_CAN_MAKE_NORMAL --><option value="make_normal">{L_MAKE_NORMAL}</option><!-- ENDIF -->
+			<!-- IF S_CAN_MAKE_STICKY --><option value="make_sticky">{L_MAKE_STICKY}</option><!-- ENDIF -->
+			<!-- IF S_CAN_MAKE_ANNOUNCE --><option value="make_announce">{L_MAKE_ANNOUNCE}</option><!-- ENDIF -->
+			<!-- IF S_CAN_MAKE_ANNOUNCE_GLOBAL --><option value="make_global">{L_MAKE_GLOBAL}</option><!-- ENDIF -->
+			<!-- EVENT mcp_forum_actions_append -->
+		</select>
+		<input class="button1" type="submit" value="{L_SUBMIT}" />
+	</td>
+</tr>
+<!-- ENDIF -->
+</table>
+{S_FORM_TOKEN}
+<!-- EVENT mcp_forum_actions_after -->
+</form>
+
+<table width="100%" cellspacing="1"><tr>
+	<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> [ {TOTAL_TOPICS} ]</td>
+	<!-- IF not S_MERGE_SELECT --><td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('mcp', 'topic_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'topic_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td><!-- IF .pagination --></tr><tr><!-- ENDIF --><!-- ENDIF -->
+	<!-- IF .pagination --><td align="{S_CONTENT_FLOW_END}"<!-- IF not S_MERGE_SELECT --> colspan="2"<!-- ENDIF -->><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+</tr></table>
+
+<!-- INCLUDE mcp_footer.html -->
