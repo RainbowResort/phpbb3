@@ -1,7 +1,3 @@
-<!-- BEGIN oauth -->
-	<tr>
-		<td>
-			<a href="{oauth.REDIRECT_URL}">{oauth.SERVICE_NAME}</a>
-		</td>
-	</tr>
-<!-- END oauth -->
+<tr>
+	<td colspan="2"<!-- IF not S_REGISTER_ENABLED --> align="center"<!-- ENDIF -->><!-- BEGIN oauth --><a class="bigger" href="{oauth.REDIRECT_URL}">{oauth.SERVICE_NAME}</a><!-- IF not oauth.S_LAST_ROW --> | <!-- ENDIF --><!-- END oauth --></td>
+</tr>

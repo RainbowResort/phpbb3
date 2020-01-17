@@ -1,8 +1,20 @@
+<div align="center" class="copyright">
+	<p class="footer-row">
+		{CREDIT_LINE}
+	</p>
+	<!-- IF TRANSLATION_INFO -->
+		<p class="footer-row">
+			{TRANSLATION_INFO}
+		</p>
+	<!-- ENDIF -->
+	<!-- IF DEBUG_OUTPUT -->
+		<p class="footer-row">
+			{DEBUG_OUTPUT}
+		</p>
+	<!-- ENDIF -->
+</div>
 
-<br clear="all" />
+<!-- EVENT simple_footer_after -->
+<!-- EVENT simple_footer_body_after -->
 
-<table cellspacing="0" width="100%"><tr><td><div align="center" class="copyright">
-	{CREDIT_LINE}
-	<!-- IF TRANSLATION_INFO --><br />{TRANSLATION_INFO}<!-- ENDIF -->
-	<!-- IF DEBUG_OUTPUT --><br />{DEBUG_OUTPUT}<!-- ENDIF -->
-</div><!-- EVENT simple_footer_after --></td></tr></table></body></html>
+</body></html>

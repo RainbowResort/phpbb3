@@ -1,33 +1,47 @@
-<!-- IF CUR_FOLDER_NAME or TOTAL_MESSAGES or S_VIEW_MESSAGE or (FOLDER_CUR_MESSAGES neq 0 and (U_MARK_ALL or .pagination)) -->
-	<table class="main" width="100%" cellspacing="1" style="margin-bottom: 4px"><tr><td class="bg1">
-		<!-- IF CUR_FOLDER_NAME --><h3>{L_TITLE}{L_COLON} {CUR_FOLDER_NAME}</h3><br /><!-- ENDIF -->
-		<table cellspacing="0" width="100%"><tr>
-			<td>
+<form name="viewfolder" method="post" action="{S_PM_ACTION}">
+
+<!-- IF CUR_FOLDER_NAME or TOTAL_MESSAGES or S_VIEW_MESSAGE -->
+	<table class="main" width="100%" cellspacing="1" style="margin-bottom: 4px">
+	<tr>
+		<td class="bg1">
+			<h3>{L_TITLE}<!-- IF CUR_FOLDER_NAME -->{L_COLON} {CUR_FOLDER_NAME}<!-- ENDIF --></h3>
+
+			<br clear="all" />
+
 			<!-- IF TOTAL_MESSAGES -->
-				<b class="nowrap">{PAGE_NUMBER}</b>
-				<span class="nowrap"><span class="bigger">
-					<!-- IF FOLDER_STATUS and FOLDER_MAX_MESSAGES neq 0 -->
-						{FOLDER_STATUS}
-					<!-- ELSE -->
-						({TOTAL_MESSAGES})
+				<table cellspacing="0" width="100%">
+				<tr>
+					<td nowrap="nowrap">
+						<b>{PAGE_NUMBER}</b> &nbsp;<!-- IF FOLDER_MAX_MESSAGES neq 0 -->[ {FOLDER_CUR_MESSAGES}/{FOLDER_MAX_MESSAGES} {L_MESSAGES} ]<!-- ELSE -->[ {TOTAL_MESSAGES} ]<!-- ENDIF -->
+					</td>
+					<!-- IF FOLDER_CUR_MESSAGES neq 0 -->
+						<td align="{S_CONTENT_FLOW_END}" width="100%">
+							<!-- IF U_MARK_ALL --><b><a href="{U_MARK_ALL}">{L_MARK_ALL_READ}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- ENDIF -->
+							<!-- INCLUDE pagination.html -->
+						</td>
 					<!-- ENDIF -->
-				</span></span>
+				</tr>
+				</table>
 			<!-- ENDIF -->
 
 			<!-- IF S_VIEW_MESSAGE -->
-			<!-- EVENT ucp_pm_viewmessage_options_before -->
-				<!-- IF S_DISPLAY_HISTORY -->
-					<!-- IF U_VIEW_PREVIOUS_HISTORY --><a href="{U_VIEW_PREVIOUS_HISTORY}">{L_VIEW_PREVIOUS_HISTORY}</a> | <!-- ENDIF --><!-- IF U_VIEW_NEXT_HISTORY --><a href="{U_VIEW_NEXT_HISTORY}">{L_VIEW_NEXT_HISTORY}</a> | <!-- ENDIF -->
-				<!-- ENDIF --><a href="{U_PREVIOUS_PM}">{L_VIEW_PREVIOUS_PM}</a> | <a href="{U_NEXT_PM}">{L_VIEW_NEXT_PM}</a>
+				<table cellspacing="0" width="100%">
+				<tr>
+					<td class="bigger">
+						<!-- EVENT ucp_pm_viewmessage_options_before -->
+						<!-- IF S_DISPLAY_HISTORY and (U_VIEW_PREVIOUS_HISTORY or U_VIEW_NEXT_HISTORY) -->
+							<!-- IF U_VIEW_PREVIOUS_HISTORY --><a href="{U_VIEW_PREVIOUS_HISTORY}">{L_VIEW_PREVIOUS_HISTORY}</a> | <!-- ENDIF -->
+							<!-- IF U_VIEW_NEXT_HISTORY --><a href="{U_VIEW_NEXT_HISTORY}">{L_VIEW_NEXT_HISTORY}</a> | <!-- ENDIF -->
+						<!-- ENDIF -->
+						<a href="{U_PREVIOUS_PM}">{L_VIEW_PREVIOUS_PM}</a> | <a href="{U_NEXT_PM}">{L_VIEW_NEXT_PM}</a>
+					</td>
+					<td align="{S_CONTENT_FLOW_END}">
+						<b><a href="{U_CURRENT_FOLDER}">{L_RETURN_TO_FOLDER}</a></b>
+					</td>
+				</tr>
+				</table>
 			<!-- ENDIF -->
-			</td>
-			<td align="{S_CONTENT_FLOW_END}">
-			<!-- IF S_VIEW_MESSAGE -->
-					<b><a href="{U_CURRENT_FOLDER}">{L_RETURN_TO_FOLDER}</a></b>
-			<!-- ELSEIF FOLDER_CUR_MESSAGES neq 0 -->
-					<!-- IF U_MARK_ALL --><b><a href="{U_MARK_ALL}">{L_PM_MARK_ALL_READ}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- ENDIF --><!-- INCLUDE pagination.html -->
-			<!-- ENDIF -->
-			</td>
-		</tr></table>
-	</td></tr></table>
+		</td>
+	</tr>
+	</table>
 <!-- ENDIF -->

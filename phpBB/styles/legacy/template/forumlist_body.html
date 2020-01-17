@@ -7,7 +7,7 @@
 			<th align="{S_CONTENT_FLOW_BEGIN}" class="category" colspan="2"><!-- IF forumrow.S_IS_CAT --><a href="{forumrow.U_VIEWFORUM}">{forumrow.FORUM_NAME}</a><!-- ELSE -->{L_FORUM}<!-- ENDIF --></th>
 			<th width="50">{L_TOPICS}</th>
 			<th width="50">{L_POSTS}</th>
-			<th width="10%">{L_LAST_POST}</th>
+			<th nowrap="nowrap" width="10%">{L_LAST_POST}</th>
 			<!-- EVENT forumlist_body_category_header_row_append -->
 		</tr>
 		<!-- EVENT forumlist_body_category_header_after -->
@@ -21,7 +21,7 @@
 				<!-- IF forumrow.FORUM_IMAGE -->
 					<table cellspacing="1"><tr><td><!-- EVENT forumlist_body_forum_image_before --> <!-- EVENT forumlist_body_forum_image_prepend -->{forumrow.FORUM_IMAGE}<!-- EVENT forumlist_body_forum_image_append --> <!-- EVENT forumlist_body_forum_image_after --></td><td>
 				<!-- ENDIF -->
-				<a class="forumlink" href="{forumrow.U_VIEWFORUM}" title="<!-- IF forumrow.S_UNREAD_FORUM -->{L_UNREAD_POSTS}<!-- ELSE -->{forumrow.FORUM_FOLDER_IMG_ALT}<!-- ENDIF -->">{forumrow.FORUM_NAME}</a>
+				<a class="forumtitle" href="{forumrow.U_VIEWFORUM}" title="<!-- IF forumrow.S_UNREAD_FORUM -->{L_UNREAD_POSTS}<!-- ELSE -->{forumrow.FORUM_FOLDER_IMG_ALT}<!-- ENDIF -->">{forumrow.FORUM_NAME}</a>
 				<!-- IF forumrow.FORUM_DESC -->
 					<br /><span class="forumdesc">{forumrow.FORUM_DESC}</span>	
 				<!-- ENDIF -->
@@ -48,19 +48,19 @@
 				<td class="bg2" align="center"><p>{forumrow.POSTS}</p></td>
 				<td class="bg2" align="center" nowrap="nowrap">
 					<p>
+					<!-- IF forumrow.U_UNAPPROVED_TOPICS -->
+						<a href="{forumrow.U_UNAPPROVED_TOPICS}"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="(?)" border="0" title="{L_TOPICS_UNAPPROVED}" /></a>
+					<!-- ELSEIF forumrow.U_UNAPPROVED_POSTS -->
+						<a href="{forumrow.U_UNAPPROVED_POSTS}"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="(?)" border="0" title="{L_POSTS_UNAPPROVED_FORUM}" /></a>
+					<!-- ENDIF -->
 					<!-- IF forumrow.LAST_POST_TIME -->
 						<!-- IF forumrow.S_DISPLAY_SUBJECT -->
 							<!-- EVENT forumlist_body_last_post_title_prepend -->
 							<b><a href="{forumrow.U_LAST_POST}" title="{forumrow.LAST_POST_SUBJECT}">{forumrow.LAST_POST_SUBJECT_TRUNCATED}</a></b><br />
 						<!-- ENDIF -->
-						<!-- IF forumrow.U_UNAPPROVED_TOPICS -->
-							<a href="{forumrow.U_UNAPPROVED_TOPICS}"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="(?)" border="0" title="{L_TOPICS_UNAPPROVED}" /></a>&nbsp;
-						<!-- ELSEIF forumrow.U_UNAPPROVED_POSTS -->
-							<a href="{forumrow.U_UNAPPROVED_POSTS}"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="(?)" border="0" title="{L_POSTS_UNAPPROVED_FORUM}" /></a>&nbsp;
-						<!-- ENDIF -->
-						{forumrow.LAST_POST_TIME}<br />{forumrow.LAST_POSTER_FULL}<!-- IF not S_IS_BOT --> <a href="{forumrow.U_LAST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_latest.gif" width="18" height="9" alt="&gt;" border="0" title="{L_VIEW_LATEST_POST}" /></a><!-- ENDIF -->
+						{forumrow.LAST_POST_TIME}<br /><!-- EVENT forumlist_body_last_poster_username_prepend -->{forumrow.LAST_POSTER_FULL}<!-- EVENT forumlist_body_last_poster_username_append --><!-- IF not S_IS_BOT --> <a href="{forumrow.U_LAST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_latest.gif" width="18" height="9" alt="&gt;" border="0" title="{L_VIEW_LATEST_POST}" /></a><!-- ENDIF -->
 					<!-- ELSE -->
-						{L_NO_POSTS}
+						<!-- IF forumrow.U_UNAPPROVED_TOPICS -->{{ lang('TOPIC_UNAPPROVED_FORUM', forumrow.TOPICS) }}<!-- ELSE -->{L_NO_POSTS}<!-- ENDIF -->
 					<!-- ENDIF -->
 					</p>
 				</td>

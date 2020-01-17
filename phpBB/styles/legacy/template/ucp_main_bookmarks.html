@@ -1,5 +1,7 @@
 <!-- INCLUDE ucp_header.html -->
 
+<form name="ucp" id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+
 <table class="main" width="100%" cellspacing="1">
 <tr>
 	<th colspan="4">{L_TITLE}</th>
@@ -40,7 +42,9 @@
 			<td class="{$BG}" colspan="2" width="97%"><p>{L_DELETED_TOPIC}</p></td>
 		<!-- ELSE -->
 			<td class="{$BG}" width="83%">
-				<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_newest.gif" width="18" height="9" alt="&gt;&gt;&gt;" border="0" title="{L_UNREAD_POSTS}" /></a> <!-- ENDIF --><!-- IF topicrow.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF --><a title="{L_POSTED}{L_COLON} {topicrow.FIRST_POST_TIME}" href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
+				<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_newest.gif" width="18" height="9" alt="&gt;&gt;&gt;" border="0" title="{L_UNREAD_POSTS}" /></a><!-- ENDIF -->
+				<!-- IF topicrow.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF -->
+				<a title="{L_POSTED}{L_COLON} {topicrow.FIRST_POST_TIME}" href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
 				<div class="bigger"><b>{L_FORUM}{L_COLON}</b> <a href="{topicrow.U_VIEW_FORUM}">{topicrow.FORUM_NAME}</a></div>
 				<!-- IF .topicrow.pagination -->
 					<div class="bigger"> [ <img src="{T_THEME_PATH}/images/icon_post_target.gif" width="12" height="9" alt="" />{L_GOTO_PAGE}{L_COLON} 
@@ -76,10 +80,13 @@
 </table>
 
 <!-- IF (.topicrow and not S_NO_DISPLAY_BOOKMARKS) or .pagination -->
-	<table width="100%" cellspacing="2">
+	<table width="100%" cellspacing="1">
 		<!-- IF not S_NO_DISPLAY_BOOKMARKS and .topicrow --><tr><td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('ucp', 't', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp', 't', false); return false;">{L_UNMARK_ALL}</a></b></td></tr><!-- ENDIF -->
 		<!-- IF .pagination --><tr><td align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td></tr><!-- ENDIF -->
 	</table>
 <!-- ENDIF -->
+
+{S_FORM_TOKEN}
+</form>
 
 <!-- INCLUDE ucp_footer.html -->

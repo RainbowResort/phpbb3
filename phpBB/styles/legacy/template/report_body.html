@@ -8,33 +8,33 @@
 </tr>
 <!-- IF ERROR -->
 	<tr>
-		<td class="bg2" colspan="2" align="center"><p class="error">{ERROR}</p></td>
+		<td class="bg1" colspan="2" align="center"><p class="error">{ERROR}</p></td>
 	</tr>
 <!-- ENDIF -->
 <tr>
-	<td class="bg3" colspan="2"><span class="bigger"><!-- IF S_REPORT_POST -->{L_REPORT_POST_EXPLAIN}<!-- ELSE -->{L_REPORT_MESSAGE_EXPLAIN}<!-- ENDIF --></span></td>
+	<td class="bg1" colspan="2"><span class="bigger"><!-- IF S_REPORT_POST -->{L_REPORT_POST_EXPLAIN}<!-- ELSE -->{L_REPORT_MESSAGE_EXPLAIN}<!-- ENDIF --></span></td>
 </tr>
 <tr>
 	<td class="bg1" width="22%"><b class="big">{L_REASON}{L_COLON}</b></td>
-	<td class="bg2" width="78%"><select name="reason_id" class="bigger">
+	<td class="bg1"><select name="reason_id" class="bigger">
 		<!-- BEGIN reason --><option value="{reason.ID}"<!-- IF reason.S_SELECTED --> selected="selected"<!-- ENDIF -->>{reason.TITLE} &#187; {reason.DESCRIPTION}</option><!-- END reason -->
 	</select></td>
 </tr>
 <!-- IF S_CAN_NOTIFY -->
 	<tr>
 		<td class="bg1"><b class="big">{L_REPORT_NOTIFY}{L_COLON}</b><br /><span class="bigger">{L_REPORT_NOTIFY_EXPLAIN}</span></td>
-		<td class="bg2"><span class="bigger"><input type="radio" name="notify" value="1"<!-- IF S_NOTIFY --> checked="checked"<!-- ENDIF --> /> {L_YES}&nbsp; <input type="radio" name="notify" value="0"<!-- IF not S_NOTIFY --> checked="checked"<!-- ENDIF --> /> {L_NO}</span></td>
+		<td class="bg1"><span class="bigger"><input type="radio" name="notify" value="1"<!-- IF S_NOTIFY --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp;<input type="radio" name="notify" value="0"<!-- IF not S_NOTIFY --> checked="checked"<!-- ENDIF --> /> {L_NO}</span></td>
 	</tr>
 <!-- ENDIF -->
 <tr>
 	<td class="bg1" valign="top"><b class="big">{L_MORE_INFO}{L_COLON}</b><br /><span class="bigger">{L_CAN_LEAVE_BLANK}</span></td>
-	<td class="bg2"><textarea name="report_text" rows="10" cols="50">{REPORT_TEXT}</textarea></td>
+	<td class="bg1"><textarea name="report_text" rows="10" cols="50">{REPORT_TEXT}</textarea></td>
 </tr>
 <!-- IF CAPTCHA_TEMPLATE -->
 			<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 <!-- ENDIF -->	
 <tr>
-	<td class="cat" colspan="2" align="center"><input type="submit" name="submit" class="button1" value="{L_SUBMIT}" />&nbsp; <input type="submit" name="cancel" class="button2" value="{L_CANCEL}" /></td>
+	<td class="cat" colspan="2" align="center"><input type="submit" name="submit" class="button1" value="{L_SUBMIT}" /> &nbsp;<input type="submit" name="cancel" class="button2" value="{L_CANCEL}" /></td>
 </tr>
 </table>
 {S_FORM_TOKEN}

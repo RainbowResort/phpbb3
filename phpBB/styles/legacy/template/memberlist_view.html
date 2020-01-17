@@ -13,7 +13,7 @@
 <table class="main" width="100%" cellspacing="1">
 <tr>
 	<th width="40%">{L_USER_PRESENCE}</th>
-	<th width="60%">{L_USER_FORUM}</th>
+	<th>{L_USER_FORUM}</th>
 </tr>
 <tr>
 	<td class="bg1" align="center">
@@ -24,7 +24,7 @@
 		</tr>
 		<!-- ENDIF -->
 		<tr>
-			<td align="center"><b class="big"<!-- IF USER_COLOR --> style="color: {USER_COLOR}"<!-- ENDIF -->>{USERNAME}</b>
+			<td align="center"><!-- EVENT memberlist_view_username_prepend --><b class="big"<!-- IF USER_COLOR --> style="color: {USER_COLOR}"<!-- ENDIF -->>{USERNAME}</b><!-- EVENT memberlist_view_username_append -->
 			<!-- IF U_USER_BAN or U_USER_ADMIN --><span class="bigger"><!-- ENDIF -->
 			<!-- IF U_USER_ADMIN --> [&nbsp;<a href="{U_USER_ADMIN}">{L_USER_ADMIN}</a><!-- ENDIF -->
 			<!-- IF U_USER_ADMIN and U_USER_BAN --> | <!-- ELSEIF U_USER_ADMIN and not U_USER_BAN -->&nbsp;] <!-- ELSEIF U_USER_BAN and not U_USER_ADMIN --> [&nbsp;<!-- ENDIF -->
@@ -69,7 +69,7 @@
 		<!-- EVENT memberlist_view_user_statistics_before -->
 		<tr valign="top">
 			<td align="{S_CONTENT_FLOW_END}" width="22%"><span class="big">{L_JOINED}{L_COLON}</span></td>
-			<td width="78%"><b class="big">{JOINED}</b></td>
+			<td><b class="big">{JOINED}</b></td>
 		</tr>
 		<tr valign="top">
 			<td align="{S_CONTENT_FLOW_END}"><span class="big">{L_LAST_ACTIVE}{L_COLON}</span></td>
@@ -111,28 +111,28 @@
 		<table width="100%" cellspacing="1">
 		<!-- IF U_EMAIL -->
 			<tr valign="top">
-				<td align="{S_CONTENT_FLOW_END}"><span class="big">{L_EMAIL}{L_COLON}</span></td>
-				<td width="78%"><a class="bigger" href="{U_EMAIL}">{L_SEND_EMAIL}</a></td>
+				<td align="{S_CONTENT_FLOW_END}" width="22%"><span class="big">{L_EMAIL}{L_COLON}</span></td>
+				<td><a class="bigger" href="{U_EMAIL}">{L_SEND_EMAIL}</a></td>
 			</tr>
 		<!-- ENDIF -->
 		<!-- IF U_PM -->
 			<tr valign="top">
-				<td align="{S_CONTENT_FLOW_END}"><span class="big">{L_PM}{L_COLON}</span></td>
-				<td width="78%"><a class="bigger" href="{U_PM}">{L_SEND_PRIVATE_MESSAGE}</a></td>
+				<td align="{S_CONTENT_FLOW_END}" width="22%"><span class="big">{L_PM}{L_COLON}</span></td>
+				<td><a class="bigger" href="{U_PM}">{L_SEND_PRIVATE_MESSAGE}</a></td>
 			</tr>
 		<!-- ENDIF -->
-		<!-- IF S_JABBER_ENABLED -->
+		<!-- IF S_JABBER_ENABLED and (U_JABBER or USER_JABBER) -->
 		<tr valign="top">
-			<td align="{S_CONTENT_FLOW_END}"><span class="big">{L_JABBER}{L_COLON}</span></td>
-			<td width="78%"><!-- IF U_JABBER --><a class="bigger" href="{U_JABBER}" onclick="popup(this.href, 550, 320); return false">{L_SEND_JABBER_MESSAGE}</a><!-- ELSEIF USER_JABBER --><span class="bigger">{USER_JABBER}</span><!-- ENDIF --></td>
+			<td align="{S_CONTENT_FLOW_END}" width="22%"><span class="big">{L_JABBER}{L_COLON}</span></td>
+			<td><!-- IF U_JABBER --><a class="bigger" href="{U_JABBER}" onclick="popup(this.href, 550, 320); return false">{L_SEND_JABBER_MESSAGE}</a><!-- ELSEIF USER_JABBER --><span class="bigger">{USER_JABBER}</span><!-- ENDIF --></td>
 		</tr>
 		<!-- ENDIF -->
 		<!-- EVENT memberlist_view_contact_custom_fields_before -->
 		<!-- BEGIN custom_fields -->
 			<!-- IF custom_fields.S_PROFILE_CONTACT -->
 			<tr valign="top">
-				<td align="{S_CONTENT_FLOW_END}"><span class="big">{custom_fields.PROFILE_FIELD_NAME}{L_COLON}</span></td>
-				<td width="78%">
+				<td align="{S_CONTENT_FLOW_END}" width="22%"><span class="big">{custom_fields.PROFILE_FIELD_NAME}{L_COLON}</span></td>
+				<td>
 				<!-- IF custom_fields.PROFILE_FIELD_CONTACT -->
 					<a class="bigger" href="{custom_fields.PROFILE_FIELD_CONTACT}">{custom_fields.PROFILE_FIELD_DESC}</a>
 				<!-- ELSE -->
@@ -148,8 +148,8 @@
 	<td class="bg1"><table cellspacing="0"><tr><td width="100%" style="padding: 0">
 		<table width="100%" cellspacing="1">
 		<tr valign="top">
-			<td align="{S_CONTENT_FLOW_END}"><span class="big">{L_USERGROUPS}{L_COLON}</span></td>
-			<td width="78%"><select name="g">{S_GROUP_OPTIONS}</select> <input class="button2" type="submit" name="submit" value="{L_GO}" /></td>
+			<td align="{S_CONTENT_FLOW_END}" width="22%"><span class="big">{L_USERGROUPS}{L_COLON}</span></td>
+			<td><select name="g">{S_GROUP_OPTIONS}</select> <input class="button2" type="submit" name="submit" value="{L_GO}" /></td>
 		</tr>
 		<!-- IF AGE !== '' -->
 		<tr valign="top">
@@ -173,7 +173,7 @@
 <!-- EVENT memberlist_view_contact_after -->
 <!-- IF SIGNATURE -->
 	<tr>
-		<th colspan="2"><table cellspacing="0" width="40%"><tr><td align="center" style="padding: 0">{L_SIGNATURE}</td></tr></table></th>
+		<td colspan="2" style="padding: 0"><table cellspacing="0" width="100%"><tr><th width="40%">{L_SIGNATURE}</th><th></th></tr></table></td>
 	</tr>
 	<tr>
 		<td class="bg1" colspan="2"><table cellspacing="5" width="100%"><tr><td><span class="postbody"><span class="signature">{SIGNATURE}</span></span></td></tr></table></td>

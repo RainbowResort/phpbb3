@@ -7,24 +7,25 @@
 <!-- ENDIF -->
 
 <form name="login_forum" method="post" action="{S_LOGIN_ACTION}">
+{S_FORM_TOKEN}
 <table class="main" width="100%" cellspacing="1">
 <tr>
 	<th>{L_LOGIN}</th>
 </tr>
-<tr class="bigger">
-	<td class="bg3" align="center">{L_LOGIN_FORUM}</td>
-</tr>
 <tr>
-	<td class="bg1" align="center">
+	<td class="bg1">
 
-		<table cellspacing="1">
+		<table cellspacing="2" width="100%">
+		<tr>
+			<td colspan="2" align="center"><span class="bigger">{L_LOGIN_FORUM}</span></td>
+		</tr>
 		<!-- IF LOGIN_ERROR -->
 			<tr>
 				<td colspan="2" align="center"><p class="error">{LOGIN_ERROR}</p></td>
 			</tr>
 		<!-- ENDIF -->
 		<tr>
-			<td class="bigger"><b>{L_PASSWORD}{L_COLON}</b></td>
+			<td class="bigger" align="{S_CONTENT_FLOW_END}" width="50%"><b>{L_PASSWORD}{L_COLON}</b></td>
 			<td><input type="password" class="inputbox" name="password" size="25" tabindex="2" autocomplete="off" /></td>
 		</tr>
 		</table>
@@ -34,8 +35,8 @@
 	<td class="cat" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="login" class="button1" value="{L_LOGIN}" tabindex="3" /></td>
 </tr>
 </table>
-{S_FORM_TOKEN}
 {S_LOGIN_REDIRECT}
+{S_FORM_TOKEN_LOGIN}
 </form>
 
 <!-- IF S_DISPLAY_JUMPBOX --><div style="margin: 8px 0"><!-- INCLUDE jumpbox.html --></div><!-- ENDIF -->

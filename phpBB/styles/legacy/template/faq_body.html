@@ -29,14 +29,16 @@
 	<tr>
 		<td class="cat" align="center"><h4>{faq_block.BLOCK_TITLE}</h4></td>
 	</tr>
-	<!-- BEGIN faq_row --> 
+	<!-- BEGIN faq_row -->
 	<tr>
 		<td class="<!-- IF faq_block.faq_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
-			<div class="postbody"><span class="content">
-				<a name="f{faq_block.S_ROW_COUNT}r{faq_block.faq_row.S_ROW_COUNT}" class="anchor"></a><b>&#187; {faq_block.faq_row.FAQ_QUESTION}</b><br />
-				{faq_block.faq_row.FAQ_ANSWER}
-			</span></div>
-			<br clear="all" /> <a class="top" href="#faqtop"><b>{L_BACK_TO_TOP}</b></a>
+			<p class="bigger">
+				<span class="forumdesc">
+					<a name="f{faq_block.S_ROW_COUNT}r{faq_block.faq_row.S_ROW_COUNT}" class="anchor"></a>
+					<b>&#187; {faq_block.faq_row.FAQ_QUESTION}</b><br />{faq_block.faq_row.FAQ_ANSWER}
+				</span>
+				<br /><br /><a class="top" href="#faqtop"><b>{L_BACK_TO_TOP}</b></a>
+			</p>
 		</td>
 	</tr>
 	<!-- END faq_row -->

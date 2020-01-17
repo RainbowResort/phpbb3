@@ -2,16 +2,16 @@
 	<th colspan="2">{L_ADD_ATTACHMENT}</th>
 </tr>
 <tr>
-	<td class="bg3" colspan="2"><span class="bigger">{L_ADD_ATTACHMENT_EXPLAIN}</span></td>
+	<td class="bg1" colspan="2"><span class="bigger">{L_ADD_ATTACHMENT_EXPLAIN}</span></td>
 </tr>
 
 <tr>
 	<td class="bg1"><b class="bigger">{L_FILENAME}</b></td>
-	<td class="bg2"><input type="file" class="inputbox" name="fileupload" id="fileupload" /> <b class="bigger" id="upload_progress"></b></td>
+	<td class="bg1"><input type="file" class="inputbox" name="fileupload" id="fileupload" /> <b class="bigger" id="upload_progress"></b></td>
 </tr>
 <tr>
 	<td class="bg1"><b class="bigger">{L_FILE_COMMENT}</b></td>
-	<td class="bg2">
+	<td class="bg1">
 		<table cellspacing="0">
 		<tr>
 			<td><textarea name="filecomment" rows="3" cols="35">{FILE_COMMENT}</textarea></td>
@@ -26,20 +26,21 @@
 		</table>
 	</td>
 </tr>
-
+<!-- EVENT posting_attach_body_file_list_before -->
 <!-- IF S_HAS_ATTACHMENTS -->
 	<tr>
 		<th colspan="2">{L_POSTED_ATTACHMENTS}</th>
 	</tr>
-
+	<!-- EVENT posting_attach_body_attach_row_before -->
 	<!-- BEGIN attach_row -->
+		<!-- EVENT posting_attach_body_attach_row_prepend -->
 		<tr>
 			<td class="bg1"><b class="bigger">{L_FILENAME}</b></td>
-			<td class="bg2"><a class="bigger" href="{attach_row.U_VIEW_ATTACHMENT}" target="_blank">{attach_row.FILENAME}</a></td>
+			<td class="bg1"><a class="bigger" href="{attach_row.U_VIEW_ATTACHMENT}" target="_blank">{attach_row.FILENAME}</a></td>
 		</tr>
 		<tr>
 			<td class="bg1"><b class="bigger">{L_FILE_COMMENT}</b></td>
-			<td class="bg2">{attach_row.S_HIDDEN}
+			<td class="bg1">{attach_row.S_HIDDEN}
 				<table cellspacing="0">
 				<tr>
 					<td><textarea name="comment_list[{attach_row.ASSOC_INDEX}]" rows="3" cols="35" wrap="virtual">{attach_row.FILE_COMMENT}</textarea></td>
@@ -54,6 +55,8 @@
 				</table>
 			</td>
 		</tr>
+		<!-- EVENT posting_attach_body_attach_row_append -->
 	<!-- END attach_row -->
-
+	<!-- EVENT posting_attach_body_attach_row_after -->
 <!-- ENDIF -->
+<!-- EVENT posting_attach_body_file_list_after -->

@@ -8,25 +8,25 @@
 		<th colspan="2" align="{S_CONTENT_FLOW_BEGIN}">{L_SPLIT_TOPIC}</th>
 	</tr>
 	<tr>
-		<td class="bg2" colspan="2"><span class="bigger">{L_SPLIT_TOPIC_EXPLAIN}</span></td>
+		<td class="bg1" colspan="2"><span class="bigger">{L_SPLIT_TOPIC_EXPLAIN}</span></td>
 	</tr>
 	<!-- EVENT mcp_topic_options_before -->
 	<tr>
-		<td class="bg1" width="20%"><b class="bigger">{L_SPLIT_SUBJECT}</b></td>
-		<td class="bg2"><input type="text" class="inputbox" size="45" maxlength="124" name="subject" value="{SPLIT_SUBJECT}" /></td>
+		<td class="bg1"><b class="bigger">{L_SPLIT_SUBJECT}{L_COLON}</b></td>
+		<td class="bg1"><input type="text" class="inputbox" size="45" maxlength="124" name="subject" value="{SPLIT_SUBJECT}" /></td>
 	</tr>
 	<!-- EVENT mcp_topic_options_after -->
 	<tr>
-		<td class="bg1"><b class="bigger">{L_SPLIT_FORUM}</b></td>
-		<td class="bg2"><select name="to_forum_id">{S_FORUM_SELECT}</select></td>
+		<td class="bg1"><b class="bigger">{L_SPLIT_FORUM}{L_COLON}</b></td>
+		<td class="bg1"><select name="to_forum_id">{S_FORUM_SELECT}</select></td>
 	</tr>
 	<!-- IF S_SHOW_TOPIC_ICONS -->
 		<tr>
-			<td class="bg1"><b class="bigger">{L_TOPIC_ICON}</b></td>
-			<td class="bg2">
+			<td class="bg1"><b class="bigger">{L_TOPIC_ICON}{L_COLON}</b></td>
+			<td class="bg1">
 				<table width="100%" cellspacing="0">
 				<tr>
-					<td class="bigger"><span class="nowrap"><input type="radio" name="icon" value="0"<!-- IF not S_TOPIC_ICON --> checked="checked"<!-- ENDIF --> /> <span class="bigger">{L_NO_TOPIC_ICON}</span></span> &nbsp; <!-- BEGIN topic_icon --><span class="nowrap"><input type="radio" name="icon" value="{topic_icon.ICON_ID}"<!-- IF topic_icon.S_CHECKED --> checked="checked"<!-- ENDIF --> /> <img src="{topic_icon.ICON_IMG}" width="{topic_icon.ICON_WIDTH}" height="{topic_icon.ICON_HEIGHT}" alt="{topic_icon.ICON_ALT}" title="{topic_icon.ICON_ALT}" /></span> &nbsp; <!-- END topic_icon --></td>
+					<td class="bigger"><span class="nowrap"><input type="radio" name="icon" value="0"<!-- IF not S_TOPIC_ICON --> checked="checked"<!-- ENDIF --> /> <span class="bigger">{L_NO_TOPIC_ICON}</span></span> &nbsp; <!-- BEGIN topic_icon --><span class="nowrap"><input type="radio" name="icon" value="{topic_icon.ICON_ID}" {topic_icon.S_ICON_CHECKED} /> <img src="{topic_icon.ICON_IMG}" width="{topic_icon.ICON_WIDTH}" height="{topic_icon.ICON_HEIGHT}" alt="{topic_icon.ICON_ALT}" title="{topic_icon.ICON_ALT}" /></span> &nbsp; <!-- END topic_icon --></td>
 				</tr>
 				</table>
 			</td>
@@ -39,15 +39,15 @@
 		<th colspan="2" align="{S_CONTENT_FLOW_BEGIN}">{L_MERGE_POSTS}</th>
 	</tr>
 	<tr>
-		<td class="bg2" colspan="2"><span class="bigger">{L_MERGE_TOPIC_EXPLAIN}</span></td>
+		<td class="bg1" colspan="2"><span class="bigger">{L_MERGE_TOPIC_EXPLAIN}</span></td>
 	</tr>
 	<tr>
-		<td class="bg1" width="20%"><b class="bigger">{L_MERGE_TOPIC_ID}</b></td>
-		<td class="bg2"><input type="text" class="inputbox" size="6" maxlength="10" name="to_topic_id" value="{TO_TOPIC_ID}" /> <a href="{U_SELECT_TOPIC}" class="bigger">{L_SELECT_TOPIC}</a></td>
+		<td class="bg1"><b class="bigger">{L_MERGE_TOPIC_ID}{L_COLON}</b></td>
+		<td class="bg1"><input type="text" class="inputbox" size="6" maxlength="10" name="to_topic_id" value="{TO_TOPIC_ID}" /> <a href="{U_SELECT_TOPIC}" class="bigger">{L_SELECT_TOPIC}</a></td>
 	</tr>
 	<!-- IF TO_TOPIC_INFO -->
 		<tr>
-			<td class="bg3" colspan="2"><span class="bigger">{TO_TOPIC_INFO}</span></td>
+			<td class="bg1" colspan="2"><b class="bigger">{TO_TOPIC_INFO}</b></td>
 		</tr>
 	<!-- ENDIF -->
 <!-- ENDIF -->
@@ -55,22 +55,24 @@
 	<th colspan="2" align="{S_CONTENT_FLOW_BEGIN}">{L_DISPLAY_OPTIONS}</th>
 </tr>
 <tr>
-	<td class="bg1" width="20%"><b class="bigger">{L_POSTS_PER_PAGE}</b><br /><span class="bigger">{L_POSTS_PER_PAGE_EXPLAIN}</span></td>
-	<td class="bg2"><input type="text" class="inputbox" size="6" maxlength="6" name="posts_per_page" value="{POSTS_PER_PAGE}" /></td>
+	<td class="bg1" width="20%"><b class="bigger">{L_POSTS_PER_PAGE}{L_COLON}</b><br /><span class="bigger">{L_POSTS_PER_PAGE_EXPLAIN}</span></td>
+	<td class="bg1"><input type="text" class="inputbox" size="6" maxlength="6" name="posts_per_page" value="{POSTS_PER_PAGE}" /></td>
 </tr>
 <tr>
-	<td class="cat" colspan="2"><!-- INCLUDE display_options.html --></td>
+	<td class="bg1"><b class="bigger">{L_DISPLAY_POSTS}{L_COLON}</b></td>
+	<td class="bg1">{S_SELECT_SORT_DAYS} <span class="bigger">{L_SORT_BY}</span> {S_SELECT_SORT_KEY} {S_SELECT_SORT_DIR} <input class="button2" type="submit" name="sort" value="{L_GO}" /></td>
 </tr>
 </table>
 
 <table class="main" width="100%" cellspacing="1">
 <tr>
-	<th colspan="3" align="{S_CONTENT_FLOW_BEGIN}">{L_TOPIC_REVIEW}{L_COLON} <!-- EVENT mcp_topic_topic_title_before -->{TOPIC_TITLE}<!-- EVENT mcp_topic_topic_title_after --></th>
+	<th colspan="3" align="{S_CONTENT_FLOW_BEGIN}">{L_TOPIC_REVIEW} - <!-- EVENT mcp_topic_topic_title_before -->{TOPIC_TITLE}<!-- EVENT mcp_topic_topic_title_after --></th>
 </tr>
 <!-- BEGIN postrow -->
 	<!-- EVENT mcp_topic_postrow_post_before -->
-	<tr class="<!-- IF postrow.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
-		<td align="center" width="15%"><b>{postrow.POST_AUTHOR_FULL}</b></td>
+	<!-- IF postrow.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+	<tr class="{$BG}">
+		<td align="center" width="15%"><!-- EVENT mcp_topic_post_author_full_prepend --><b>{postrow.POST_AUTHOR_FULL}</b><!-- EVENT mcp_topic_post_author_full_append --></td>
 		<td>
 			<span class="bigger">
 				<!-- EVENT mcp_topic_postrow_post_subject_before -->
@@ -81,8 +83,7 @@
 		<td width="5%" align="center"><a href="{postrow.U_POST_DETAILS}"><img src="{T_THEME_PATH}/images/icon_post_info.gif" width="20" height="20" alt="[?]" border="0" title="{L_POST_DETAILS}" /></a></td>
 	</tr>
 
-	<tr class="<!-- IF postrow.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
-
+	<tr class="{$BG}">
 		<td width="100%" valign="top" colspan="2">
 		<table cellspacing="5" width="100%">
 			<tr>
@@ -91,9 +92,9 @@
 					<table width="100%" cellspacing="0">
 					<tr class="bigger">
 						<td>
-							<!-- IF postrow.S_POST_UNAPPROVED and postrow.U_MCP_APPROVE --><div><b><a href="{postrow.U_MCP_APPROVE}" class="postapprove"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="" border="0" /> {L_POST_UNAPPROVED}</a></b></div><!-- ENDIF -->
-							<!-- IF postrow.S_POST_DELETED and postrow.U_MCP_APPROVE --><div><b><a href="{postrow.U_MCP_APPROVE}" class="postapprove"><img src="{T_THEME_PATH}/images/icon_topic_deleted.gif" width="14" height="14" alt="" border="0" /> {L_POST_DELETED}</a></b></div><!-- ENDIF -->
-							<!-- IF postrow.S_POST_REPORTED and postrow.U_MCP_REPORT --><div><b><a href="{postrow.U_MCP_REPORT}" class="postreported"><img src="{T_THEME_PATH}/images/icon_topic_reported.gif" width="19" height="18" alt="" border="0" /> {L_POST_REPORTED}</a></b></div><!-- ENDIF -->
+							<!-- IF postrow.S_POST_UNAPPROVED --><div><b><a href="{postrow.U_MCP_APPROVE}" class="postapprove"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="" border="0" /> {L_POST_UNAPPROVED}</a></b></div><!-- ENDIF -->
+							<!-- IF postrow.S_POST_DELETED --><div><b><a href="{postrow.U_MCP_APPROVE}" class="postapprove"><img src="{T_THEME_PATH}/images/icon_topic_deleted.gif" width="14" height="14" alt="" border="0" /> {L_POST_DELETED}</a></b></div><!-- ENDIF -->
+							<!-- IF postrow.S_POST_REPORTED --><div><b><a href="{postrow.U_MCP_REPORT}" class="postreported"><img src="{T_THEME_PATH}/images/icon_topic_reported.gif" width="19" height="18" alt="" border="0" /> {L_POST_REPORTED}</a></b></div><!-- ENDIF -->
 						</td>
 						<td align="{S_CONTENT_FLOW_END}"><b>{L_POSTED}{L_COLON}</b> {postrow.POST_DATE}</td>
 					</tr>
@@ -103,8 +104,8 @@
 			</tr>
 			<tr>
 				<td>
-					<div class="postbody"><span class="content">{postrow.MESSAGE}</span></div>
-					<!-- EVENT mcp_topic_postrow_attachments_before -->
+					<div class="postbody"><div class="content">{postrow.MESSAGE}</div>
+					<!-- EVENT mcp_topic_postrow_attachments_before --></div>
 					<!-- IF postrow.S_HAS_ATTACHMENTS -->
 						<br />
 
@@ -114,7 +115,7 @@
 						</tr>
 						<!-- BEGIN attachment -->
 							<tr class="postbody">
-								<td class="bg1">{postrow.attachment.DISPLAY_ATTACHMENT}</td>
+								<td class="bg2">{postrow.attachment.DISPLAY_ATTACHMENT}</td>
 							</tr>
 						<!-- END attachment -->
 						</table>
@@ -144,14 +145,14 @@
 	</select>&nbsp;<input class="button1" type="submit" name="mcp_topic_submit" value="{L_SUBMIT}" /></td>
 </tr>
 </table>
+
+<table width="100%" cellspacing="1"><tr>
+	<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL_POSTS} ]</td>
+	<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('mcp', 'post', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'post', false); return false;">{L_UNMARK_ALL}</a></b></td>
+	<!-- IF .pagination --></tr><tr><td align="{S_CONTENT_FLOW_END}" colspan="2"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+</tr></table>
 {S_HIDDEN_FIELDS}
 {S_FORM_TOKEN}
 </form>
-
-<table width="100%" cellspacing="1"><tr>
-	<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> [ {TOTAL_POSTS} ]</td>
-	<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
-	<!-- IF .pagination --></tr><tr><td align="{S_CONTENT_FLOW_END}" colspan="2"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
-</tr></table>
 
 <!-- INCLUDE mcp_footer.html -->

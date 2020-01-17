@@ -1,7 +1,7 @@
 <table width="100%" cellspacing="0">
 	<!-- IF .avatar_local_cats -->
 	<tr>
-		<td class="bg3" align="center"><span class="bigger">{L_AVATAR_CATEGORY}{L_COLON} </span><select name="avatar_local_cat" id="category">
+		<td class="bg3" align="center"><span class="bigger">{L_AVATAR_CATEGORY}{L_COLON} </span><select name="avatar_local_cat">
 			<!-- BEGIN avatar_local_cats -->
 			<option value="{avatar_local_cats.NAME}"<!-- IF avatar_local_cats.SELECTED --> selected="selected"<!-- ENDIF -->>{avatar_local_cats.NAME}</option>
 			<!-- END avatar_local_cats -->
@@ -14,17 +14,13 @@
 			<!-- BEGIN avatar_local_row -->
 			<tr>
 				<!-- BEGIN avatar_local_col -->
-					<td class="bg1" align="center" id="av-{avatar_local_row.S_ROW_COUNT}-{avatar_local_row.avatar_local_col.S_ROW_COUNT}"><img src="{avatar_local_row.avatar_local_col.AVATAR_IMAGE}" alt="{avatar_local_row.avatar_local_col.AVATAR_NAME}" /></td>
+					<td class="bg1" align="center"><img src="{avatar_local_row.avatar_local_col.AVATAR_IMAGE}" alt="{avatar_local_row.avatar_local_col.AVATAR_NAME}" /></td>
 				<!-- END avatar_local_col -->
 			</tr>
 			<tr>
 				<!-- BEGIN avatar_local_option -->
-					<td class="bg1" align="center"><input type="radio" name="avatar_local_file" id="av-{avatar_local_row.S_ROW_COUNT}-{avatar_local_row.avatar_local_col.S_ROW_COUNT}" value="{avatar_local_row.avatar_local_option.S_OPTIONS_AVATAR}" <!-- IF avatar_local_row.avatar_local_option.CHECKED --> checked="checked"<!-- ENDIF --> /></td>
+					<td class="bg1" align="center"><input type="radio" name="avatar_local_file" value="{avatar_local_row.avatar_local_option.S_OPTIONS_AVATAR}" <!-- IF avatar_local_row.avatar_local_option.CHECKED --> checked="checked"<!-- ENDIF --> /></td>
 				<!-- END avatar_local_option -->
-			</tr>
-			<!-- BEGINELSE -->
-			<tr>
-				<td class="bg1">{L_NO_AVATAR_CATEGORY}</td>
 			</tr>
 			<!-- END avatar_local_row -->
 			</table>
@@ -32,7 +28,7 @@
 	</tr>
 	<!-- ELSE -->
 	<tr>
-		<td class="bg1"><b>{L_NO_AVATARS}</b></td>
+		<td align="center" class="bg1"><b class="bigger">{L_NO_AVATARS}</b></td>
 	</tr>
 	<!-- ENDIF -->
 </table>

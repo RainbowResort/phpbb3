@@ -1,29 +1,17 @@
 <!-- BEGIN oauth -->
 	<tr>
-		<th>{oauth.SERVICE_NAME}</th>
+		<td class="bg3"><b class="bigger">{oauth.SERVICE_NAME}</b></td>
 	</tr>
-
 	<tr>
 		<td class="bg1">
-			<form id="ucp" method="post" action="{S_UCP_ACTION}">
+			<form id="ucp_oauth_{oauth.SERVICE_ID}" method="post" action="{S_UCP_ACTION}">
 				<table cellspacing="1">
-					<!-- IF oauth.UNIQUE_ID -->
 						<tr>
-							<td class="bg1">{L_UCP_AUTH_LINK_ID}{L_COLON}</td>
-							<td class="bg1">{oauth.UNIQUE_ID}</td>
+							<td class="bigger"><!-- IF oauth.UNIQUE_ID -->{L_UCP_AUTH_LINK_ID}{L_COLON} {oauth.UNIQUE_ID}<!-- ELSE -->{L_UCP_AUTH_LINK_ASK}<!-- ENDIF --></td>
 						</tr>
 						<tr>
-							<td class="bg1">&nbsp;</td>
-							<td class="bg1"><input type="submit" name="submit" tabindex="6" value="{L_UCP_AUTH_LINK_UNLINK}" class="button2" /></td>
+							<td><input type="submit" name="submit" tabindex="6" value="<!-- IF oauth.UNIQUE_ID -->{L_UCP_AUTH_LINK_UNLINK}<!-- ELSE -->{L_UCP_AUTH_LINK_LINK}<!-- ENDIF -->" class="button2" /></td>
 						</tr>
-					<!-- ELSE -->
-						<tr>
-							<td class="bg1">{L_UCP_AUTH_LINK_ASK}</td>
-						</tr>
-						<tr>
-							<td class="bg1"><input type="submit" name="submit" tabindex="6" value="{L_UCP_AUTH_LINK_LINK}" class="button2" /></td>
-						</tr>
-					<!-- ENDIF -->
 				</table>
 				{oauth.HIDDEN_FIELDS}
 				{S_HIDDEN_FIELDS}

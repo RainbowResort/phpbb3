@@ -19,11 +19,12 @@
 			<th width="100%">{L_MESSAGE}</th>
 		</tr>
 	<!-- BEGIN history_row -->
-			<tr class="<!-- IF history_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
-			<td rowspan="2" valign="top"><a name="{history_row.MSG_ID}" class="anchor"></a>
+		<!-- IF history_row.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+		<tr class="{$BG}">
+			<td rowspan="2" valign="top"><a name="pr{history_row.MSG_ID}" class="anchor"></a>
 				<table width="150" cellspacing="0">
 				<tr>
-					<td align="center"><b>{history_row.MESSAGE_AUTHOR_FULL}</b></td>
+					<td align="center"><!-- EVENT ucp_pm_history_row_message_author_username_prepend --><b>{history_row.MESSAGE_AUTHOR_FULL}</b><!-- EVENT ucp_pm_history_row_message_author_username_append --></td>
 				</tr>
 				</table>
 			</td>
@@ -33,8 +34,8 @@
 					<td class="bigger"><b>{L_PM_SUBJECT}{L_COLON}</b> {history_row.SUBJECT}</td>
 					<td align="{S_CONTENT_FLOW_END}">
 						<!-- EVENT ucp_pm_history_post_buttons_before -->
-						<!-- IF history_row.U_QUOTE or history_row.MESSAGE_AUTHOR_QUOTE -->	<a class="button" <!-- IF history_row.U_QUOTE -->href="{history_row.U_QUOTE}"<!-- ELSE -->href="#" onclick="addquote({history_row.MSG_ID}, '{history_row.MESSAGE_AUTHOR_QUOTE}', '{LA_WROTE}', {time:{history_row.MESSAGE_TIME},user_id:{history_row.USER_ID}}, true); return false;"<!-- ENDIF --> title="{L_QUOTE} {history_row.MESSAGE_AUTHOR}">{L_BUTTON_QUOTE}</a> <!-- ENDIF --> 
-						<!-- IF history_row.U_POST_REPLY_PM --><a class="button" href="{history_row.U_POST_REPLY_PM}" title="{L_POST_REPLY_PM}">{L_BUTTON_PM_REPLY}</a><!-- ENDIF -->
+						<!-- IF history_row.U_QUOTE or history_row.MESSAGE_AUTHOR_QUOTE --><a class="button" <!-- IF history_row.U_QUOTE -->href="{history_row.U_QUOTE}"<!-- ELSE -->href="#" onclick="addquote({history_row.MSG_ID}, '{history_row.MESSAGE_AUTHOR_QUOTE}', '{LA_WROTE}', {time:{history_row.MESSAGE_TIME},user_id:{history_row.USER_ID}}, true); return false;"<!-- ENDIF --> title="{L_QUOTE} {history_row.MESSAGE_AUTHOR}">{L_BUTTON_QUOTE}</a><!-- ENDIF -->
+						<!-- IF history_row.U_POST_REPLY_PM and REPLY_IMG --><a class="button" href="{history_row.U_POST_REPLY_PM}" title="{L_POST_REPLY_PM}">{L_BUTTON_PM_REPLY}</a><!-- ENDIF -->
 						<!-- EVENT ucp_pm_history_post_buttons_after -->
 					</td>
 				</tr>
@@ -42,11 +43,11 @@
 			</td>
 		</tr>
 
-		<tr class="<!-- IF history_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+		<tr class="{$BG}">
 			<td valign="top">
 				<table cellspacing="5" width="100%">
 				<tr>
-					<td colspan="2"><div class="postbody"><!-- IF history_row.MESSAGE --><span class="content">{history_row.MESSAGE}</span><!-- ELSE --><p class="error">{L_MESSAGE_REMOVED_FROM_OUTBOX}</p><!-- ENDIF --></div><div id="message_{history_row.MSG_ID}" data-content="{history_row.DECODED_MESSAGE}" style="display: none"></div></td>
+					<td colspan="2"><div class="postbody"><!-- IF history_row.MESSAGE --><div class="content">{history_row.MESSAGE}</div><!-- ELSE --><p class="error">{L_MESSAGE_REMOVED_FROM_OUTBOX}</p><!-- ENDIF --></div><div id="message_{history_row.MSG_ID}" data-content="{history_row.DECODED_MESSAGE}"></div></td>
 				</tr>
 				<tr class="bigger">
 					<td><a href="{history_row.U_VIEW_MESSAGE}">{L_VIEW_PM}</a></td>

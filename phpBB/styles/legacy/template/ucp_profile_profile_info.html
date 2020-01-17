@@ -1,48 +1,53 @@
 <!-- INCLUDE ucp_header.html -->
 
+<form name="ucp" id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+
 <table class="main" width="100%" cellspacing="1">
 <tr>
 	<th colspan="2">{L_TITLE}</th>
 </tr>
 <!-- IF ERROR -->
 	<tr>
-		<td class="bg2" colspan="2" align="center"><p class="error">{ERROR}</p></td>
+		<td class="bg1" colspan="2" align="center"><p class="error">{ERROR}</p></td>
 	</tr>
 <!-- ENDIF -->
 <tr>
-	<td class="bg1" colspan="2"><span class="bigger">{L_PROFILE_INFO_NOTICE}</span></td>
+	<td align="center" class="bg1" colspan="2"><span class="bigger">{L_PROFILE_INFO_NOTICE}</span></td>
 </tr>
 <!-- EVENT ucp_profile_profile_info_before -->
-<!-- IF S_JABBER_ENABLED -->
-<tr>
-	<td class="bg1" width="35%"><b class="bigger">{L_UCP_JABBER}{L_COLON} </b></td>
-	<td class="bg2"><input type="text" class="inputbox" name="jabber" size="30" maxlength="255" value="{JABBER}" /></td>
-</tr>
-<!-- ENDIF -->
 <!-- IF S_BIRTHDAYS_ENABLED -->
 	<tr>
-		<td class="bg1" width="35%"><b class="bigger">{L_BIRTHDAY}{L_COLON} </b><br /><span class="bigger">{L_BIRTHDAY_EXPLAIN}</span></td>
-		<td class="bg2">
+		<td class="bg1" width="35%"><b class="bigger">{L_BIRTHDAY}{L_COLON}</b><br /><span class="bigger">{L_BIRTHDAY_EXPLAIN}</span></td>
+		<td class="bg1">
 			<span class="nowrap"><span class="bigger">{L_DAY}{L_COLON}</span> <select name="bday_day">{S_BIRTHDAY_DAY_OPTIONS}</select></span>
 			<span class="nowrap"><span class="bigger">{L_MONTH}{L_COLON}</span> <select name="bday_month">{S_BIRTHDAY_MONTH_OPTIONS}</select></span>
 			<span class="nowrap"><span class="bigger">{L_YEAR}{L_COLON}</span> <select name="bday_year">{S_BIRTHDAY_YEAR_OPTIONS}</select></span>
 		</td>
 	</tr>
 <!-- ENDIF -->
+<!-- IF S_JABBER_ENABLED -->
+	<tr>
+		<td class="bg1" width="35%"><b class="bigger">{L_UCP_JABBER}{L_COLON}</b></td>
+		<td class="bg1"><input type="text" class="inputbox" name="jabber" size="30" maxlength="255" value="{JABBER}" /></td>
+	</tr>
+<!-- ENDIF -->
 <!-- BEGIN profile_fields -->
 	<tr>
 		<td class="bg1" width="35%">
-			<b class="bigger">{profile_fields.LANG_NAME}{L_COLON} </b>
+			<b class="bigger">{profile_fields.LANG_NAME}{L_COLON}</b>
 			<!-- IF profile_fields.S_REQUIRED --><b>*</b><!-- ENDIF -->
 			<!-- IF profile_fields.LANG_EXPLAIN --><br /><span class="bigger">{profile_fields.LANG_EXPLAIN}</span><!-- ENDIF -->
 		</td>
-		<td class="bg2">{profile_fields.FIELD}<!-- IF profile_fields.ERROR --><p class="error">{profile_fields.ERROR}</p><!-- ENDIF --></td>
+		<td class="bg1">{profile_fields.FIELD}<!-- IF profile_fields.ERROR --><p class="error">{profile_fields.ERROR}</p><!-- ENDIF --></td>
 	</tr>
 <!-- END profile_fields -->
 <!-- EVENT ucp_profile_profile_info_after -->
 <tr>
-	<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" />&nbsp; <input class="button1" type="submit" name="submit" value="{L_SUBMIT}" /></td>
+	<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" /> &nbsp;<input class="button1" type="submit" name="submit" value="{L_SUBMIT}" /></td>
 </tr>
 </table>
+
+{S_FORM_TOKEN}
+</form>
 
 <!-- INCLUDE ucp_footer.html -->

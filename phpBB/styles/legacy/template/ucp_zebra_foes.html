@@ -1,28 +1,33 @@
 <!-- INCLUDE ucp_header.html -->
 
+<form name="ucp" id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+
 <table class="main" width="100%" cellspacing="1">
 <tr>
 	<th colspan="2">{L_TITLE}</th>
 </tr>
 <tr>
-	<td class="bg3" colspan="2"><span class="bigger">{L_FOES_EXPLAIN}</span></td>
+	<td align="center" class="bg1" colspan="2"><span class="bigger">{L_FOES_EXPLAIN}</span></td>
 </tr>
 <!-- IF ERROR -->
 	<tr>
-		<td class="bg2" colspan="2" align="center"><p class="error">{ERROR}</p></td>
+		<td class="bg1" colspan="2" align="center"><p class="error">{ERROR}</p></td>
 	</tr>
 <!-- ENDIF -->
 <tr>
 	<td class="bg1" width="40%"><b class="bigger">{L_YOUR_FOES}{L_COLON}</b><br /><p>{L_YOUR_FOES_EXPLAIN}</p></td>
-	<td class="bg2"><!-- IF S_USERNAME_OPTIONS --><select name="usernames[]" multiple="multiple" size="5">{S_USERNAME_OPTIONS}</select><!-- ELSE --><b class="bigger">{L_NO_FOES}</b><!-- ENDIF --></td>
+	<td class="bg1"><!-- IF S_USERNAME_OPTIONS --><select name="usernames[]" multiple="multiple" size="5">{S_USERNAME_OPTIONS}</select><!-- ELSE --><b class="bigger">{L_NO_FOES}</b><!-- ENDIF --></td>
 </tr>
 <tr>
 	<td class="bg1"><b class="bigger">{L_ADD_FOES}{L_COLON}</b><br /><p>{L_ADD_FOES_EXPLAIN}</p></td>
-	<td class="bg2"><textarea name="add" rows="5" cols="30">{USERNAMES}</textarea><br /><span class="bigger">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</span></td>
+	<td class="bg1"><textarea name="add" rows="5" cols="30">{USERNAMES}</textarea><br /><span class="bigger">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</span></td>
 </tr>
 <tr>
-	<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" />&nbsp; <input class="button1" type="submit" name="submit" value="{L_SUBMIT}" /></td>
+	<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" /> &nbsp;<input class="button1" type="submit" name="submit" value="{L_SUBMIT}" /></td>
 </tr>
 </table>
+
+{S_FORM_TOKEN}
+</form>
 
 <!-- INCLUDE ucp_footer.html -->

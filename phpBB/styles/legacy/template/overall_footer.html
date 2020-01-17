@@ -1,4 +1,6 @@
-<table cellspacing="1" width="100%" class="main" style="margin: 8px 0 10px">
+<!-- EVENT overall_footer_content_after -->
+
+<table cellspacing="1" width="100%" class="main" style="margin: 8px 0">
 <tr class="bg1"><td><table cellspacing="0" width="100%"><tr class="breadcrumbs">
 	<td>
 		<b><!-- IF U_SITE_HOME --><a href="{U_SITE_HOME}" data-navbar-reference="home">{L_SITE_HOME}</a> <b>&#187;</b> <!-- ENDIF -->
@@ -13,23 +15,41 @@
 </tr></table></td></tr>
 </table>
 
-<!-- EVENT overall_footer_content_after -->
 <!-- EVENT overall_footer_page_body_after -->
 
-<table cellspacing="0" width="100%"><tr><td><div align="center" class="copyright">
-	<!-- IF U_ACP --><span class="bigger">[&nbsp;<a href="{U_ACP}">{L_ACP}</a>&nbsp;]</span><br /><br /><!-- ENDIF -->
+<div align="center" class="copyright">
 	<!-- EVENT overall_footer_copyright_prepend -->
-	{CREDIT_LINE}
-	<!-- IF TRANSLATION_INFO --><br />{TRANSLATION_INFO}<!-- ENDIF -->
+	<p class="footer-row">
+		{CREDIT_LINE}
+	</p>
+	<!-- IF TRANSLATION_INFO -->
+		<p class="footer-row">
+			{TRANSLATION_INFO}
+		</p>
+	<!-- ENDIF -->
 	<!-- EVENT overall_footer_copyright_append -->
-	<!-- IF DEBUG_OUTPUT --><br />{DEBUG_OUTPUT}<!-- ENDIF -->
-</div><!-- IF not S_IS_BOT -->{RUN_CRON_TASK}<!-- ENDIF --></td></tr></table>
+
+	<p class="footer-row">
+		<a href="{U_PRIVACY}">{L_PRIVACY_LINK}</a> | <a href="{U_TERMS_USE}">{L_TERMS_LINK}</a>
+	</p>
+
+	<!-- IF DEBUG_OUTPUT -->
+		<p class="footer-row">
+			{DEBUG_OUTPUT}
+		</p>
+	<!-- ENDIF -->
+	<!-- IF U_ACP -->
+		<p class="footer-row">
+			<b><a href="{U_ACP}">{L_ACP}</a></b>
+		</p>
+	<!-- ENDIF -->
+</div><!-- IF not S_IS_BOT -->{RUN_CRON_TASK}<!-- ENDIF -->
 
 <!-- IF S_COOKIE_NOTICE -->
 <script type="text/javascript"><!--
 if (document.body.removeChild && (!/cookieconsent_status=dismiss/i.test(document.cookie))) {
 	var cookiesconsent = document.createElement('div');
-	cookiesconsent.innerHTML = "<table cellspacing='4' class='separator' width='100%'><tr class='bigger'><td align='center' style='padding: 2px; padding-{S_CONTENT_FLOW_BEGIN}: 20px' width='100%'><p style='line-height: 140%'>{LA_COOKIE_CONSENT_MSG}</p></td><td style='padding: 2px; padding-{S_CONTENT_FLOW_END}: 20px'></td></tr></table>";
+	cookiesconsent.innerHTML = "<table cellspacing='4' class='separator' width='100%'><tr class='bigger'><td align='center' style='padding: 2px; padding-{S_CONTENT_FLOW_BEGIN}: 20px' width='100%'><p style='line-height: 140%'><b>{LA_COOKIE_CONSENT_MSG}</b></p></td><td style='padding: 2px; padding-{S_CONTENT_FLOW_END}: 20px'></td></tr></table>";
 	var cookiesbtn = document.createElement('input');
 	cookiesbtn.setAttribute('type', 'button');
 	cookiesbtn.className = 'button1';

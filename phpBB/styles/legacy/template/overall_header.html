@@ -57,8 +57,8 @@
 		<!-- IF S_DISPLAY_SEARCH and not S_IN_SEARCH -->
 			<div class="search-box">
 				<form action="{U_SEARCH}" method="get" name="global_search">
-					<input type="text" class="inputbox" name="keywords" value="{L_SEARCH_MINI}" title="{L_SEARCH_KEYWORDS}" onfocus="if (typeof this.flag == 'undefined') {this.flag = true; this.value='';}" />
-					<input type="image" src="{T_THEME_PATH}/images/icon_mini_search.gif" width="12" height="13" alt="*" title="{L_SEARCH}" style="margin-bottom: -3px" onclick="var h = document.forms['global_search'].elements[0]; if (h.value == '' || typeof h.flag == 'undefined') {h.focus(); return false;}" />
+					<input type="text" class="inputbox" name="keywords" size="20" title="{L_SEARCH_KEYWORDS}" value="<!-- IF SEARCH_WORDS -->{SEARCH_WORDS}<!-- ELSE -->{L_SEARCH_MINI}<!-- ENDIF -->" onfocus="if (this.value == '{LA_SEARCH_MINI}') {this.value='';}" />
+					<input type="image" src="{T_THEME_PATH}/images/icon_mini_search.gif" width="12" height="13" alt="*" title="{L_SEARCH}" style="margin-bottom: -3px" onclick="var h = document.forms['global_search'].elements[0]; if (h.value == '' || h.value == '{LA_SEARCH_MINI}') {h.focus(); return false;}" />
 					{S_SEARCH_HIDDEN_FIELDS}
 				</form>
 				<p><a href="{U_SEARCH}">{L_SEARCH_ADV}</a></p>
@@ -113,9 +113,9 @@
 			</div>
 
 			<!-- IF S_NOTIFICATIONS_DISPLAY -->
-				<div id="notification_list" style="border-width: 0; display: none; width: 270px"><!--
+				<div id="notification_list" style="border-width: 0; display: none"><!--
 					<div align="{S_CONTENT_FLOW_BEGIN}"><div style="overflow: hidden; padding: 4px 0">
-						<b style="float: {S_CONTENT_FLOW_BEGIN}; padding: 0 10px">{L_NOTIFICATIONS}</b>
+						<table align="{S_CONTENT_FLOW_BEGIN}" cellspacing="0"><tr><td style="padding: 0 10px"><b>{L_NOTIFICATIONS}</b></td></tr></table>
 						<div align="{S_CONTENT_FLOW_END}" style="padding: 0 10px"><a href="{U_NOTIFICATION_SETTINGS}">{L_SETTINGS}</a></div>
 					</div>
 					<!-- BEGIN notifications -->
@@ -196,14 +196,15 @@
 	</tr></table></div>
 <!-- ENDIF -->
 
-<!-- DEFINE $MICRODATA = ' itemtype="http://data-vocabulary.org/Breadcrumb" itemscope=""' -->
+<!-- DEFINE $MICRODATA = ' itemtype="http://schema.org/ListItem" itemprop="itemListElement" itemscope' -->
+<!-- SET navlink_position = 1 -->
 <table cellspacing="1" width="100%" class="main" style="margin: 4px 0 8px">
 <tr class="bg1"><td><table cellspacing="0" width="100%"><tr class="breadcrumbs">
 	<td><!-- EVENT overall_header_breadcrumbs_before -->
-		<b><!-- IF U_SITE_HOME --><span{$MICRODATA}><a href="{U_SITE_HOME}" data-navbar-reference="home" itemprop="url"><span itemprop="title">{L_SITE_HOME}</span></a></span> <b>&#187;</b> <!-- ENDIF -->
-		<!-- EVENT overall_header_breadcrumb_prepend --><span{$MICRODATA}><a href="{U_INDEX}" data-navbar-reference="index" itemprop="url"><span itemprop="title">{L_INDEX}</span></a></span>
-		<!-- BEGIN navlinks --><!-- EVENT overall_header_navlink_prepend --> &#187; <span{$MICRODATA}<!-- IF navlinks.MICRODATA --> {navlinks.MICRODATA}<!-- ENDIF -->><a href="{navlinks.U_VIEW_FORUM}" itemprop="url"><span itemprop="title">{navlinks.FORUM_NAME}</span></a></span><!-- EVENT overall_header_navlink_append --><!-- END navlinks -->
-		<!-- EVENT overall_header_breadcrumb_append --></b>
+		<b><span itemscope itemtype="http://schema.org/BreadcrumbList"><!-- IF U_SITE_HOME --><span {$MICRODATA}><a href="{U_SITE_HOME}" itemtype="https://schema.org/Thing" itemprop="item" data-navbar-reference="home"><span itemprop="name">{L_SITE_HOME}</span></a><meta itemprop="position" content="{{ navlink_position }}<!-- SET navlink_position = navlink_position + 1 -->" /></span> <b>&#187;</b> <!-- ENDIF -->
+		<!-- EVENT overall_header_breadcrumb_prepend --><span {$MICRODATA}><a href="{U_INDEX}" itemtype="https://schema.org/Thing" itemprop="item" data-navbar-reference="index"><span itemprop="name">{L_INDEX}</span></a><meta itemprop="position" content="{{ navlink_position }}<!-- SET navlink_position = navlink_position + 1 -->" /></span>
+		<!-- BEGIN navlinks --><!-- EVENT overall_header_navlink_prepend --> &#187; <span {$MICRODATA}<!-- IF navlinks.MICRODATA --> {navlinks.MICRODATA}<!-- ENDIF -->><a href="{navlinks.U_VIEW_FORUM}" itemtype="https://schema.org/Thing" itemprop="item"><span itemprop="name">{navlinks.FORUM_NAME}</span></a><meta itemprop="position" content="{{ navlink_position }}<!-- SET navlink_position = navlink_position + 1 -->" /></span><!-- EVENT overall_header_navlink_append --><!-- END navlinks -->
+		<!-- EVENT overall_header_breadcrumb_append --></span></b>
 		<!-- EVENT overall_header_breadcrumbs_after -->
 	</td>
 </tr></table></td></tr>

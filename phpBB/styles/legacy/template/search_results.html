@@ -17,8 +17,8 @@
 			<!-- IF SEARCH_IN_RESULTS and TOTAL_MATCHES > 0 -->
 				<div class="search-box">
 					<form action="{S_SEARCH_ACTION}" method="post">
-						<input type="text" class="inputbox" name="add_keywords" value="{L_SEARCH_IN_RESULTS}" onfocus="if (typeof this.flag == 'undefined') {this.flag = true; this.value='';}" />
-						<input type="submit" name="submit" class="button2" title="{L_SEARCH}" value="{L_GO}" onclick="var h = this.form.elements[0]; if (h.value == '' || typeof h.flag == 'undefined') {h.focus(); return false;}" />
+						<input type="text" class="inputbox" name="add_keywords" size="20" value="{L_SEARCH_IN_RESULTS}" onfocus="if (this.value == '{LA_SEARCH_IN_RESULTS}') {this.value='';}" />
+						<input type="submit" name="submit" class="button2" title="{L_SEARCH}" value="{L_GO}" onclick="var h = this.form.elements[0]; if (h.value == '' || h.value == '{LA_SEARCH_IN_RESULTS}') {h.focus(); return false;}" />
 					</form>
 				</div>
 			<!-- ENDIF -->
@@ -28,19 +28,20 @@
 	</tr>
 </table>
 
-<form method="post" action="{S_SEARCH_ACTION}">
 <!-- EVENT search_results_header_after -->
 
 <!-- IF S_SHOW_TOPICS -->
-	<table class="main" width="100%" cellspacing="1">
-	<tr>
-		<th colspan="3">{L_TOPICS}</th>
-		<th width="10%">{L_AUTHOR}</th>
-		<th width="50">{L_REPLIES}</th>
-		<th width="50">{L_VIEWS}</th>
-		<th width="10%">{L_LAST_POST}</th>
-	</tr>
 	<!-- BEGIN searchresults -->
+		<!-- IF searchresults.S_FIRST_ROW -->
+			<table class="main" width="100%" cellspacing="1">
+			<tr>
+				<th colspan="3">{L_TOPICS}</th>
+				<th width="10%">{L_AUTHOR}</th>
+				<th width="50">{L_REPLIES}</th>
+				<th width="50">{L_VIEWS}</th>
+				<th nowrap="nowrap" width="10%">{L_LAST_POST}</th>
+			</tr>
+		<!-- ENDIF -->
 		<!-- EVENT search_results_topic_before -->
 		<tr>
 			<td class="bg1" width="25" align="center">
@@ -54,15 +55,16 @@
 			<td class="bg1">
 				<!-- EVENT topiclist_row_prepend -->
 				<!-- IF searchresults.S_UNREAD_TOPIC --><a href="{searchresults.U_NEWEST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_newest.gif" width="18" height="9" alt="&gt;&gt;&gt;" border="0" title="{L_UNREAD_POSTS}" /></a><!-- ENDIF -->
-				<!-- IF searchresults.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF --><!-- IF searchresults.S_HAS_POLL --><b>{searchresults.TOPIC_TYPE} </b><!-- ENDIF --><a title="{L_POSTED}{L_COLON} {searchresults.FIRST_POST_TIME}" href="{searchresults.U_VIEW_TOPIC}" class="topictitle">{searchresults.TOPIC_TITLE}</a>
+				<!-- IF searchresults.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF -->
+				<!-- IF searchresults.S_HAS_POLL --><b>{searchresults.TOPIC_TYPE}</b> <!-- ENDIF --><a title="{L_POSTED}{L_COLON} {searchresults.FIRST_POST_TIME}" href="{searchresults.U_VIEW_TOPIC}" class="topictitle">{searchresults.TOPIC_TITLE}</a>
 				<!-- IF searchresults.S_TOPIC_UNAPPROVED or searchresults.S_POSTS_UNAPPROVED -->
-					<a href="{searchresults.U_MCP_QUEUE}"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="(?)" border="0" title="<!-- IF searchresults.S_TOPIC_UNAPPROVED -->{L_TOPIC_UNAPPROVED}<!-- ELSE -->{L_POSTS_UNAPPROVED}<!-- ENDIF -->" /></a>&nbsp;
+					<a href="{searchresults.U_MCP_QUEUE}"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="(?)" border="0" title="<!-- IF searchresults.S_TOPIC_UNAPPROVED -->{L_TOPIC_UNAPPROVED}<!-- ELSE -->{L_POSTS_UNAPPROVED}<!-- ENDIF -->" /></a>
 				<!-- ENDIF -->
 				<!-- IF searchresults.S_TOPIC_DELETED -->
-					<a href="{searchresults.U_MCP_QUEUE}"><img src="{T_THEME_PATH}/images/icon_topic_deleted.gif" width="14" height="14" alt="(X)" border="0" title="{L_TOPIC_DELETED}" /></a>&nbsp;
+					<a href="{searchresults.U_MCP_QUEUE}"><img src="{T_THEME_PATH}/images/icon_topic_deleted.gif" width="14" height="14" alt="(X)" border="0" title="{L_TOPIC_DELETED}" /></a>
 				<!-- ENDIF -->
 				<!-- IF searchresults.S_TOPIC_REPORTED -->
-					<a href="{searchresults.U_MCP_REPORT}"><img src="{T_THEME_PATH}/images/icon_topic_reported.gif" width="19" height="18" alt="(!)" border="0" title="{L_TOPIC_REPORTED}" /></a>&nbsp;
+					<a href="{searchresults.U_MCP_REPORT}"><img src="{T_THEME_PATH}/images/icon_topic_reported.gif" width="19" height="18" alt="(!)" border="0" title="{L_TOPIC_REPORTED}" /></a>
 				<!-- ENDIF -->
 				<!-- EVENT topiclist_row_topic_title_after -->
 				<!-- IF .searchresults.pagination -->
@@ -80,44 +82,32 @@
 				<div class="bigger">{L_IN} <a href="{searchresults.U_VIEW_FORUM}">{searchresults.FORUM_TITLE}</a></div>
 				<!-- EVENT topiclist_row_append -->
 			</td>
-			<td class="bg2" align="center"><p>{searchresults.TOPIC_AUTHOR_FULL}</p></td>
+			<td class="bg2" align="center"><p><!-- EVENT search_results_topic_author_username_prepend -->{searchresults.TOPIC_AUTHOR_FULL}<!-- EVENT search_results_topic_author_username_append --></p></td>
 			<td class="bg1" align="center"><p>{searchresults.TOPIC_REPLIES}</p></td>
 			<td class="bg2" align="center"><p>{searchresults.TOPIC_VIEWS}</p></td>
 			<td class="bg1" align="center" nowrap="nowrap">
-				<p>{searchresults.LAST_POST_TIME}<br />{searchresults.LAST_POST_AUTHOR_FULL}<!-- IF not S_IS_BOT --> <a href="{searchresults.U_LAST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_latest.gif" width="18" height="9" alt="&gt;" border="0" title="{L_GOTO_LAST_POST}" /></a><!-- ENDIF --></p>
+				<p>{searchresults.LAST_POST_TIME}<br /><!-- EVENT search_results_last_post_author_username_prepend -->{searchresults.LAST_POST_AUTHOR_FULL}<!-- EVENT search_results_last_post_author_username_append --><!-- IF not S_IS_BOT --> <a href="{searchresults.U_LAST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_latest.gif" width="18" height="9" alt="&gt;" border="0" title="{L_GOTO_LAST_POST}" /></a><!-- ENDIF --></p>
 			</td>
 		</tr>
 		<!-- EVENT search_results_topic_after -->
-	<!-- BEGINELSE -->
-		<tr>
-			<td colspan="7" class="bg3" align="center"><b>{L_NO_SEARCH_RESULTS}</b></td>
-		</tr>
+		<!-- IF searchresults.S_LAST_ROW --></table><!-- ENDIF -->
 	<!-- END searchresults -->
-	<!-- IF .searchresults and (S_SELECT_SORT_DAYS or S_SELECT_SORT_KEY) -->
-		<tr>
-			<td class="cat" colspan="7"><!-- INCLUDE display_options.html --></td>
-		</tr>
-	<!-- ENDIF -->
-	</table>
-
 <!-- ELSE -->
-
 	<!-- BEGIN searchresults -->
-	<table class="main" width="100%" cellspacing="1">
-
-	<!-- IF searchresults.S_FIRST_ROW -->
-		<tr>
-			<th nowrap="nowrap">{L_AUTHOR}</th>
-			<th width="100%">{L_MESSAGE}</th>
-		</tr>
-	<!-- ENDIF -->
-
-		<tr class="<!-- IF searchresults.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+		<table class="main" width="100%" cellspacing="1">
+		<!-- IF searchresults.S_FIRST_ROW -->
+			<tr>
+				<th nowrap="nowrap">{L_AUTHOR}</th>
+				<th width="100%">{L_MESSAGE}</th>
+			</tr>
+		<!-- ENDIF -->
+		<!-- IF searchresults.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+		<tr class="{$BG}">
 		<!-- EVENT search_results_post_before -->
 		<!-- IF searchresults.S_IGNORE_POST -->
 			<td align="center" class="member"<!-- IF searchresults.S_FIRST_ROW or searchresults.S_LAST_ROW --> colspan="2"<!-- ENDIF -->>{searchresults.L_IGNORE_POST}</td>
 		<!-- ELSE -->
-			<td align="center"><b>{searchresults.POST_AUTHOR_FULL}</b></td>
+			<td align="center"><b><!-- EVENT search_results_post_author_username_prepend -->{searchresults.POST_AUTHOR_FULL}<!-- EVENT search_results_post_author_username_append --></b></td>
 			<td width="100%">
 				<table cellspacing="0" height="20" width="100%">
 				<tr>
@@ -135,7 +125,7 @@
 				</table>
 			</td>
 		</tr>
-		<tr class="<!-- IF searchresults.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->" valign="top">
+		<tr class="{$BG}" valign="top">
 			<td><br />
 				<table cellspacing="0" width="150"><tr><td>
 					<table class="profile"><tr><td>&nbsp;</td><td width="100%"><table class="fixed"><tr><td>
@@ -148,39 +138,39 @@
 						<!-- EVENT search_results_postprofile_after -->
 					</td></tr></table></td><td>&nbsp;</td></tr></table>
 				</td></tr></table>
-			<br /><br /></td>
+				<br /><br />
+			</td>
 			<td>
 				<table cellspacing="5" width="100%">
 				<tr>
-					<td><div class="postbody"><span class="content">{searchresults.MESSAGE}</span></div></td>
+					<td><div class="postbody"><div class="content">{searchresults.MESSAGE}</div><!-- EVENT search_results_content_after --></div></td>
 				</tr>
 				</table>
 			</td>
 		</tr>
 		<!-- ENDIF -->
-	<!-- EVENT search_results_post_after -->
-		<!-- IF searchresults.S_LAST_ROW and S_SELECT_SORT_KEY -->
-			<tr>
-				<td class="cat" colspan="2"><!-- INCLUDE display_options.html --></td>
-			</tr>
-		<!-- ENDIF -->
+		<!-- EVENT search_results_post_after -->
 		</table>
 		<!-- IF not searchresults.S_LAST_ROW --><div class="spacer"></div><!-- ENDIF -->
-	<!-- BEGINELSE -->
-		<table class="main" width="100%" cellspacing="1">
-		<tr>
-			<th nowrap="nowrap">{L_AUTHOR}</th>
-			<th width="100%">{L_MESSAGE}</th>
-		</tr>
-
-		<tr>
-			<td colspan="2" class="bg3" align="center"><b>{L_NO_SEARCH_RESULTS}</b></td>
-		</tr>
-		</table>
 	<!-- END searchresults -->
-
 <!-- ENDIF -->
-</form>
+
+<!-- IF not .searchresults -->
+	<table class="main" width="100%" cellspacing="1">
+	<tr>
+		<th>{L_INFORMATION}</th>
+	</tr>
+	<tr>
+		<td class="bg1" align="center"><span class="big">{L_NO_SEARCH_RESULTS}</span></td>
+	</tr>
+	</table>
+<!-- ELSEIF S_SELECT_SORT_DAYS or S_SELECT_SORT_KEY -->
+	<table cellspacing="0" width="100%">
+	<tr>
+		<td class="cat" align="center"><form method="post" action="{S_SEARCH_ACTION}"><!-- INCLUDE display_options.html --></form></td>
+	</tr>
+	</table>
+<!-- ENDIF -->
 
 <table cellspacing="1" style="margin: 5px 0" width="100%"><tr valign="top">
 	<td><b class="nowrap"><!-- IF SEARCH_TOPIC --><a href="{U_SEARCH_TOPIC}">{L_RETURN_TO_TOPIC}</a><!-- ELSE --><a href="{U_SEARCH}">{L_GO_TO_SEARCH_ADV}</a><!-- ENDIF --></b></td>

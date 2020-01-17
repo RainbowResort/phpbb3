@@ -4,7 +4,7 @@
 	<tr valign="top">
 		<td style="padding: 2px" width="100%">
 			<table cellspacing="0" style="table-layout: fixed" width="100%"><tr><td style="padding: 2px; padding-{S_CONTENT_FLOW_BEGIN}: 0; padding-{S_CONTENT_FLOW_END}: 6px">
-			<textarea name=<!-- IF $SIG_EDIT -->"signature"<!-- ELSE -->"message"<!-- ENDIF --> rows="15" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" style="height: 270px; width: 100%">{MESSAGE}{DRAFT_MESSAGE}{SIGNATURE}</textarea>
+			<textarea name="<!-- IF $SIG_EDIT -->signature<!-- ELSE -->message<!-- ENDIF -->" rows="15" cols="<!-- IF S_PRIVMSGS -->55<!-- ELSE -->76<!-- ENDIF -->" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" style="width: 550px; height: 270px; min-width: 100%; max-width: 100%; *width: 100%">{MESSAGE}{DRAFT_MESSAGE}{SIGNATURE}</textarea>
 			</td></tr></table>
 		</td>
 		<!-- IF S_BBCODE_ALLOWED -->

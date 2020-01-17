@@ -3,35 +3,35 @@
 	<th colspan="2">{L_ADD_POLL}</th>
 </tr>
 <tr>
-	<td class="bg3" colspan="2"><span class="bigger">{L_ADD_POLL_EXPLAIN}</span></td>
+	<td class="bg1" colspan="2"><span class="bigger">{L_ADD_POLL_EXPLAIN}</span></td>
 </tr>
 <tr>
 	<td class="bg1"><b class="bigger">{L_POLL_QUESTION}{L_COLON}</b></td>
-	<td class="bg2"><input type="text" class="inputbox" name="poll_title" size="50" maxlength="255" value="{POLL_TITLE}" /></td>
+	<td class="bg1"><input type="text" class="inputbox" name="poll_title" size="50" maxlength="100" value="{POLL_TITLE}" /></td>
 </tr>
 <tr>
 	<td class="bg1"><b class="bigger">{L_POLL_OPTIONS}{L_COLON}</b><br /><span class="bigger">{L_POLL_OPTIONS_EXPLAIN}</span></td>
-	<td class="bg2"><textarea name="poll_option_text" rows="5" cols="50">{POLL_OPTIONS}</textarea></td>
+	<td class="bg1"><textarea name="poll_option_text" rows="5" cols="50">{POLL_OPTIONS}</textarea></td>
 </tr>
 <tr>
-	<td class="bg1"><b class="bigger">{L_POLL_MAX_OPTIONS}{L_COLON}</b><br /><span class="bigger">{L_POLL_MAX_OPTIONS_EXPLAIN}</span></td>
-	<td class="bg2"><input type="text" class="inputbox" size="3" maxlength="3" name="poll_max_options" value="{POLL_MAX_OPTIONS}" /></td>
+	<td class="bg1"><b class="bigger">{L_POLL_MAX_OPTIONS}{L_COLON}</b></td>
+	<td class="bg1"><input type="text" class="inputbox" size="3" maxlength="3" name="poll_max_options" value="{POLL_MAX_OPTIONS}" /> <span class="bigger">{L_POLL_MAX_OPTIONS_EXPLAIN}</span></td>
 </tr>
 <tr>
 	<td class="bg1"><b class="bigger">{L_POLL_FOR}{L_COLON}</b></td>
-	<td class="bg2"><input type="text" class="inputbox" size="3" maxlength="3" name="poll_length" value="{POLL_LENGTH}" />&nbsp;<b class="big">{L_DAYS}</b> <span class="bigger">{L_POLL_FOR_EXPLAIN}</span></td>
+	<td class="bg1"><input type="text" class="inputbox" size="3" maxlength="3" name="poll_length" value="{POLL_LENGTH}" />&nbsp;<b class="big">{L_DAYS}</b> <span class="bigger">{L_POLL_FOR_EXPLAIN}</span></td>
 </tr>
 	<!-- IF S_POLL_VOTE_CHANGE -->
 	<tr>
-		<td class="bg1"><b class="bigger">{L_POLL_VOTE_CHANGE}{L_COLON}</b><br /><span class="bigger">{L_POLL_VOTE_CHANGE_EXPLAIN}</span></td>
-		<td class="bg2"><input type="checkbox" name="poll_vote_change"{VOTE_CHANGE_CHECKED} /></td>
+		<td class="bg1"><b class="bigger">{L_POLL_VOTE_CHANGE}{L_COLON}</b></td>
+		<td class="bg1"><input type="checkbox" name="poll_vote_change"{VOTE_CHANGE_CHECKED} /> <span class="bigger">{L_POLL_VOTE_CHANGE_EXPLAIN}</span></td>
 	</tr>
 	<!-- ENDIF -->
 <!-- ENDIF -->
 <!-- IF S_POLL_DELETE -->
 	<tr>
 		<td class="bg1"><b class="bigger">{L_POLL_DELETE}{L_COLON}</b></td>
-		<td class="bg2"><input type="checkbox" name="poll_delete"<!-- IF S_POLL_DELETE_CHECKED --> checked="checked"<!-- ENDIF --> /></td>
+		<td class="bg1"><input type="checkbox" name="poll_delete"<!-- IF S_POLL_DELETE_CHECKED --> checked="checked"<!-- ENDIF --> /></td>
 	</tr>
 <!-- ENDIF -->
 

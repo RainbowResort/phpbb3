@@ -3,7 +3,7 @@
 <br clear="all" />
 
 <form method="post" action="{S_IM_ACTION}">
-	<table class="main" width="95%" cellspacing="1" align="center">
+	<table cellspacing="1" class="main" width="100%">
 	<tr>
 		<th colspan="2">{L_SEND_IM}</th>
 	</tr>
@@ -13,17 +13,17 @@
         </tr>
 	<!-- ENDIF -->
 	<tr>
-		<td class="bg3" colspan="2"><span class="bigger">{L_SEND_IM_EXPLAIN}</span></td>
+		<td class="bg1" colspan="2"><span class="bigger">{L_SEND_IM_EXPLAIN}</span></td>
 	</tr>
 	<tr>
-		<td class="bg1"><b class="bigger">{L_IM_RECIPIENT}{L_COLON} </b></td>
-		<td class="bg2"><span class="big"><b>{USERNAME}</b><!-- IF S_NO_SEND_JABBER --> [ {IM_CONTACT} ]<!-- ENDIF --></span></td>
+		<td class="bg1"><b class="bigger">{L_IM_RECIPIENT}{L_COLON}</b></td>
+		<td class="bg1"><span class="big"><b>{USERNAME}</b><!-- IF S_NO_SEND_JABBER --> [ {IM_CONTACT} ]<!-- ENDIF --></span></td>
 	</tr>
 
 	<!-- IF S_SEND_JABBER -->
 		<tr>
-			<td class="bg1"><b class="bigger">{L_IM_MESSAGE}{L_COLON} </b></td>
-			<td class="bg2"><textarea name="message" rows="5" cols="45"></textarea></td>
+			<td class="bg1"><b class="bigger">{L_IM_MESSAGE}{L_COLON}</b></td>
+			<td class="bg1"><textarea name="message" rows="5" cols="45"></textarea></td>
 		</tr>
 		<tr>
 			<td class="cat" colspan="2" align="center"><input class="button1" name="submit" type="submit" value="{L_IM_SEND}" /></td>
@@ -38,6 +38,10 @@
 {S_FORM_TOKEN}
 </form>
 
-<br /><a class="bigger" href="#" onclick="window.close(); return false;">{L_CLOSE_WINDOW}</a>
+<table cellspacing="1" width="100%">
+<tr>
+	<td><b><a class="bigger" href="#" onclick="window.close(); return false;">{L_CLOSE_WINDOW}</a></b></td>
+</tr>
+</table>
 
 <!-- INCLUDE simple_footer.html -->

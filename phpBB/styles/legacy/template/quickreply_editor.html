@@ -6,19 +6,19 @@
 		</tr>
 		<!-- EVENT quickreply_editor_subject_before -->
 		<tr>
-			<td class="bg1" width="150"><b class="bigger">{L_SUBJECT}{L_COLON}</b></td>
-			<td class="bg2"><input type="text" class="inputbox" name="subject" size="60" maxlength="124" tabindex="2" value="{SUBJECT}" /></td>
+			<td class="bg1"><b class="bigger">{L_SUBJECT}{L_COLON}</b></td>
+			<td class="bg1" width="100%"><input type="text" class="inputbox" name="subject" size="60" maxlength="124" tabindex="2" value="{SUBJECT}" /></td>
 		</tr>
 		<!-- EVENT quickreply_editor_message_before -->
-		<tr>
-			<td class="bg1" valign="top" width="150"><b class="bigger">{L_MESSAGE}{L_COLON}</b></td>
-			<td class="bg2"><textarea name="message" rows="7" cols="70" tabindex="3"></textarea></td>
+		<tr class="bg1">
+			<td valign="top"><table cellspacing="0" width="150"><tr><td><b class="bigger">{L_MESSAGE}{L_COLON}</b></td></tr></table></td>
+			<td class="bg1"><textarea name="message" rows="7" cols="70" tabindex="3"></textarea></td>
 		</tr>
 		<!-- EVENT quickreply_editor_message_after -->
 		<tr>
 			<td class="cat" colspan="2" align="center">
-				<input class="button2" type="submit" accesskey="f" tabindex="6" name="preview" value="{L_FULL_EDITOR}" />&nbsp;
-				<input class="button1" type="submit" accesskey="s" tabindex="7" name="post" value="{L_SUBMIT}" />
+				<input class="button2" type="submit" accesskey="f" tabindex="6" name="preview" value="{L_FULL_EDITOR}" />
+				&nbsp;<input class="button1" type="submit" accesskey="s" tabindex="7" name="post" value="{L_SUBMIT}" />
 
 				{S_FORM_TOKEN}
 				{QR_HIDDEN_FIELDS}

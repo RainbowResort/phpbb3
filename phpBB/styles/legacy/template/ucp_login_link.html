@@ -16,59 +16,57 @@
 	<!-- ENDIF -->
 
 	<tr>
-		<td class="bg1">
-			<form action="{REGISTER_ACTION}" method="post" id="register">
-				<table width="100%" cellspacing="1">
-					<tr>
-						<th>{L_REGISTER}</th>
-					</tr>
-
-					<tr>
-						<td>{S_HIDDEN_FIELDS}<input type="submit" name="register" tabindex="1" value="{L_REGISTER}" class="button2" /></td>
-					</tr>
-				</table>
-			</form>
-		</td>
+		<th>{L_REGISTER}</th>
 	</tr>
 
 	<tr>
-		<td class="bg1">
-			<form action="{LOGIN_ACTION}" method="post" id="login">
-				<table width="100%" cellspacing="1">
-					<tr>
-						<th colspan="2">{L_LOGIN}</th>
-					</tr>
-
-					<!-- IF LOGIN_ERROR -->
-						<tr>
-							<td class="bg1" align="center" colspan="2"><p class="error">{LOGIN_ERROR}</p></td>
-						</tr>
-					<!-- ENDIF -->
-
-					<tr>
-						<td align="{S_CONTENT_FLOW_END}"><b class="bigger"><label for="{USERNAME_CREDENTIAL}">{L_USERNAME}{L_COLON}</label></b></td>
-						<td><input type="text" class="inputbox" tabindex="2" name="{USERNAME_CREDENTIAL}" id="{USERNAME_CREDENTIAL}" size="25" value="{LOGIN_USERNAME}" /></td>
-					</tr>
-
-					<tr>
-						<td align="{S_CONTENT_FLOW_END}"><b class="bigger"><label for="{PASSWORD_CREDENTIAL}">{L_PASSWORD}{L_COLON}</label></b></td>
-						<td><input type="password" class="inputbox" tabindex="3" id="{PASSWORD_CREDENTIAL}" name="{PASSWORD_CREDENTIAL}" size="25" autocomplete="off" /></td>
-					</tr>
-
-					<!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->
-						<!-- DEFINE $CAPTCHA_TAB_INDEX = 4 -->
-						<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
-					<!-- ENDIF -->
-
-					{S_LOGIN_REDIRECT}
-					<tr>
-						<td>&nbsp;</td>
-						<td>{S_HIDDEN_FIELDS}<input type="submit" name="login" tabindex="5" value="{L_LOGIN}" class="button2" /></td>
-					</tr>
-				</table>
+		<td align="center" class="bg1">
+			<form action="{REGISTER_ACTION}" method="post" id="register">
+				{S_HIDDEN_FIELDS}<input type="submit" name="register" tabindex="1" value="{L_REGISTER}" class="button1" />
 			</form>
 		</td>
 	</tr>
 </table>
+
+<form action="{LOGIN_ACTION}" method="post" id="login">
+	<table class="main" width="100%" cellspacing="1">
+		<tr>
+			<th colspan="2">{L_LOGIN}</th>
+		</tr>
+
+		<tr>
+			<td class="bg1" colspan="2">
+				<table width="100%" cellspacing="1">
+
+					<!-- IF LOGIN_ERROR -->
+						<tr>
+							<td align="center" colspan="2"><p class="error">{LOGIN_ERROR}</p></td>
+						</tr>
+					<!-- ENDIF -->
+
+					<tr>
+						<td align="{S_CONTENT_FLOW_END}" width="50%"><b class="bigger">{L_USERNAME}{L_COLON}</b></td>
+						<td><input type="text" class="inputbox" tabindex="2" name="{USERNAME_CREDENTIAL}" id="{USERNAME_CREDENTIAL}" size="25" value="{LOGIN_USERNAME}" /></td>
+					</tr>
+
+					<tr>
+						<td align="{S_CONTENT_FLOW_END}"><b class="bigger">{L_PASSWORD}{L_COLON}</b></td>
+						<td><input type="password" class="inputbox" tabindex="3" id="{PASSWORD_CREDENTIAL}" name="{PASSWORD_CREDENTIAL}" size="25" autocomplete="off" /></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+
+		<!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->
+			<!-- DEFINE $CAPTCHA_TAB_INDEX = 4 -->
+			<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+		<!-- ENDIF -->
+
+		{S_LOGIN_REDIRECT}
+		<tr>
+			<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="login" tabindex="5" value="{L_LOGIN}" class="button1" /></td>
+		</tr>
+	</table>
+</form>
 
 <!-- INCLUDE overall_footer.html -->

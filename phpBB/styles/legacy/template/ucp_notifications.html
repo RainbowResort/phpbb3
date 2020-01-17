@@ -1,19 +1,21 @@
 <!-- INCLUDE ucp_header.html -->
+
+<form name="ucp" id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+
+<table class="main" width="100%" cellspacing="1">
+<tr>
+	<th colspan="<!-- IF MODE == 'notification_options' -->{NOTIFICATION_TYPES_COLS}<!-- ELSE -->2<!-- ENDIF -->">{TITLE}</th>
+</tr>
+<tr>
+	<td class="bg1" colspan="<!-- IF MODE == 'notification_options' -->{NOTIFICATION_TYPES_COLS}<!-- ELSE -->2<!-- ENDIF -->" align="center"><span class="bigger">{TITLE_EXPLAIN}</span></td>
+</tr>
 <!-- IF MODE == 'notification_options' -->
-	<table width="100%" class="main" cellspacing="1">
-	<tr>
-		<th colspan="{NOTIFICATION_TYPES_COLS}">{TITLE}</th>
-	</tr>
-	<tr>
-		<td class="bg1" colspan="{NOTIFICATION_TYPES_COLS}" align="center"><span class="bigger">{TITLE_EXPLAIN}</span></td>
-	</tr>
 	<tr>
 		<th>{L_NOTIFICATION_TYPE}</th>
 		<!-- BEGIN notification_methods -->
 			<th width="10%">{notification_methods.NAME}</th>
 		<!-- END notification_methods -->
 	</tr>
-
 	<!-- BEGIN notification_types -->
 		<!-- IF notification_types.GROUP_NAME -->
 			<tr>
@@ -23,7 +25,7 @@
 			<tr class="<!-- IF notification_types.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
 				<td>
 					<span class="bigger">{notification_types.NAME}
-						<!-- IF notification_types.EXPLAIN --><br />&nbsp; &nbsp;{notification_types.EXPLAIN}<!-- ENDIF -->
+						<!-- IF notification_types.EXPLAIN --><br /> &nbsp; {notification_types.EXPLAIN}<!-- ENDIF -->
 					</span>
 				</td>
 				<!-- BEGIN notification_methods -->
@@ -36,60 +38,58 @@
 		<td class="cat" colspan="{NOTIFICATION_TYPES_COLS}" align="center">
 			<input type="hidden" name="form_time" value="{FORM_TIME}" />
 			{S_HIDDEN_FIELDS}
-			<input class="button2" type="reset" value="{L_RESET}" name="reset" />&nbsp; <input class="button1" type="submit" name="submit" value="{L_SUBMIT}" />
+			<input class="button2" type="reset" value="{L_RESET}" name="reset" /> &nbsp;<input class="button1" type="submit" name="submit" value="{L_SUBMIT}" />
 			{S_FORM_TOKEN}
 		</td>
 	</tr>
-	</table>
 <!-- ELSE -->
-	<table cellspacing="1" width="100%">
+	<!-- IF .notification_list -->
 		<tr>
-			<!-- IF TOTAL_COUNT -->
-				<td><b class="nowrap">{PAGE_NUMBER}</b> <span class="nowrap">[ {TOTAL_COUNT} {L_NOTIFICATIONS}]</span></td>
-			<!-- ENDIF -->
-			<td align="{S_CONTENT_FLOW_END}"><!-- IF U_MARK_ALL and .notifications --><b><a href="{U_MARK_ALL}">{L_NOTIFICATIONS_MARK_ALL_READ}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- ENDIF --><!-- INCLUDE pagination.html --></td>
+			<th colspan="2">{L_NOTIFICATIONS}</th>
 		</tr>
-	</table>
-
-		<table cellspacing="1" class="main" width="100%">
-			<tr>
-				<th>{L_NOTIFICATIONS}</th>
-				<th width="15%">{L_MARK_READ}</th>
-			</tr>
-			<!-- BEGIN notification_list -->
-				<tr class="forumdesc"><!-- IF notification_list.UNREAD --><!-- DEFINE $BG = 'bg3' --><!-- ELSE --><!-- DEFINE $BG = 'bg1' --><!-- ENDIF -->
-					<td class="{$BG}">
-						<!-- IF notification_list.UNREAD --><b>&#187; </b><!-- ENDIF -->
-						<!-- IF notification_list.URL --><a href="<!-- IF notification_list.UNREAD -->{notification_list.U_MARK_READ}<!-- ELSE -->{notification_list.URL}<!-- ENDIF -->">
-						{notification_list.FORMATTED_TITLE}<!-- IF notification_list.REFERENCE --> {notification_list.REFERENCE}<!-- ENDIF -->
-						</a><!-- ELSE -->{notification_list.FORMATTED_TITLE}<!-- IF notification_list.REFERENCE --> {notification_list.REFERENCE}<!-- ENDIF -->
-						<!-- ENDIF --><br />
-						<!-- IF notification_list.FORUM -->{notification_list.FORUM}<br /><!-- ENDIF -->
-						<!-- IF notification_list.REASON -->{notification_list.REASON}<br /><!-- ENDIF -->
-						<span class="small">{notification_list.TIME}</span>
-					</td>
-					<td align="center" class="{$BG}">
-						<input type="checkbox" name="mark[]" value="{notification_list.NOTIFICATION_ID}"<!-- IF not notification_list.UNREAD --> disabled="disabled"<!-- ENDIF --> />
-					</td>
+		<tr>
+			<td class="bg3" colspan="2">
+				<table width="100%" cellspacing="1">
+				<tr>
+					<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL_COUNT} {L_NOTIFICATIONS} ]</td>
+					<td align="{S_CONTENT_FLOW_END}" width="100%"><!-- IF U_MARK_ALL --><b><a href="{U_MARK_ALL}">{L_MARK_ALL_READ}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- ENDIF --><!-- INCLUDE pagination.html --></td>
 				</tr>
-			<!-- END notification_list -->
-			<tr>
-				<td class="cat" colspan="2" align="{S_CONTENT_FLOW_END}">
-				<!-- IF .notification_list -->
-					<input type="hidden" name="form_time" value="{FORM_TIME}" />
-					{S_HIDDEN_FIELDS}
-					<input class="button1" type="submit" name="submit" value="{L_MARK_READ}" />
-					{S_FORM_TOKEN}
-				<!-- ELSE -->
-					<b class="bigger">{L_NO_NOTIFICATIONS}</b>
-				<!-- ENDIF -->
-				</td>
-			</tr>
-		</table>
+				</table>
+			</td>
+		</tr>
+	<!-- ENDIF -->
+	<!-- BEGIN notification_list -->
+		<tr class="forumdesc">
+			<td class="bg1" width="97%">
+				<!-- IF notification_list.URL --><a href="<!-- IF notification_list.UNREAD -->{notification_list.U_MARK_READ}"><img src="{T_THEME_PATH}/images/icon_topic_newest.gif" width="18" height="9" alt="&gt;&gt;&gt;" border="0" title="{L_UNREAD_POSTS}" /> <!-- ELSE -->{notification_list.URL}"><!-- ENDIF --><!-- ENDIF -->{notification_list.FORMATTED_TITLE}<!-- IF notification_list.REFERENCE --> {notification_list.REFERENCE}<!-- ENDIF --><!-- IF notification_list.URL --></a><!-- ENDIF -->
+				<!-- IF notification_list.FORUM --><br />{notification_list.FORUM}<!-- ENDIF -->
+				<!-- IF notification_list.REASON --><br />{notification_list.REASON}<!-- ENDIF -->
+				<div class="small">{notification_list.TIME}</div>
+			</td>
+			<td align="center" class="bg1" width="3%">
+				<input type="checkbox" name="mark[]" value="{notification_list.NOTIFICATION_ID}"<!-- IF not notification_list.UNREAD --> disabled="disabled"<!-- ENDIF --> />
+			</td>
+		</tr>
+	<!-- END notification_list -->
+	<tr>
+		<!-- IF .notification_list -->
+			<td align="{S_CONTENT_FLOW_END}" class="cat" colspan="2">
+				<input type="hidden" name="form_time" value="{FORM_TIME}" />
+				{S_HIDDEN_FIELDS}
+				<input class="button1" type="submit" name="submit" value="{L_MARK_READ}" />
+				{S_FORM_TOKEN}
+			</td>
+		<!-- ELSE -->
+			<td align="center" class="bg1" colspan="2">
+				<b class="bigger">{L_NO_NOTIFICATIONS}</b>
+			</td>
+		<!-- ENDIF -->
+	</tr>
 <!-- ENDIF -->
+</table>
 
 <!-- IF .notifications or MODE == 'notification_options' or (.pagination and not MODE == 'notification_options') -->
-	<table width="100%" cellspacing="2">
+	<table width="100%" cellspacing="1">
 		<!-- IF .notifications or MODE == 'notification_options' --><tr><td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('ucp', '<!-- IF MODE == 'notification_options' -->notification.type<!-- ELSE -->mark[]<!-- ENDIF -->', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp', '<!-- IF MODE == 'notification_options' -->notification.type<!-- ELSE -->mark[]<!-- ENDIF -->', false); return false;">{L_UNMARK_ALL}</a></b></td></tr><!-- ENDIF -->
 		<!-- IF .pagination and not MODE == 'notification_options' --><tr><td align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td></tr><!-- ENDIF -->
 	</table>

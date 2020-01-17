@@ -4,14 +4,14 @@
 
 <table class="main" width="100%" cellspacing="1">
 <tr>
-	<th colspan="2">{L_SELECT_USER}</th>
+	<th colspan="2">{L_WARN_USER}</th>
 </tr>
 <tr>
-	<td class="bg1" width="40%"><b class="big">{L_SELECT_USER}{L_COLON} </b><br /><span class="bigger">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</span></td>
+	<td class="bg1" width="40%"><b class="big">{L_SELECT_USER}{L_COLON}</b><br /><span class="bigger">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</span></td>
 	<td class="bg2"><input type="text" class="inputbox" name="username" size="20" /></td>
 </tr>
 <tr>
-	<td class="cat" colspan="2" align="center"><input type="reset" value="{L_RESET}" class="button2" />&nbsp; <input type="submit" name="submituser" value="{L_SUBMIT}" class="button1" /></td>
+	<td class="cat" colspan="2" align="center"><input type="reset" value="{L_RESET}" class="button2" /> &nbsp;<input type="submit" name="submituser" value="{L_SUBMIT}" class="button1" /></td>
 </tr>
 </table>
 {S_FORM_TOKEN}
@@ -21,13 +21,10 @@
 
 <table class="main" width="100%" cellspacing="1">
 <tr>
-	<td class="bg3" colspan="4" align="center"><b class="big">{L_MOST_WARNINGS}</b></td>
-</tr>
-<tr>
-	<th width="30%">{L_USERNAME}</th>
-	<th width="10%">{L_WARNINGS}</th>
-	<th width="30%">{L_LATEST_WARNING_TIME}</th>
-	<th width="30%"></th>
+	<th width="25%">{L_MOST_WARNINGS}</th>
+	<th width="25%">{L_WARNINGS}</th>
+	<th width="25%">{L_LATEST_WARNING_TIME}</th>
+	<th width="25%">&nbsp;</th>
 </tr>
 <!-- BEGIN highest -->
 	<tr>
@@ -38,7 +35,7 @@
 	</tr>
 <!-- BEGINELSE -->
 	<tr>
-		<td class="bg3" colspan="4" align="center"><span class="big">{L_NO_WARNINGS}</span></td>
+		<td class="bg1" colspan="4" align="center"><span class="big">{L_NO_WARNINGS}</span></td>
 	</tr>
 <!-- END highest -->
 </table>
@@ -47,13 +44,10 @@
 
 <table class="main" width="100%" cellspacing="1">
 <tr>
-	<td class="bg3" colspan="4" align="center"><b class="big">{L_LATEST_WARNINGS}</b></td>
-</tr>
-<tr>
-	<th width="30%">{L_USERNAME}</th>
-	<th width="30%">{L_TIME}</th>
-	<th width="10%">{L_TOTAL_WARNINGS}</th>
-	<th width="30%">&nbsp;</th>
+	<th width="25%">{L_LATEST_WARNINGS}</th>
+	<th width="25%">{L_TIME}</th>
+	<th width="25%">{L_TOTAL_WARNINGS}</th>
+	<th width="25%">&nbsp;</th>
 </tr>
 <!-- BEGIN latest -->
 	<tr>
@@ -64,7 +58,7 @@
 	</tr>
 <!-- BEGINELSE -->
 	<tr>
-		<td class="bg3" colspan="4" align="center"><span class="big">{L_NO_WARNINGS}</span></td>
+		<td class="bg1" colspan="4" align="center"><span class="big">{L_NO_WARNINGS}</span></td>
 	</tr>
 <!-- END latest -->
 </table>

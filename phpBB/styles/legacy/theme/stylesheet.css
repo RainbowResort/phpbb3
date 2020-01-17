@@ -1,9 +1,9 @@
 /*  phpBB3 Style Sheet
     --------------------------------------------------------------
-	Style name:			Legacy 1.2.2
+	Style name:			Legacy 1.2.8
 	Based on style: 	subSilver (the default phpBB 2.0.x style)
 	Original author:	Tom Beddard ( http://www.subblue.com/ )
-	Modified by:		Big Monstro (initial CSS by LiveKiller44)
+	Modified by:		Big Monstro ( http://www.win3x.org/ )
     --------------------------------------------------------------
 */
 
@@ -151,12 +151,12 @@ th.category {
 
 table.fixed {
 	border-collapse: collapse;
-	table-layout: fixed;
 	width: 100%;
-	*width: auto;
+	/* **/ table-layout: fixed;
+	*width: auto; /** */
 }
 
-table.fixed td, table.fixed th {
+table.fixed td {
 	overflow: hidden;
 	padding: 0;
 	word-wrap: break-word;
@@ -202,7 +202,7 @@ a:hover {
 	text-decoration: underline;
 }
 
-a.forumlink, a.header, a.topictitle {
+a.forumtitle, a.header, a.topictitle {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 1.2em;
 	font-weight: bold;
@@ -323,7 +323,7 @@ textarea {
 blockquote, .codebox {
 	background-color: #C0C0C0;
 	border: 1px solid #C0C0C0;
-	margin: 10px 5px;
+	margin: 12px 5px;
 }
 
 .codecontent {
@@ -339,8 +339,9 @@ blockquote, .codebox {
 	line-height: normal;
 	padding: 5px;
 	word-wrap: normal;
-	_height: 37px;
-	*min-height: 37px;
+	*min-height: 30px;
+	_height: 40px;
+	_heig\ht: 30px;
 }
 
 .codetitle, .quotetitle {
@@ -382,12 +383,8 @@ blockquote, .codebox {
 
 /* Private messages
  -------------------- */
-.pm-foe-colour {
-	border-color: #000000;
-}
-
-.pm-friend-colour {
-	border-color: #0000FF;
+.pm-reported-colour {
+	border-color: #800000;
 }
 
 .pm-marked-colour {
@@ -396,6 +393,14 @@ blockquote, .codebox {
 
 .pm-replied-colour {
 	border-color: #C0C0C0;
+}
+
+.pm-friend-colour {
+	border-color: #0000FF;
+}
+
+.pm-foe-colour {
+	border-color: #000000;
 }
 
 
@@ -458,6 +463,11 @@ img {
 	min-width: 18px;
 	height: 1em;
 	width: 1em;
+}
+
+.footer-row {
+	font-size: 1em;
+	line-height: 1.8em;
 }
 
 .notification {

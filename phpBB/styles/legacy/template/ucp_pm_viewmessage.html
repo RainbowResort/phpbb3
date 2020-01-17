@@ -2,7 +2,7 @@
 
 <!-- INCLUDE ucp_pm_message_header.html -->
 
-<table class="main" width="100%" cellspacing="1">
+<table class="main" width="100%" cellspacing="1" style="margin-bottom: 4px">
 
 <tr class="bg1">
 	<td class="bigger" width="150"><b>{L_PM_SUBJECT}{L_COLON}</b></td>
@@ -24,7 +24,7 @@
 		<td class="bigger"><b>{L_TO}{L_COLON}</b></td>
 		<td class="big">
 		<!-- BEGIN to_recipient -->
-			<!-- IF to_recipient.IS_GROUP --><b><a href="{to_recipient.U_VIEW}">{to_recipient.NAME}</a></b><!-- ELSE -->{to_recipient.NAME_FULL}<!-- ENDIF -->&nbsp;
+			<!-- IF to_recipient.IS_GROUP --><b><a href="{to_recipient.U_VIEW}"<!-- IF to_recipient.COLOUR --> style="color: {to_recipient.COLOUR}"<!-- ENDIF -->>{to_recipient.NAME}</a></b><!-- ELSE -->{to_recipient.NAME_FULL}<!-- ENDIF -->&nbsp;
 		<!-- END to_recipient -->
 		</td>
 	</tr>
@@ -35,14 +35,14 @@
 		<td class="bigger"><b>{L_BCC}{L_COLON}</b></td>
 		<td class="big">
 		<!-- BEGIN bcc_recipient -->
-			<!-- IF bcc_recipient.IS_GROUP --><b><a href="{bcc_recipient.U_VIEW}">{bcc_recipient.NAME}</a></b><!-- ELSE -->{bcc_recipient.NAME_FULL}<!-- ENDIF -->&nbsp;
+			<!-- IF bcc_recipient.IS_GROUP --><b><a href="{bcc_recipient.U_VIEW}"<!-- IF bcc_recipient.COLOUR --> style="color: {bcc_recipient.COLOUR}"<!-- ENDIF -->>{bcc_recipient.NAME}</a></b><!-- ELSE -->{bcc_recipient.NAME_FULL}<!-- ENDIF -->&nbsp;
 		<!-- END bcc_recipient -->
 		</td>
 	</tr>
 <!-- ENDIF -->
 </table>
 
-<table class="main" width="100%" cellspacing="1" style="margin-top: 4px">
+<table class="main" width="100%" cellspacing="1">
 
 <tr>
 	<th>{L_MESSAGE}</th>
@@ -53,18 +53,18 @@
 		<table cellspacing="5" width="100%">
 		<tr>
 			<td>
-				<div class="postbody"><span class="content">{MESSAGE}</span></div>
+				<div class="postbody"><div class="content">{MESSAGE}</div></div>
 
 				<!-- IF S_HAS_ATTACHMENTS -->
 					<br />
-							
+
 					<table class="main" width="100%" cellspacing="1">
 					<tr>
 						<td class="bg3"><b class="bigger">{L_ATTACHMENTS}</b></td>
 					</tr>
 					<!-- BEGIN attachment -->
 						<tr class="postbody">
-							<td class="bg1">{attachment.DISPLAY_ATTACHMENT}</td>
+							<td class="bg2">{attachment.DISPLAY_ATTACHMENT}</td>
 						</tr>
 					<!-- END attachment -->
 					</table>
@@ -73,18 +73,18 @@
 				<!-- IF S_DISPLAY_NOTICE -->
 					<br /><p class="error">{L_DOWNLOAD_NOTICE}</p>
 				<!-- ENDIF -->
+				<!-- IF EDITED_MESSAGE -->
+					{EDITED_MESSAGE}
+				<!-- ENDIF -->
 				<!-- IF SIGNATURE -->
 					<span class="postbody"><span class="signature"><p>_________________</p>{SIGNATURE}</span></span>
-				<!-- ENDIF -->
-				<!-- IF EDITED_MESSAGE -->
-					<span class="bigger">{EDITED_MESSAGE}</span>
 				<!-- ENDIF -->
 
 				<br clear="all" /><br />
 
 				<table width="100%" cellspacing="0">
 				<tr>
-					<td class="bigger" align="{S_CONTENT_FLOW_END}">
+					<td align="{S_CONTENT_FLOW_END}">
 						<!-- IF U_DELETE --><a href="{U_DELETE}"><img src="{T_THEME_PATH}/images/icon_post_delete.gif" width="20" height="20" alt="[X]" border="0" title="{L_DELETE_MESSAGE}" /></a> <!-- ENDIF -->
 						<!-- IF U_REPORT --><a href="{U_REPORT}"><img src="{T_THEME_PATH}/images/icon_post_report.gif" width="20" height="20" alt="[!]" border="0" title="{L_REPORT_PM}" /></a> <!-- ENDIF -->
 					</td>

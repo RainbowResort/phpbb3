@@ -43,7 +43,7 @@ function initInsertions() {
 
 	if (document.forms[form_name]) {
 		// Allow to use tab character when typing code
-		if (window.InstallTrigger) {
+		if (window.InstallTrigger || (!window.matchMedia && window.opera)) {
 			textarea.onkeypress = function(event) {
 				if ((event.keyCode==9 || event.which==9) && inCodeTag() && !event.altKey && !event.ctrlKey && !event.shiftKey && !event.metaKey) {
 					event.preventDefault ? event.preventDefault() : (event.returnValue = false); bbfontstyle('\t','',true);
@@ -102,7 +102,7 @@ function bbfontstyle(bbopen, bbclose, appendText) {
 		return;
 	}
 
-	//The new position for the cursor after adding the bbcode
+	// The new position for the cursor after adding the bbcode
 	if (document.getElementById) {
 		var caret_pos = getCaretPosition(textarea).start;
 		var new_pos = caret_pos + bbopen.length;

@@ -1,5 +1,7 @@
 <!-- INCLUDE ucp_header.html -->
 
+<form name="ucp" id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+
 <table class="main" width="100%" cellspacing="1">
 <tr>
 	<th colspan="2">{L_TITLE}</th>
@@ -7,13 +9,13 @@
 
 <!-- IF ERROR -->
 	<tr>
-		<td class="bg2" colspan="2" align="center"><p class="error">{ERROR}</p></td>
+		<td class="bg1" colspan="2" align="center"><p class="error">{ERROR}</p></td>
 	</tr>
 <!-- ENDIF -->
 
 <tr valign="top">
 	<td class="bg1" width="22%">
-	<span class="bigger">{L_SIGNATURE_EXPLAIN}</span><br /><br />
+	<div><p>{L_SIGNATURE_EXPLAIN}</p></div>
 	<!-- EVENT posting_editor_smilies_before -->
 	<!-- IF S_SMILIES_ALLOWED and (.smiley or S_SHOW_SMILEY_LINK) -->
 		<table cellspacing="5" width="100%">
@@ -38,7 +40,7 @@
 	<!-- ENDIF -->
 	<!-- EVENT posting_editor_smilies_after -->
 	</td>
-	<td class="bg2" width="78%">
+	<td class="bg1">
 	<!-- DEFINE $SIG_EDIT = 1 -->
 	<!-- INCLUDE posting_editor.html -->
 	</td>
@@ -66,7 +68,8 @@
 		</table>
 	</td>
 	<!-- EVENT posting_editor_bbcode_status_after -->
-	<td class="bg2">
+	<td class="bg1">
+		<!-- EVENT ucp_profile_signature_posting_editor_options_prepend -->
 		<table cellspacing="2">
 		<!-- IF S_BBCODE_ALLOWED -->
 			<tr>
@@ -92,8 +95,11 @@
 	</td>
 </tr>
 <tr>
-	<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" />&nbsp; <input class="button2" type="submit" name="preview" value="{L_PREVIEW}" />&nbsp; <input class="button1" type="submit" name="submit" value="{L_SUBMIT}" /></td>
+	<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" /> &nbsp;<input class="button2" type="submit" name="preview" value="{L_PREVIEW}" /> &nbsp;<input class="button1" type="submit" name="submit" value="{L_SUBMIT}" /></td>
 </tr>
 </table>
+
+{S_FORM_TOKEN}
+</form>
 
 <!-- INCLUDE ucp_footer.html -->

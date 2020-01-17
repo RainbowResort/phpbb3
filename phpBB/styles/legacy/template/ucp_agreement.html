@@ -28,33 +28,37 @@
 	</form>
 <!-- ENDIF -->
 
-	<form method="post" action="{S_UCP_ACTION}">
+	<form name="agreement" method="post" action="{S_UCP_ACTION}">
 
 	<table class="main" width="100%" cellspacing="1">
 	<tr>
 		<th>{SITENAME} - {L_REGISTRATION}</th>
 	</tr>
 	<tr>
-		<td class="bg1" align="center">
+		<td class="bg1">
 			<table width="90%" cellspacing="2" align="center">
 			<tr>
 				<!-- IF S_SHOW_COPPA -->
-					<td class="big" align="center"><br />{L_COPPA_BIRTHDAY}<br /><br /><a href="{U_COPPA_NO}">{L_COPPA_NO}</a> :: <a href="{U_COPPA_YES}">{L_COPPA_YES}</a><br /><br /></td>
+					<td align="center">
+						<br /><div class="big">{L_COPPA_BIRTHDAY}</div><br />
+						<div class="big"><a href="{U_COPPA_NO}">{L_COPPA_NO}</a> :: <a href="{U_COPPA_YES}">{L_COPPA_YES}</a></div><br />
+					</td>
 				<!-- ELSE -->
 					<td>
 						<!-- EVENT ucp_agreement_terms_before -->
-						<span class="bigger"><br />{L_TERMS_OF_USE}<br /><br /></span>
+						<br /><div class="bigger">{L_TERMS_OF_USE}</div><br />
 						<!-- EVENT ucp_agreement_terms_after -->
-						<div align="center">
-							<input class="button2" type="submit" id="agreed" name="agreed" value="{L_AGREE}" /><br /><br />
-							<input class="button2" type="submit" name="not_agreed" value="{L_NOT_AGREE}" />
-						</div>
 					</td>
 				<!-- ENDIF -->
 			</tr>
 			</table>
 		</td>
 	</tr>
+	<!-- IF not S_SHOW_COPPA -->
+		<tr>
+			<td align="center" class="cat"><input class="button1" type="submit" id="agreed" name="agreed" value="{L_AGREE}" /> &nbsp;<input class="button2" type="submit" name="not_agreed" value="{L_NOT_AGREE}" /></td>
+		</tr>
+	<!-- ENDIF -->
 	</table>
 	{S_HIDDEN_FIELDS}
 	{S_FORM_TOKEN}
@@ -67,14 +71,11 @@
 		<th>{SITENAME} - {AGREEMENT_TITLE}</th>
 	</tr>
 	<tr>
-		<td class="bg1" align="center">
+		<td class="bg1">
 			<table width="90%" cellspacing="2" align="center">
 			<tr>
 				<td>
-					<span class="bigger"><br />{AGREEMENT_TEXT}<br /><br /></span>
-					<div align="center" class="bigger">
-						<a href="{U_BACK}">{L_BACK}</a>
-					</div>
+					<br /><div class="bigger">{AGREEMENT_TEXT}</div><br />
 				</td>
 			</tr>
 			</table>

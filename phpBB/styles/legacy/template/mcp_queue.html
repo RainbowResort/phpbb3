@@ -1,13 +1,13 @@
 <!-- INCLUDE mcp_header.html -->
 
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
 <table width="100%" cellspacing="1">
 <tr>
-	<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> [ {TOTAL} ]</td>
+	<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL} ]</td>
 	<!-- IF .pagination --><td width="100%" align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
 </tr>
 </table>
-
-<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
 <table width="100%" class="main" cellspacing="1">
 <tr>
@@ -24,8 +24,11 @@
 </tr>
 <!-- BEGIN postrow -->
 	<tr><!-- IF postrow.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
-		<td class="{$BG}"><!-- IF postrow.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" class="bigger" /><!-- ENDIF --><a href="{postrow.U_VIEW_DETAILS}" class="big">{postrow.POST_SUBJECT}</a>
-			<div class="bigger">{L_FORUM}{L_COLON} <!-- IF postrow.U_VIEWFORUM --><a href="{postrow.U_VIEWFORUM}">{postrow.FORUM_NAME}</a><!-- ELSE -->{postrow.FORUM_NAME}<!-- ENDIF --></div></td>
+		<td class="{$BG}">
+			<!-- IF postrow.S_HAS_ATTACHMENTS --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF -->
+			<a href="{postrow.U_VIEW_DETAILS}" class="big">{postrow.POST_SUBJECT}</a>
+			<div class="bigger">{L_FORUM}{L_COLON} <!-- IF postrow.U_VIEWFORUM --><a href="{postrow.U_VIEWFORUM}">{postrow.FORUM_NAME}</a><!-- ELSE -->{postrow.FORUM_NAME}<!-- ENDIF --></div>
+		</td>
 		<td align="center" class="{$BG}"><span class="big">{postrow.POST_AUTHOR_FULL}</span></td>
 		<td align="center" class="{$BG}"><span class="bigger">{postrow.POST_TIME}</span></td>
 		<td align="center" class="{$BG}">
@@ -54,21 +57,21 @@
 <tr>
 	<td class="cat" colspan="4" align="center">
 		<!-- IF S_RESTORE -->
-			<input class="button2" type="submit" name="action[delete]" value="{L_DELETE}" />&nbsp; <input class="button1" type="submit" name="action[restore]" value="{L_RESTORE}" />
+			<input class="button2" type="submit" name="action[delete]" value="{L_DELETE}" /> &nbsp;<input class="button1" type="submit" name="action[restore]" value="{L_RESTORE}" />
 		<!-- ELSE -->
-			<input class="button2" type="submit" name="action[disapprove]" value="{L_DISAPPROVE}" />&nbsp; <input class="button1" type="submit" name="action[approve]" value="{L_APPROVE}" />
+			<input class="button2" type="submit" name="action[disapprove]" value="{L_DISAPPROVE}" /> &nbsp;<input class="button1" type="submit" name="action[approve]" value="{L_APPROVE}" />
 		<!-- ENDIF -->
 	</td>
 </tr>
 <!-- ENDIF -->
 </table>
-{S_FORM_TOKEN}
-</form>
 
 <table width="100%" cellspacing="1"><tr>
-	<!-- IF .postrow --><td nowrap="nowrap"><b>{PAGE_NUMBER}</b> [ {TOTAL} ]</td>
+	<!-- IF .postrow --><td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL} ]</td>
 	<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('mcp', '<!-- IF S_TOPICS -->topic<!-- ELSE -->post<!-- ENDIF -->_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '<!-- IF S_TOPICS -->topic<!-- ELSE -->post<!-- ENDIF -->_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td><!-- IF .pagination --></tr><tr><!-- ENDIF --><!-- ENDIF -->
 	<!-- IF .pagination --><td align="{S_CONTENT_FLOW_END}"<!-- IF .postrow --> colspan="2"<!-- ENDIF -->><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
 </tr></table>
+{S_FORM_TOKEN}
+</form>
 
 <!-- INCLUDE mcp_footer.html -->

@@ -1,6 +1,6 @@
 <!-- INCLUDE overall_header.html -->
 
-<form name="confirm" action="{S_CONFIRM_ACTION}" method="post" onkeydown="if ((window.ActiveXObject || !document.getElementById) && event.keyCode==13) {return false;}">
+<form name="confirm" action="{S_CONFIRM_ACTION}" method="post">
 
 <table class="main" width="100%" cellspacing="1">
 <tr>
@@ -14,16 +14,19 @@
 		<table width="90%" cellspacing="2" align="center">
 		<!-- IF not S_SOFTDELETED and S_ALLOWED_DELETE and S_ALLOWED_SOFTDELETE -->
 			<tr>
-				<td align="{S_CONTENT_FLOW_END}" class="big" width="22%"><b>{L_DELETE_PERMANENTLY}{L_COLON}</b></td>
-				<td align="{S_CONTENT_FLOW_BEGIN}" width="78%">
+				<td align="{S_CONTENT_FLOW_END}" class="big"><b>{L_DELETE_PERMANENTLY}{L_COLON}</b></td>
+				<td align="{S_CONTENT_FLOW_BEGIN}">
 					<input type="checkbox" id="delete_permanent" name="delete_permanent" value="1" {S_CHECKED_PERMANENT} />
 					<span class="bigger"><!-- IF S_TOPIC_MODE -->{DELETE_TOPIC_PERMANENTLY_EXPLAIN}<!-- ELSE -->{DELETE_POST_PERMANENTLY_EXPLAIN}<!-- ENDIF --></span>
 				</td>
 			</tr>
 		<!-- ENDIF -->
+
+		<!-- EVENT confirm_delete_body_delete_reason_before -->
+
 			<tr valign="top">
 				<td align="{S_CONTENT_FLOW_END}" class="big" rowspan="2" width="22%"><b>{L_DELETE_REASON}{L_COLON}</b></td>
-				<td align="{S_CONTENT_FLOW_BEGIN}" width="78%"><input type="text" class="inputbox" name="delete_reason" value="" maxlength="120" size="45" /></td>
+				<td align="{S_CONTENT_FLOW_BEGIN}"><input type="text" class="inputbox" name="delete_reason" value="" maxlength="120" size="45" onkeydown="if (window.ActiveXObject && (event.keyCode==13)) {return false;}" /></td>
 			</tr>
 			<tr valign="top">
 				<td align="{S_CONTENT_FLOW_BEGIN}" class="bigger">{L_DELETE_REASON_EXPLAIN}</td>

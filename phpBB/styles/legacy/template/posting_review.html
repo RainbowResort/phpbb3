@@ -14,32 +14,34 @@
 			</tr>
 		<!-- ENDIF -->
 
-		<tr class="<!-- IF post_review_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+		<!-- IF post_review_row.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+
+		<tr class="{$BG}">
 		<!-- IF post_review_row.S_IGNORE_POST -->
 			<td align="center" class="member" colspan="2">{post_review_row.L_IGNORE_POST}</td>
 		<!-- ELSE -->
-			<td rowspan="2" valign="top"><a name="pr{post_review_row.POST_ID}" class="anchor"></a>
+			<td rowspan="2" valign="top"><a name="ppr{post_review_row.POST_ID}" class="anchor"></a>
 				<table width="150" cellspacing="0">
 				<tr>
-					<td align="center"><b>{post_review_row.POST_AUTHOR_FULL}</b></td>
+					<td align="center"><!-- EVENT posting_review_row_post_author_username_prepend --><b>{post_review_row.POST_AUTHOR_FULL}</b><!-- EVENT posting_review_row_post_author_username_append --></td>
 				</tr>
 				</table>
 			</td>
 			<td width="100%">
 				<table width="100%" cellspacing="0">
-				<tr>
-					<td class="bigger"><b>{L_POST_SUBJECT}{L_COLON}</b> {post_review_row.POST_SUBJECT}</td>
-					<!-- IF post_review_row.POSTER_QUOTE and post_review_row.DECODED_MESSAGE --><td align="{S_CONTENT_FLOW_END}"><a class="button" href="#" onclick="addquote({post_review_row.POST_ID}, '{post_review_row.POSTER_QUOTE}', '{LA_WROTE}', {post_id:{post_review_row.POST_ID},time:{post_review_row.POST_TIME},user_id:{post_review_row.USER_ID}}, true); return false;" title="{L_QUOTE} {post_review_row.POST_AUTHOR}">{L_BUTTON_QUOTE}</a></td><!-- ENDIF -->
+				<tr class="bigger">
+					<td><b>{L_POST_SUBJECT}{L_COLON}</b> {post_review_row.POST_SUBJECT}</td>
+					<td align="{S_CONTENT_FLOW_END}"><b>{L_POSTED}{L_COLON}</b> {post_review_row.POST_DATE}</td>
 				</tr>
 				</table>
 			</td>
 		</tr>
 
-		<tr class="<!-- IF post_review_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+		<tr class="{$BG}">
 			<td valign="top">
 				<table cellspacing="5" width="100%">
 				<tr>
-					<td><div class="postbody"><span class="content">{post_review_row.MESSAGE}</span></div>
+					<td><div class="postbody"><div class="content">{post_review_row.MESSAGE}</div></div>
 
 					<!-- IF post_review_row.S_HAS_ATTACHMENTS -->
 						<br />
@@ -50,19 +52,12 @@
 						</tr>
 						<!-- BEGIN attachment -->
 							<tr class="postbody">
-								<td class="bg1">{post_review_row.attachment.DISPLAY_ATTACHMENT}</td>
+								<td class="bg2">{post_review_row.attachment.DISPLAY_ATTACHMENT}</td>
 							</tr>
 						<!-- END attachment -->
 						</table>
 					<!-- ENDIF -->
-
-						<!-- IF post_review_row.POSTER_QUOTE and post_review_row.DECODED_MESSAGE -->
-							<div id="message_{post_review_row.POST_ID}" data-content="{post_review_row.DECODED_MESSAGE}" style="display: none"></div>
-						<!-- ENDIF -->
 					</td>
-				</tr>
-				<tr>
-					<td align="{S_CONTENT_FLOW_END}" class="bigger"><b>{L_POSTED}{L_COLON}</b> {post_review_row.POST_DATE}</td>
 				</tr>
 				</table>
 			</td>

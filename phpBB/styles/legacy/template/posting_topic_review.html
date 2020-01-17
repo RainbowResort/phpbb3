@@ -20,17 +20,19 @@
 
 			<!-- EVENT posting_topic_review_row_post_details_before -->
 
-			<tr class="<!-- IF topic_review_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+			<!-- IF topic_review_row.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+
+			<tr class="{$BG}">
 
 				<!-- IF topic_review_row.S_IGNORE_POST -->
 				<td class="member" colspan="2">{topic_review_row.L_IGNORE_POST}</td>
-				<!-- ELSE IF topic_review_row.S_POST_DELETED -->
+				<!-- ELSEIF topic_review_row.S_POST_DELETED -->
 				<td class="member" colspan="2">{topic_review_row.L_DELETE_POST}</td>
 				<!-- ELSE -->
 				<td rowspan="2" valign="top"><a name="pr{topic_review_row.POST_ID}" class="anchor"></a>
 					<table width="150" cellspacing="0">
 					<tr>
-						<td align="center"><b>{topic_review_row.POST_AUTHOR_FULL}</b></td>
+						<td align="center"><!-- EVENT posting_topic_review_row_post_author_username_prepend --><b>{topic_review_row.POST_AUTHOR_FULL}</b><!-- EVENT posting_topic_review_row_post_author_username_append --></td>
 					</tr>
 					</table>
 				</td>
@@ -45,12 +47,12 @@
 			</tr>
 			<!-- EVENT posting_topic_review_row_post_details_after -->
 
-			<tr class="<!-- IF topic_review_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+			<tr class="{$BG}">
 				<td valign="top">
 					<table cellspacing="5" width="100%">
 					<tr>
 						<td<!-- IF topic_review_row.U_MCP_DETAILS --> colspan="2"<!-- ENDIF -->>
-							<div class="postbody"><span class="content">{topic_review_row.MESSAGE}</span></div>
+							<div class="postbody"><div class="content">{topic_review_row.MESSAGE}</div><!-- EVENT posting_topic_review_row_content_after --></div>
 
 							<!-- IF topic_review_row.S_HAS_ATTACHMENTS -->
 								<br />
@@ -61,14 +63,14 @@
 								</tr>
 								<!-- BEGIN attachment -->
 									<tr class="postbody">
-										<td class="bg1">{topic_review_row.attachment.DISPLAY_ATTACHMENT}</td>
+										<td class="bg2">{topic_review_row.attachment.DISPLAY_ATTACHMENT}</td>
 									</tr>
 								<!-- END attachment -->
 								</table>
 							<!-- ENDIF -->
 
 							<!-- IF topic_review_row.POSTER_QUOTE and topic_review_row.DECODED_MESSAGE -->
-								<div id="message_{topic_review_row.POST_ID}" data-content="{topic_review_row.DECODED_MESSAGE}" style="display: none"></div>
+								<div id="message_{topic_review_row.POST_ID}" data-content="{topic_review_row.DECODED_MESSAGE}"></div>
 							<!-- ENDIF -->
 						</td>
 					</tr>

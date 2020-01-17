@@ -1,52 +1,42 @@
-
-<!-- IF not S_VIEW_MESSAGE -->
-	{S_FORM_TOKEN}
-	</form>
-<!-- ENDIF -->
-
 <!-- IF S_VIEW_MESSAGE or .messagerow -->
-<table cellspacing="1" class="main" style="margin-top: 4px" width="100%">
-<tr>
-	<td class="bg1">
-		<table cellspacing="0" width="100%">
-		<tr>
-		<!-- IF S_VIEW_MESSAGE -->
-			<td>
-				<span class="bigger">
-					<!-- IF U_PRINT_PM --><a href="{U_PRINT_PM}">{L_PRINT_PM}</a><!-- IF U_FORWARD_PM --> | <!-- ENDIF --><!-- ENDIF -->
-					<!-- IF U_FORWARD_PM --><a href="{U_FORWARD_PM}">{L_FORWARD_PM}</a><!-- ENDIF -->
-					<!-- IF U_POST_REPLY_PM and S_PM_RECIPIENTS gt 1 --><!-- IF U_PRINT_PM or U_FORWARD_PM --> | <!-- ENDIF --><a href="{U_POST_REPLY_ALL}">{L_REPLY_TO_ALL}</a><!-- ENDIF -->
-				</span>
-			</td>
-			<td align="{S_CONTENT_FLOW_END}">
-				<!-- IF not S_SPECIAL_FOLDER -->
-					<form name="movepm" method="post" action="{S_PM_ACTION}">
+	<table cellspacing="1" class="main" style="margin-top: 4px" width="100%">
+	<tr>
+		<td class="bg1">
+			<table cellspacing="0" width="100%">
+			<tr>
+			<!-- IF S_VIEW_MESSAGE -->
+				<td>
+					<span class="bigger">
+						<!-- IF U_PRINT_PM --><a href="{U_PRINT_PM}">{L_PRINT_PM}</a><!-- IF U_FORWARD_PM --> | <!-- ENDIF --><!-- ENDIF -->
+						<!-- IF U_FORWARD_PM --><a href="{U_FORWARD_PM}">{L_FORWARD_PM}</a><!-- ENDIF -->
+						<!-- IF U_POST_REPLY_PM and S_PM_RECIPIENTS gt 1 --><!-- IF U_PRINT_PM or U_FORWARD_PM --> | <!-- ENDIF --><a href="{U_POST_REPLY_ALL}">{L_REPLY_TO_ALL}</a><!-- ENDIF -->
+					</span>
+				</td>
+				<td align="{S_CONTENT_FLOW_END}">
+					<!-- IF not S_SPECIAL_FOLDER -->
 						<input type="hidden" name="marked_msg_id[]" value="{MSG_ID}" />
 						<input type="hidden" name="cur_folder_id" value="{CUR_FOLDER_ID}" />
 						<input type="hidden" name="p" value="{MSG_ID}" />
 						<span class="bigger">{L_MOVE_TO_FOLDER}{L_COLON} </span><select name="dest_folder">{S_TO_FOLDER_OPTIONS}</select>&nbsp;<input class="button2" type="submit" name="move_pm" value="{L_GO}" />
-					{S_FORM_TOKEN}
-					</form>
-				<!-- ENDIF -->
-			</td>
-		<!-- ELSE -->
-			<td>
-				<form name="sortmsg" method="post" action="{S_PM_ACTION}">
-					<!-- INCLUDE display_options.html -->
-				{S_FORM_TOKEN}
-				</form>
-			</td>
-		<!-- ENDIF -->
-		</tr>
-		</table>
-	</td>
-</tr>
-</table>
+					<!-- ENDIF -->
+				</td>
+			<!-- ELSE -->
+				<td><select name="export_option"><option value="CSV">{L_EXPORT_AS_CSV}</option><option value="CSV_EXCEL">{L_EXPORT_AS_CSV_EXCEL}</option><option value="XML">{L_EXPORT_AS_XML}</option></select> <input class="button2" type="submit" name="submit_export" value="{L_GO}" /></td>
+				<td align="{S_CONTENT_FLOW_END}"><select name="mark_option">{S_MARK_OPTIONS}{S_MOVE_MARKED_OPTIONS}</select> <input class="button2" type="submit" name="submit_mark" value="{L_GO}" /></td>
+			<!-- ENDIF -->
+			</tr>
+			</table>
+		</td>
+	</tr>
+	</table>
 <!-- ENDIF -->
 
 <!-- IF not S_VIEW_MESSAGE and (.messagerow or (FOLDER_CUR_MESSAGES neq 0 and .pagination)) -->
-	<table width="100%" cellspacing="2">
+	<table width="100%" cellspacing="1">
 		<!-- IF .messagerow --><tr><td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('viewfolder', 'marked_msg_id', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('viewfolder', 'marked_msg_id', false); return false;">{L_UNMARK_ALL}</a></b></td></tr><!-- ENDIF -->
 		<!-- IF FOLDER_CUR_MESSAGES neq 0 and .pagination --><tr><td align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td></tr><!-- ENDIF -->
 	</table>
 <!-- ENDIF -->
+
+{S_FORM_TOKEN}
+</form>
