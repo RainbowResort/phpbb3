@@ -46,6 +46,7 @@ class bbcode_firstpass extends bbcode
 	var $message = '';
 	var $warn_msg = array();
 	var $parsed_items = array();
+	var $mode;
 
 	/**
 	* Parse BBCode
@@ -1128,8 +1129,6 @@ class parse_message extends bbcode_firstpass
 	var $allow_quote_bbcode = true;
 	var $allow_url_bbcode = true;
 
-	var $mode;
-
 	/**
 	* The plupload object used for dealing with attachments
 	* @var \phpbb\plupload\plupload
@@ -1139,7 +1138,7 @@ class parse_message extends bbcode_firstpass
 	/**
 	* Init - give message here or manually
 	*/
-	function parse_message($message = '')
+	function __construct($message = '')
 	{
 		// Init BBCode UID
 		$this->bbcode_uid = substr(base_convert(unique_id(), 16, 36), 0, BBCODE_UID_LEN);
@@ -1525,6 +1524,35 @@ class parse_message extends bbcode_firstpass
 	}
 
 	/**
+	 * Check attachment form token depending on submit type
+	 *
+	 * @param \phpbb\language\language $language Language
+	 * @param \phpbb\request\request_interface $request Request
+	 * @param string $form_name Form name for checking form key
+	 *
+	 * @return bool True if form token is not needed or valid, false if needed and invalid
+	 */
+	function check_attachment_form_token(\phpbb\language\language $language, \phpbb\request\request_interface $request, $form_name)
+	{
+		$add_file = $request->is_set_post('add_file');
+		$delete_file = $request->is_set_post('delete_file');
+
+		if (($add_file || $delete_file) && !check_form_key($form_name))
+		{
+			$this->warn_msg[] = $language->lang('FORM_INVALID');
+
+			if ($request->is_ajax() && $this->plupload)
+			{
+				$this->plupload->emit_error(-400, 'FORM_INVALID');
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	* Parse Attachments
 	*/
 	function parse_attachments($form_name, $mode, $forum_id, $submit, $preview, $refresh, $is_message = false)
@@ -1586,6 +1614,16 @@ class parse_message extends bbcode_firstpass
 						'in_message'		=> ($is_message) ? 1 : 0,
 						'poster_id'			=> $user->data['user_id'],
 					);
+
+					/**
+					* Modify attachment sql array on submit
+					*
+					* @event core.modify_attachment_sql_ary_on_submit
+					* @var	array	sql_ary		Array containing SQL data
+					* @since 3.2.6-RC1
+					*/
+					$vars = array('sql_ary');
+					extract($phpbb_dispatcher->trigger_event('core.modify_attachment_sql_ary_on_submit', compact($vars)));
 
 					$db->sql_query('INSERT INTO ' . ATTACHMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 
@@ -1721,6 +1759,16 @@ class parse_message extends bbcode_firstpass
 							'in_message'		=> ($is_message) ? 1 : 0,
 							'poster_id'			=> $user->data['user_id'],
 						);
+
+						/**
+						* Modify attachment sql array on upload
+						*
+						* @event core.modify_attachment_sql_ary_on_upload
+						* @var	array	sql_ary		Array containing SQL data
+						* @since 3.2.6-RC1
+						*/
+						$vars = array('sql_ary');
+						extract($phpbb_dispatcher->trigger_event('core.modify_attachment_sql_ary_on_upload', compact($vars)));
 
 						$db->sql_query('INSERT INTO ' . ATTACHMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 

@@ -287,7 +287,7 @@ class phpbb_content_visibility_delete_post_test extends phpbb_database_test_case
 	*/
 	public function test_delete_post($forum_id, $topic_id, $post_id, $data, $is_soft, $reason, $expected_posts, $expected_topic, $expected_forum, $expected_user)
 	{
-		global $auth, $cache, $config, $db, $phpbb_container, $phpbb_dispatcher, $phpbb_root_path, $phpEx;
+		global $auth, $cache, $config, $db, $user, $phpbb_container, $phpbb_dispatcher, $phpbb_root_path, $phpEx;
 
 		$config = new \phpbb\config\config(array(
 			'num_posts' => 3,
@@ -299,7 +299,7 @@ class phpbb_content_visibility_delete_post_test extends phpbb_database_test_case
 		$phpbb_dispatcher = new phpbb_mock_event_dispatcher();
 
 		// Create auth mock
-		$auth = $this->getMock('\phpbb\auth\auth');
+		$auth = $this->createMock('\phpbb\auth\auth');
 		$auth->expects($this->any())
 			->method('acl_get')
 			->with($this->stringContains('_'), $this->anything())

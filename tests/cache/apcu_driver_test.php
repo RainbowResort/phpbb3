@@ -20,7 +20,6 @@ require_once dirname(__FILE__) . '/common_test_case.php';
 class phpbb_cache_apcu_driver_test extends phpbb_cache_common_test_case
 {
 	protected static $config;
-	protected $driver;
 
 	public function getDataSet()
 	{
@@ -45,14 +44,33 @@ class phpbb_cache_apcu_driver_test extends phpbb_cache_common_test_case
 		{
 			self::markTestSkipped('APCu is not enabled for CLI. Set apc.enable_cli=1 in php.ini');
 		}
+
+		parent::setUpBeforeClass();
 	}
 
-	protected function setUp()
+	protected function setUp(): void
 	{
+		global $phpbb_container, $phpbb_root_path;
+
 		parent::setUp();
+
+		$phpbb_container = new phpbb_mock_container_builder();
+		$phpbb_container->setParameter('core.cache_dir', $phpbb_root_path . 'cache/' . PHPBB_ENVIRONMENT . '/');
 
 		$this->driver = new \phpbb\cache\driver\apcu;
 
 		$this->driver->purge();
+	}
+
+	public function test_purge()
+	{
+		/* add a cache entry which does not match our key */
+		$foreign_key = 'test_' . $this->driver->key_prefix . 'test';
+		$this->assertSame(true, apcu_store($foreign_key, 0, 600));
+		$this->assertSame(true, apcu_exists($foreign_key));
+
+		parent::test_purge();
+
+		$this->assertSame(true, apcu_exists($foreign_key));
 	}
 }

@@ -30,9 +30,12 @@ class acp_board
 
 	function main($id, $mode)
 	{
-		global $user, $template, $request;
+		global $user, $template, $request, $language;
 		global $config, $phpbb_root_path, $phpEx;
 		global $cache, $phpbb_container, $phpbb_dispatcher, $phpbb_log;
+
+		/** @var \phpbb\language\language $language Language object */
+		$language = $phpbb_container->get('language');
 
 		$user->add_lang('acp/board');
 
@@ -56,7 +59,7 @@ class acp_board
 						'legend1'				=> 'ACP_BOARD_SETTINGS',
 						'sitename'				=> array('lang' => 'SITE_NAME',				'validate' => 'string',	'type' => 'text:40:255', 'explain' => false),
 						'site_desc'				=> array('lang' => 'SITE_DESC',				'validate' => 'string',	'type' => 'text:40:255', 'explain' => false),
-						'site_home_url'			=> array('lang' => 'SITE_HOME_URL',			'validate' => 'string',	'type' => 'url:40:255', 'explain' => true),
+						'site_home_url'			=> array('lang' => 'SITE_HOME_URL',			'validate' => 'url',	'type' => 'url:40:255', 'explain' => true),
 						'site_home_text'		=> array('lang' => 'SITE_HOME_TEXT',		'validate' => 'string',	'type' => 'text:40:255', 'explain' => true),
 						'board_index_text'		=> array('lang' => 'BOARD_INDEX_TEXT',		'validate' => 'string',	'type' => 'text:40:255', 'explain' => true),
 						'board_disable'			=> array('lang' => 'DISABLE_BOARD',			'validate' => 'bool',	'type' => 'custom', 'method' => 'board_disable', 'explain' => true),
@@ -82,34 +85,26 @@ class acp_board
 				$display_vars = array(
 					'title'	=> 'ACP_BOARD_FEATURES',
 					'vars'	=> array(
-						'legend1'				=> 'ACP_BOARD_FEATURES',
-						'allow_privmsg'			=> array('lang' => 'BOARD_PM',				'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'allow_topic_notify'	=> array('lang' => 'ALLOW_TOPIC_NOTIFY',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'allow_forum_notify'	=> array('lang' => 'ALLOW_FORUM_NOTIFY',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'allow_namechange'		=> array('lang' => 'ALLOW_NAME_CHANGE',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'allow_attachments'		=> array('lang' => 'ALLOW_ATTACHMENTS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'allow_pm_attach'		=> array('lang' => 'ALLOW_PM_ATTACHMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'allow_pm_report'		=> array('lang' => 'ALLOW_PM_REPORT',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'allow_bbcode'			=> array('lang' => 'ALLOW_BBCODE',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'allow_smilies'			=> array('lang' => 'ALLOW_SMILIES',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'allow_sig'				=> array('lang' => 'ALLOW_SIG',				'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
+						'legend1'						=> 'ACP_BOARD_FEATURES',
+						'allow_privmsg'					=> array('lang' => 'BOARD_PM',						'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'allow_topic_notify'			=> array('lang' => 'ALLOW_TOPIC_NOTIFY',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
+						'allow_forum_notify'			=> array('lang' => 'ALLOW_FORUM_NOTIFY',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
+						'allow_namechange'				=> array('lang' => 'ALLOW_NAME_CHANGE',				'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
+						'allow_attachments'				=> array('lang' => 'ALLOW_ATTACHMENTS',				'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
+						'allow_pm_attach'				=> array('lang' => 'ALLOW_PM_ATTACHMENTS',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
+						'allow_pm_report'				=> array('lang' => 'ALLOW_PM_REPORT',				'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'allow_bbcode'					=> array('lang' => 'ALLOW_BBCODE',					'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
+						'allow_smilies'					=> array('lang' => 'ALLOW_SMILIES',					'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
+						'allow_sig'						=> array('lang' => 'ALLOW_SIG',						'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
 						'allow_board_notifications'		=> array('lang' => 'ALLOW_BOARD_NOTIFICATIONS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'allow_nocensors'		=> array('lang' => 'ALLOW_NO_CENSORS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'allow_bookmarks'		=> array('lang' => 'ALLOW_BOOKMARKS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'allow_birthdays'		=> array('lang' => 'ALLOW_BIRTHDAYS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'display_last_subject'	=> array('lang' => 'DISPLAY_LAST_SUBJECT',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'allow_quick_reply'		=> array('lang' => 'ALLOW_QUICK_REPLY',		'validate' => 'bool',	'type' => 'custom', 'method' => 'quick_reply', 'explain' => true),
+						'allow_nocensors'				=> array('lang' => 'ALLOW_NO_CENSORS',				'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'allow_bookmarks'				=> array('lang' => 'ALLOW_BOOKMARKS',				'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'allow_birthdays'				=> array('lang' => 'ALLOW_BIRTHDAYS',				'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'display_last_subject'			=> array('lang' => 'DISPLAY_LAST_SUBJECT',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'display_unapproved_posts'		=> array('lang' => 'DISPLAY_UNAPPROVED_POSTS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'allow_quick_reply'				=> array('lang' => 'ALLOW_QUICK_REPLY',				'validate' => 'bool',	'type' => 'custom', 'method' => 'quick_reply', 'explain' => true),
 
-						'legend2'				=> 'ACP_LOAD_SETTINGS',
-						'load_birthdays'		=> array('lang' => 'YES_BIRTHDAYS',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'load_moderators'		=> array('lang' => 'YES_MODERATORS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'load_jumpbox'			=> array('lang' => 'YES_JUMPBOX',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'load_cpf_memberlist'	=> array('lang' => 'LOAD_CPF_MEMBERLIST',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'load_cpf_pm'			=> array('lang' => 'LOAD_CPF_PM',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain'	=> false),
-						'load_cpf_viewprofile'	=> array('lang' => 'LOAD_CPF_VIEWPROFILE',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-						'load_cpf_viewtopic'	=> array('lang' => 'LOAD_CPF_VIEWTOPIC',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
-
-						'legend3'					=> 'ACP_SUBMIT_CHANGES',
+						'legend2'							=> 'ACP_SUBMIT_CHANGES',
 					)
 				);
 			break;
@@ -122,6 +117,7 @@ class acp_board
 				$avatar_vars = array();
 				foreach ($avatar_drivers as $current_driver)
 				{
+					/** @var \phpbb\avatar\driver\driver_interface $driver */
 					$driver = $phpbb_avatar_manager->get_driver($current_driver, false);
 
 					/*
@@ -259,7 +255,6 @@ class acp_board
 					'vars'	=> array(
 						'legend1'				=> 'GENERAL_SETTINGS',
 						'max_name_chars'		=> array('lang' => 'USERNAME_LENGTH', 'validate' => 'int:8:180', 'type' => false, 'method' => false, 'explain' => false,),
-						'max_pass_chars'		=> array('lang' => 'PASSWORD_LENGTH', 'validate' => 'int:8:255', 'type' => false, 'method' => false, 'explain' => false,),
 
 						'require_activation'	=> array('lang' => 'ACC_ACTIVATION',	'validate' => 'int',	'type' => 'select', 'method' => 'select_acc_activation', 'explain' => true),
 						'new_member_post_limit'	=> array('lang' => 'NEW_MEMBER_POST_LIMIT', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'explain' => true, 'append' => ' ' . $user->lang['POSTS']),
@@ -422,7 +417,6 @@ class acp_board
 						'remote_upload_verify'	=> array('lang' => 'UPLOAD_CERT_VALID',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'check_dnsbl'			=> array('lang' => 'CHECK_DNSBL',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'email_check_mx'		=> array('lang' => 'EMAIL_CHECK_MX',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'max_pass_chars'		=> array('lang' => 'PASSWORD_LENGTH', 'validate' => 'int:8:255', 'type' => false, 'method' => false, 'explain' => false,),
 						'min_pass_chars'		=> array('lang' => 'PASSWORD_LENGTH',	'validate' => 'int:1',	'type' => 'custom', 'method' => 'password_length', 'explain' => true),
 						'pass_complex'			=> array('lang' => 'PASSWORD_TYPE',			'validate' => 'string',	'type' => 'select', 'method' => 'select_password_chars', 'explain' => true),
 						'chg_passforce'			=> array('lang' => 'FORCE_PASS_CHANGE',		'validate' => 'int:0:999',	'type' => 'number:0:999', 'explain' => true, 'append' => ' ' . $user->lang['DAYS']),
@@ -446,6 +440,7 @@ class acp_board
 						'email_enable'			=> array('lang' => 'ENABLE_EMAIL',			'validate' => 'bool',	'type' => 'radio:enabled_disabled', 'explain' => true),
 						'board_email_form'		=> array('lang' => 'BOARD_EMAIL_FORM',		'validate' => 'bool',	'type' => 'radio:enabled_disabled', 'explain' => true),
 						'email_package_size'	=> array('lang' => 'EMAIL_PACKAGE_SIZE',	'validate' => 'int:0',	'type' => 'number:0:99999', 'explain' => true),
+						'email_max_chunk_size'	=> array('lang' => 'EMAIL_MAX_CHUNK_SIZE',	'validate' => 'int:1:99999',	'type' => 'number:1:99999', 'explain' => true),
 						'board_contact'			=> array('lang' => 'CONTACT_EMAIL',			'validate' => 'email',	'type' => 'email:25:100', 'explain' => true),
 						'board_contact_name'	=> array('lang' => 'CONTACT_EMAIL_NAME',	'validate' => 'string',	'type' => 'text:25:50', 'explain' => true),
 						'board_email'			=> array('lang' => 'ADMIN_EMAIL',			'validate' => 'email',	'type' => 'email:25:100', 'explain' => true),
@@ -535,13 +530,16 @@ class acp_board
 
 			if ($submit)
 			{
-				if (strpos($data['type'], 'password') === 0 && $config_value === '********')
+				if (isset($data['type']) && strpos($data['type'], 'password') === 0 && $config_value === '********')
 				{
-					// Do not update password fields if the content is ********,
-					// because that is the password replacement we use to not
-					// send the password to the output
+					/**
+					 * Do not update password fields if the content is ********,
+					 * because that is the password replacement we use to not
+					 * send the password to the output
+					 */
 					continue;
 				}
+
 				$config->set($config_name, $config_value);
 
 				if ($config_name == 'allow_quick_reply' && isset($_POST['allow_quick_reply_enable']))
@@ -730,7 +728,7 @@ class acp_board
 			$template->assign_block_vars('options', array(
 				'KEY'			=> $config_key,
 				'TITLE'			=> (isset($user->lang[$vars['lang']])) ? $user->lang[$vars['lang']] : $vars['lang'],
-				'S_EXPLAIN'		=> $vars['explain'],
+				'S_EXPLAIN'		=> $vars['explain'] && !empty($l_explain),
 				'TITLE_EXPLAIN'	=> $l_explain,
 				'CONTENT'		=> $content,
 				)
@@ -899,13 +897,13 @@ class acp_board
 	}
 
 	/**
-	* Maximum/Minimum password length
+	* Minimum password length
 	*/
 	function password_length($value, $key)
 	{
 		global $user;
 
-		return '<input id="' . $key . '" type="number" min="1" max="999" name="config[min_pass_chars]" value="' . $value . '" /> ' . $user->lang['MIN_CHARS'] . '&nbsp;&nbsp;<input type="number" min="8" max="255" name="config[max_pass_chars]" value="' . $this->new_config['max_pass_chars'] . '" /> ' . $user->lang['MAX_CHARS'];
+		return '<input id="' . $key . '" type="number" min="1" max="999" name="config[min_pass_chars]" value="' . $value . '" /> ' . $user->lang['MIN_CHARS'];
 	}
 
 	/**

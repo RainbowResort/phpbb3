@@ -30,11 +30,9 @@ Some of the functionality in phpBB and/or the test suite uses additional
 PHP extensions. If these extensions are not loaded, respective tests
 will be skipped:
 
-- apc (APC cache driver, php5 only)
 - apcu (APCu cache driver - native API, php7+)
 - apcu_bc, apcu (APCu cache driver - APC API, php7+)
 - bz2 (compress tests)
-- mysql, pdo_mysql (MySQL database driver)
 - mysqli, pdo_mysql (MySQLi database driver)
 - pcntl (flock class)
 - pdo (any database tests)
@@ -52,7 +50,7 @@ By default all tests requiring a database connection will use sqlite. If you
 do not have sqlite installed the tests will be skipped. If you wish to run the
 tests on a different database you have to create a test_config.php file within
 your tests directory following the same format as phpBB's config.php. Testing
-makes use of a seperate database defined in this config file and before running
+makes use of a separate database defined in this config file and before running
 the tests each time this database is deleted. An example for mysqli can be
 found below. More information on configuration options can be found on the
 wiki (see below).
@@ -110,6 +108,21 @@ test_config.php as follows:
 Or via environment variables as follows:
 
     $ PHPBB_TEST_REDIS_HOST=localhost PHPBB_TEST_REDIS_PORT=6379 phpunit
+
+Memcached
+---------
+
+In order to run tests for the memcached cache driver, at least one of memcached
+host or port must be specified in the test configuration. This can be done via
+test_config.php as follows:
+
+    <?php
+    $phpbb_memcached_host = 'localhost';
+    $phpbb_memcached_port = '11211';
+
+Or via environment variables as follows:
+
+    $ PHPBB_TEST_MEMCACHED_HOST=localhost PHPBB_TEST_MEMCACHED_PORT=11211 phpunit
 
 Running
 =======

@@ -1399,10 +1399,6 @@ function phpbb_attachment_category($cat_id)
 		case 2:
 			return ATTACHMENT_CATEGORY_WM;
 		break;
-
-		case 3:
-			return ATTACHMENT_CATEGORY_FLASH;
-		break;
 	}
 
 	return ATTACHMENT_CATEGORY_NONE;
@@ -1694,7 +1690,6 @@ function phpbb_import_attach_config()
 	$config->set('img_create_thumbnail', $attach_config['img_create_thumbnail']);
 	$config->set('img_max_thumb_width', 400);
 	$config->set('img_min_thumb_filesize', $attach_config['img_min_thumb_filesize']);
-	$config->set('img_imagick', $attach_config['img_imagick']);
 }
 
 /**
@@ -1759,21 +1754,6 @@ function phpbb_create_userconv_table()
 
 	switch ($db->get_sql_layer())
 	{
-		case 'mysql':
-			$map_dbms = 'mysql_40';
-		break;
-
-		case 'mysql4':
-			if (version_compare($db->sql_server_info(true), '4.1.3', '>='))
-			{
-				$map_dbms = 'mysql_41';
-			}
-			else
-			{
-				$map_dbms = 'mysql_40';
-			}
-		break;
-
 		case 'mysqli':
 			$map_dbms = 'mysql_41';
 		break;
@@ -1796,13 +1776,6 @@ function phpbb_create_userconv_table()
 			$create_sql = 'CREATE TABLE [' . USERCONV_TABLE . '] (
 				[user_id] [int] NOT NULL ,
 				[username_clean] [varchar] (255) DEFAULT (\'\') NOT NULL
-			)';
-		break;
-
-		case 'mysql_40':
-			$create_sql = 'CREATE TABLE ' . USERCONV_TABLE . ' (
-				user_id mediumint(8) NOT NULL,
-				username_clean blob NOT NULL
 			)';
 		break;
 

@@ -26,7 +26,7 @@ namespace
 		protected $phpbb_root_path;
 		protected $filename;
 
-		public function setUp()
+		public function setUp(): void
 		{
 			$this->phpbb_root_path = dirname(__FILE__) . '/';
 			$this->config_php = new \phpbb\config_php_file($this->phpbb_root_path . 'fixtures/', 'php');
@@ -75,6 +75,18 @@ namespace
 			$container = $this->builder->get_container();
 			$this->assertInstanceOf('phpbb_cache_container', $container);
 			$this->assertTrue($container->isFrozen());
+		}
+
+		public function test_tables_mapping()
+		{
+			$this->builder->without_cache();
+			$container = $this->builder->get_container();
+			$this->assertTrue($container->hasParameter('tables'));
+			$tables = $container->getParameter('tables');
+			$this->assertGreaterThan(0, count($tables));
+			$this->assertTrue($container->hasParameter('tables.foo_bar'));
+			$this->assertTrue(isset($tables['foo_bar']));
+			$this->assertEquals($tables['acl_groups'], 'phpbb_some_other');
 		}
 
 		public function test_without_cache()

@@ -52,43 +52,50 @@ function phpbb_load_extensions_autoloaders($phpbb_root_path)
 }
 
 /**
-* Casts a variable to the given type.
-*
-* @deprecated
-*/
-function set_var(&$result, $var, $type, $multibyte = false)
-{
-	// no need for dependency injection here, if you have the object, call the method yourself!
-	$type_cast_helper = new \phpbb\request\type_cast_helper();
-	$type_cast_helper->set_var($result, $var, $type, $multibyte);
-}
-
-/**
 * Generates an alphanumeric random string of given length
+*
+* @param int $num_chars Length of random string, defaults to 8.
+* This number should be less or equal than 64.
 *
 * @return string
 */
 function gen_rand_string($num_chars = 8)
 {
-	// [a, z] + [0, 9] = 36
-	return substr(strtoupper(base_convert(unique_id(), 16, 36)), 0, $num_chars);
+	$range = array_merge(range('A', 'Z'), range(0, 9));
+	$size = count($range);
+
+	$output = '';
+	for ($i = 0; $i < $num_chars; $i++)
+	{
+		$rand = random_int(0, $size-1);
+		$output .= $range[$rand];
+	}
+
+	return $output;
 }
 
 /**
 * Generates a user-friendly alphanumeric random string of given length
 * We remove 0 and O so users cannot confuse those in passwords etc.
 *
+* @param int $num_chars Length of random string, defaults to 8.
+* This number should be less or equal than 64.
+*
 * @return string
 */
 function gen_rand_string_friendly($num_chars = 8)
 {
-	$rand_str = unique_id();
+	$range = array_merge(range('A', 'N'), range('P', 'Z'), range(1, 9));
+	$size = count($range);
 
-	// Remove Z and Y from the base_convert(), replace 0 with Z and O with Y
-	// [a, z] + [0, 9] - {z, y} = [a, z] + [0, 9] - {0, o} = 34
-	$rand_str = str_replace(array('0', 'O'), array('Z', 'Y'), strtoupper(base_convert($rand_str, 16, 34)));
+	$output = '';
+	for ($i = 0; $i < $num_chars; $i++)
+	{
+		$rand = random_int(0, $size-1);
+		$output .= $range[$rand];
+	}
 
-	return substr($rand_str, 0, $num_chars);
+	return $output;
 }
 
 /**
@@ -96,7 +103,7 @@ function gen_rand_string_friendly($num_chars = 8)
 */
 function unique_id()
 {
-	return bin2hex(random_bytes(8));
+	return strtolower(gen_rand_string(16));
 }
 
 /**
@@ -254,18 +261,6 @@ function still_on_time($extra_time = 15)
 	}
 
 	return (ceil($current_time - $start_time) < $max_execution_time) ? true : false;
-}
-
-/**
-* Hashes an email address to a big integer
-*
-* @param string $email		Email address
-*
-* @return string			Unsigned Big Integer
-*/
-function phpbb_email_hash($email)
-{
-	return sprintf('%u', crc32(strtolower($email))) . strlen($email);
 }
 
 /**
@@ -661,8 +656,6 @@ function markread($mode, $forum_id = false, $topic_id = false, $post_time = 0, $
 				}
 			}
 		}
-
-		return;
 	}
 	else if ($mode == 'topics')
 	{
@@ -789,8 +782,6 @@ function markread($mode, $forum_id = false, $topic_id = false, $post_time = 0, $
 
 			unset($tracking);
 		}
-
-		return;
 	}
 	else if ($mode == 'topic')
 	{
@@ -904,8 +895,6 @@ function markread($mode, $forum_id = false, $topic_id = false, $post_time = 0, $
 			$user->set_cookie('track', tracking_serialize($tracking), $post_time + 31536000);
 			$request->overwrite($config['cookie_name'] . '_track', tracking_serialize($tracking), \phpbb\request\request_interface::COOKIE);
 		}
-
-		return;
 	}
 	else if ($mode == 'post')
 	{
@@ -930,9 +919,28 @@ function markread($mode, $forum_id = false, $topic_id = false, $post_time = 0, $
 
 			$db->sql_return_on_error(false);
 		}
-
-		return;
 	}
+
+	/**
+	 * This event is used for performing actions directly after forums,
+	 * topics or posts have been marked as read.
+	 *
+	 * @event core.markread_after
+	 * @var	string		mode				Variable containing marking mode value
+	 * @var	mixed		forum_id			Variable containing forum id, or false
+	 * @var	mixed		topic_id			Variable containing topic id, or false
+	 * @var	int			post_time			Variable containing post time
+	 * @var	int			user_id				Variable containing the user id
+	 * @since 3.2.6-RC1
+	 */
+	$vars = array(
+		'mode',
+		'forum_id',
+		'topic_id',
+		'post_time',
+		'user_id',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.markread_after', compact($vars)));
 }
 
 /**
@@ -1725,14 +1733,14 @@ function redirect($url, $return = false, $disable_cd_check = false)
 	if ($url_parts === false)
 	{
 		// Malformed url
-		trigger_error('INSECURE_REDIRECT', E_USER_ERROR);
+		trigger_error('INSECURE_REDIRECT', E_USER_WARNING);
 	}
 	else if (!empty($url_parts['scheme']) && !empty($url_parts['host']))
 	{
 		// Attention: only able to redirect within the same domain if $disable_cd_check is false (yourdomain.com -> www.yourdomain.com will not work)
 		if (!$disable_cd_check && $url_parts['host'] !== $user->host)
 		{
-			trigger_error('INSECURE_REDIRECT', E_USER_ERROR);
+			trigger_error('INSECURE_REDIRECT', E_USER_WARNING);
 		}
 	}
 	else if ($url[0] == '/')
@@ -1772,13 +1780,13 @@ function redirect($url, $return = false, $disable_cd_check = false)
 
 	if (!$disable_cd_check && strpos($url, generate_board_url(true) . '/') !== 0)
 	{
-		trigger_error('INSECURE_REDIRECT', E_USER_ERROR);
+		trigger_error('INSECURE_REDIRECT', E_USER_WARNING);
 	}
 
 	// Make sure no linebreaks are there... to prevent http response splitting for PHP < 4.4.2
 	if (strpos(urldecode($url), "\n") !== false || strpos(urldecode($url), "\r") !== false || strpos($url, ';') !== false)
 	{
-		trigger_error('INSECURE_REDIRECT', E_USER_ERROR);
+		trigger_error('INSECURE_REDIRECT', E_USER_WARNING);
 	}
 
 	// Now, also check the protocol and for a valid url the last time...
@@ -1787,7 +1795,7 @@ function redirect($url, $return = false, $disable_cd_check = false)
 
 	if ($url_parts === false || empty($url_parts['scheme']) || !in_array($url_parts['scheme'], $allowed_protocols))
 	{
-		trigger_error('INSECURE_REDIRECT', E_USER_ERROR);
+		trigger_error('INSECURE_REDIRECT', E_USER_WARNING);
 	}
 
 	/**
@@ -1809,27 +1817,6 @@ function redirect($url, $return = false, $disable_cd_check = false)
 	else
 	{
 		garbage_collection();
-	}
-
-	// Redirect via an HTML form for PITA webservers
-	if (@preg_match('#WebSTAR|Xitami#', getenv('SERVER_SOFTWARE')))
-	{
-		header('Refresh: 0; URL=' . $url);
-
-		echo '<!DOCTYPE html>';
-		echo '<html dir="' . $user->lang['DIRECTION'] . '" lang="' . $user->lang['USER_LANG'] . '">';
-		echo '<head>';
-		echo '<meta charset="utf-8">';
-		echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
-		echo '<meta http-equiv="refresh" content="0; url=' . str_replace('&', '&amp;', $url) . '" />';
-		echo '<title>' . $user->lang['REDIRECT'] . '</title>';
-		echo '</head>';
-		echo '<body>';
-		echo '<div style="text-align: center;">' . sprintf($user->lang['URL_REDIRECT'], '<a href="' . str_replace('&', '&amp;', $url) . '">', '</a>') . '</div>';
-		echo '</body>';
-		echo '</html>';
-
-		exit;
 	}
 
 	// Behave as per HTTP/1.1 spec for others
@@ -2111,25 +2098,29 @@ function check_form_key($form_name, $timespan = false)
 /**
 * Build Confirm box
 * @param boolean $check True for checking if confirmed (without any additional parameters) and false for displaying the confirm box
-* @param string $title Title/Message used for confirm box.
+* @param string|array $title Title/Message used for confirm box.
 *		message text is _CONFIRM appended to title.
 *		If title cannot be found in user->lang a default one is displayed
 *		If title_CONFIRM cannot be found in user->lang the text given is used.
+*       If title is an array, the first array value is used as explained per above,
+*       all other array values are sent as parameters to the language function.
 * @param string $hidden Hidden variables
 * @param string $html_body Template used for confirm box
 * @param string $u_action Custom form action
+*
+* @return bool True if confirmation was successful, false if not
 */
 function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_body.html', $u_action = '')
 {
 	global $user, $template, $db, $request;
-	global $config, $phpbb_path_helper;
+	global $config, $language, $phpbb_path_helper, $phpbb_dispatcher;
 
 	if (isset($_POST['cancel']))
 	{
 		return false;
 	}
 
-	$confirm = ($user->lang['YES'] === $request->variable('confirm', '', true, \phpbb\request\request_interface::POST));
+	$confirm = ($language->lang('YES') === $request->variable('confirm', '', true, \phpbb\request\request_interface::POST));
 
 	if ($check && $confirm)
 	{
@@ -2163,13 +2154,27 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 	// generate activation key
 	$confirm_key = gen_rand_string(10);
 
-	if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
+	// generate language strings
+	if (is_array($title))
 	{
-		adm_page_header((!isset($user->lang[$title])) ? $user->lang['CONFIRM'] : $user->lang[$title]);
+		$key = array_shift($title);
+		$count = array_shift($title);
+		$confirm_title =  $language->is_set($key) ? $language->lang($key, $count, $title) : $language->lang('CONFIRM');
+		$confirm_text = $language->is_set($key . '_CONFIRM') ? $language->lang($key . '_CONFIRM', $count, $title) : $key;
 	}
 	else
 	{
-		page_header((!isset($user->lang[$title])) ? $user->lang['CONFIRM'] : $user->lang[$title]);
+		$confirm_title = $language->is_set($title) ? $language->lang($title) : $language->lang('CONFIRM');
+		$confirm_text = $language->is_set($title . '_CONFIRM') ? $language->lang($title . '_CONFIRM') : $title;
+	}
+
+	if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
+	{
+		adm_page_header($confirm_title);
+	}
+	else
+	{
+		page_header($confirm_title);
 	}
 
 	$template->set_filenames(array(
@@ -2189,10 +2194,10 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 	$u_action .= ((strpos($u_action, '?') === false) ? '?' : '&amp;') . 'confirm_key=' . $confirm_key;
 
 	$template->assign_vars(array(
-		'MESSAGE_TITLE'		=> (!isset($user->lang[$title])) ? $user->lang['CONFIRM'] : $user->lang($title, 1),
-		'MESSAGE_TEXT'		=> (!isset($user->lang[$title . '_CONFIRM'])) ? $title : $user->lang[$title . '_CONFIRM'],
+		'MESSAGE_TITLE'		=> $confirm_title,
+		'MESSAGE_TEXT'		=> $confirm_text,
 
-		'YES_VALUE'			=> $user->lang['YES'],
+		'YES_VALUE'			=> $language->lang('YES'),
 		'S_CONFIRM_ACTION'	=> $u_action,
 		'S_HIDDEN_FIELDS'	=> $hidden . $s_hidden_fields,
 		'S_AJAX_REQUEST'	=> $request->is_ajax(),
@@ -2205,16 +2210,36 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 	if ($request->is_ajax())
 	{
 		$u_action .= '&confirm_uid=' . $user->data['user_id'] . '&sess=' . $user->session_id . '&sid=' . $user->session_id;
-		$json_response = new \phpbb\json_response;
-		$json_response->send(array(
+		$data = array(
 			'MESSAGE_BODY'		=> $template->assign_display('body'),
-			'MESSAGE_TITLE'		=> (!isset($user->lang[$title])) ? $user->lang['CONFIRM'] : $user->lang[$title],
-			'MESSAGE_TEXT'		=> (!isset($user->lang[$title . '_CONFIRM'])) ? $title : $user->lang[$title . '_CONFIRM'],
+			'MESSAGE_TITLE'		=> $confirm_title,
+			'MESSAGE_TEXT'		=> $confirm_text,
 
-			'YES_VALUE'			=> $user->lang['YES'],
+			'YES_VALUE'			=> $language->lang('YES'),
 			'S_CONFIRM_ACTION'	=> str_replace('&amp;', '&', $u_action), //inefficient, rewrite whole function
 			'S_HIDDEN_FIELDS'	=> $hidden . $s_hidden_fields
-		));
+		);
+
+		/**
+		 * This event allows an extension to modify the ajax output of confirm box.
+		 *
+		 * @event core.confirm_box_ajax_before
+		 * @var string	u_action		Action of the form
+		 * @var array	data			Data to be sent
+		 * @var string	hidden			Hidden fields generated by caller
+		 * @var string	s_hidden_fields	Hidden fields generated by this function
+		 * @since 3.2.8-RC1
+		 */
+		$vars = array(
+			'u_action',
+			'data',
+			'hidden',
+			's_hidden_fields',
+		);
+		extract($phpbb_dispatcher->trigger_event('core.confirm_box_ajax_before', compact($vars)));
+
+		$json_response = new \phpbb\json_response;
+		$json_response->send($data);
 	}
 
 	if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
@@ -2225,6 +2250,8 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 	{
 		page_footer();
 	}
+
+	exit; // unreachable, page_footer() above will call exit()
 }
 
 /**
@@ -2236,6 +2263,8 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 	global $request, $phpbb_container, $phpbb_dispatcher, $phpbb_log;
 
 	$err = '';
+	$form_name = 'login';
+	$username = $autologin = false;
 
 	// Make sure user->setup() has been called
 	if (!$user->is_setup())
@@ -2311,8 +2340,19 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 			trigger_error('NO_AUTH_ADMIN_USER_DIFFER');
 		}
 
-		// If authentication is successful we redirect user to previous page
-		$result = $auth->login($username, $password, $autologin, $viewonline, $admin);
+		// Check form key
+		if ($password && !defined('IN_CHECK_BAN') && !check_form_key($form_name))
+		{
+			$result = array(
+				'status' => false,
+				'error_msg' => 'FORM_INVALID',
+			);
+		}
+		else
+		{
+			// If authentication is successful we redirect user to previous page
+			$result = $auth->login($username, $password, $autologin, $viewonline, $admin);
+		}
 
 		// If admin authentication and login, we will log if it was a success or not...
 		// We also break the operation on the first non-success login - it could be argued that the user already knows
@@ -2344,10 +2384,12 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 			* @event core.login_box_redirect
 			* @var  string	redirect	Redirect string
 			* @var	bool	admin		Is admin?
+			* @var	array	result		Result from auth provider
 			* @since 3.1.0-RC5
 			* @changed 3.1.9-RC1 Removed undefined return variable
+			* @changed 3.2.4-RC1 Added result
 			*/
-			$vars = array('redirect', 'admin');
+			$vars = array('redirect', 'admin', 'result');
 			extract($phpbb_dispatcher->trigger_event('core.login_box_redirect', compact($vars)));
 
 			// append/replace SID (may change during the session for AOL users)
@@ -2463,11 +2505,14 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 
 	$s_hidden_fields = build_hidden_fields($s_hidden_fields);
 
+	/** @var \phpbb\controller\helper $controller_helper */
+	$controller_helper = $phpbb_container->get('controller.helper');
+
 	$login_box_template_data = array(
 		'LOGIN_ERROR'		=> $err,
 		'LOGIN_EXPLAIN'		=> $l_explain,
 
-		'U_SEND_PASSWORD' 		=> ($config['email_enable']) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=sendpassword') : '',
+		'U_SEND_PASSWORD' 		=> ($config['email_enable']) ? $controller_helper->route('phpbb_ucp_forgot_password_controller') : '',
 		'U_RESEND_ACTIVATION'	=> ($config['require_activation'] == USER_ACTIVATION_SELF && $config['email_enable']) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=resend_act') : '',
 		'U_TERMS_USE'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=terms'),
 		'U_PRIVACY'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=privacy'),
@@ -2520,7 +2565,7 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 */
 function login_forum_box($forum_data)
 {
-	global $db, $phpbb_container, $request, $template, $user, $phpbb_dispatcher;
+	global $db, $phpbb_container, $request, $template, $user, $phpbb_dispatcher, $phpbb_root_path, $phpEx;
 
 	$password = $request->variable('password', '', true);
 
@@ -2604,6 +2649,8 @@ function login_forum_box($forum_data)
 	$template->set_filenames(array(
 		'body' => 'login_forum.html')
 	);
+
+	make_jumpbox(append_sid("{$phpbb_root_path}viewforum.$phpEx"), $forum_data['forum_id']);
 
 	page_footer();
 }
@@ -2793,10 +2840,13 @@ function get_preg_expression($mode)
 		// Whoa these look impressive!
 		// The code to generate the following two regular expressions which match valid IPv4/IPv6 addresses
 		// can be found in the develop directory
+
+		// @deprecated
 		case 'ipv4':
 			return '#^(?:(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$#';
 		break;
 
+		// @deprecated
 		case 'ipv6':
 			return '#^(?:(?:(?:[\dA-F]{1,4}:){6}(?:[\dA-F]{1,4}:[\dA-F]{1,4}|(?:(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])))|(?:::(?:[\dA-F]{1,4}:){0,5}(?:[\dA-F]{1,4}(?::[\dA-F]{1,4})?|(?:(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])))|(?:(?:[\dA-F]{1,4}:):(?:[\dA-F]{1,4}:){4}(?:[\dA-F]{1,4}:[\dA-F]{1,4}|(?:(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])))|(?:(?:[\dA-F]{1,4}:){1,2}:(?:[\dA-F]{1,4}:){3}(?:[\dA-F]{1,4}:[\dA-F]{1,4}|(?:(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])))|(?:(?:[\dA-F]{1,4}:){1,3}:(?:[\dA-F]{1,4}:){2}(?:[\dA-F]{1,4}:[\dA-F]{1,4}|(?:(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])))|(?:(?:[\dA-F]{1,4}:){1,4}:(?:[\dA-F]{1,4}:)(?:[\dA-F]{1,4}:[\dA-F]{1,4}|(?:(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])))|(?:(?:[\dA-F]{1,4}:){1,5}:(?:[\dA-F]{1,4}:[\dA-F]{1,4}|(?:(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])))|(?:(?:[\dA-F]{1,4}:){1,6}:[\dA-F]{1,4})|(?:(?:[\dA-F]{1,4}:){1,7}:)|(?:::))$#i';
 		break;
@@ -2922,331 +2972,26 @@ function short_ipv6($ip, $length)
 * @return mixed		false if specified address is not valid,
 *					string otherwise
 */
-function phpbb_ip_normalise($address)
+function phpbb_ip_normalise(string $address)
 {
-	$address = trim($address);
+	$ip_normalised = false;
 
-	if (empty($address) || !is_string($address))
+	if (filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
 	{
-		return false;
+		$ip_normalised = $address;
+	}
+	else if (filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+	{
+		$ip_normalised = inet_ntop(inet_pton($address));
+
+		// If is ipv4
+		if (stripos($ip_normalised, '::ffff:') === 0)
+		{
+			$ip_normalised = substr($ip_normalised, 7);
+		}
 	}
 
-	if (preg_match(get_preg_expression('ipv4'), $address))
-	{
-		return $address;
-	}
-
-	return phpbb_inet_ntop(phpbb_inet_pton($address));
-}
-
-/**
-* Wrapper for inet_ntop()
-*
-* Converts a packed internet address to a human readable representation
-* inet_ntop() is supported by PHP since 5.1.0, since 5.3.0 also on Windows.
-*
-* @param string $in_addr	A 32bit IPv4, or 128bit IPv6 address.
-*
-* @return mixed		false on failure,
-*					string otherwise
-*/
-function phpbb_inet_ntop($in_addr)
-{
-	$in_addr = bin2hex($in_addr);
-
-	switch (strlen($in_addr))
-	{
-		case 8:
-			return implode('.', array_map('hexdec', str_split($in_addr, 2)));
-
-		case 32:
-			if (substr($in_addr, 0, 24) === '00000000000000000000ffff')
-			{
-				return phpbb_inet_ntop(pack('H*', substr($in_addr, 24)));
-			}
-
-			$parts = str_split($in_addr, 4);
-			$parts = preg_replace('/^0+(?!$)/', '', $parts);
-			$ret = implode(':', $parts);
-
-			$matches = array();
-			preg_match_all('/(?<=:|^)(?::?0){2,}/', $ret, $matches, PREG_OFFSET_CAPTURE);
-			$matches = $matches[0];
-
-			if (empty($matches))
-			{
-				return $ret;
-			}
-
-			$longest_match = '';
-			$longest_match_offset = 0;
-			foreach ($matches as $match)
-			{
-				if (strlen($match[0]) > strlen($longest_match))
-				{
-					$longest_match = $match[0];
-					$longest_match_offset = $match[1];
-				}
-			}
-
-			$ret = substr_replace($ret, '', $longest_match_offset, strlen($longest_match));
-
-			if ($longest_match_offset == strlen($ret))
-			{
-				$ret .= ':';
-			}
-
-			if ($longest_match_offset == 0)
-			{
-				$ret = ':' . $ret;
-			}
-
-			return $ret;
-
-		default:
-			return false;
-	}
-}
-
-/**
-* Wrapper for inet_pton()
-*
-* Converts a human readable IP address to its packed in_addr representation
-* inet_pton() is supported by PHP since 5.1.0, since 5.3.0 also on Windows.
-*
-* @param string $address	A human readable IPv4 or IPv6 address.
-*
-* @return mixed		false if address is invalid,
-*					in_addr representation of the given address otherwise (string)
-*/
-function phpbb_inet_pton($address)
-{
-	$ret = '';
-	if (preg_match(get_preg_expression('ipv4'), $address))
-	{
-		foreach (explode('.', $address) as $part)
-		{
-			$ret .= ($part <= 0xF ? '0' : '') . dechex($part);
-		}
-
-		return pack('H*', $ret);
-	}
-
-	if (preg_match(get_preg_expression('ipv6'), $address))
-	{
-		$parts = explode(':', $address);
-		$missing_parts = 8 - count($parts) + 1;
-
-		if (substr($address, 0, 2) === '::')
-		{
-			++$missing_parts;
-		}
-
-		if (substr($address, -2) === '::')
-		{
-			++$missing_parts;
-		}
-
-		$embedded_ipv4 = false;
-		$last_part = end($parts);
-
-		if (preg_match(get_preg_expression('ipv4'), $last_part))
-		{
-			$parts[count($parts) - 1] = '';
-			$last_part = phpbb_inet_pton($last_part);
-			$embedded_ipv4 = true;
-			--$missing_parts;
-		}
-
-		foreach ($parts as $i => $part)
-		{
-			if (strlen($part))
-			{
-				$ret .= str_pad($part, 4, '0', STR_PAD_LEFT);
-			}
-			else if ($i && $i < count($parts) - 1)
-			{
-				$ret .= str_repeat('0000', $missing_parts);
-			}
-		}
-
-		$ret = pack('H*', $ret);
-
-		if ($embedded_ipv4)
-		{
-			$ret .= $last_part;
-		}
-
-		return $ret;
-	}
-
-	return false;
-}
-
-/**
-* Wrapper for php's checkdnsrr function.
-*
-* @param string $host	Fully-Qualified Domain Name
-* @param string $type	Resource record type to lookup
-*						Supported types are: MX (default), A, AAAA, NS, TXT, CNAME
-*						Other types may work or may not work
-*
-* @return mixed		true if entry found,
-*					false if entry not found,
-*					null if this function is not supported by this environment
-*
-* Since null can also be returned, you probably want to compare the result
-* with === true or === false,
-*/
-function phpbb_checkdnsrr($host, $type = 'MX')
-{
-	// The dot indicates to search the DNS root (helps those having DNS prefixes on the same domain)
-	if (substr($host, -1) == '.')
-	{
-		$host_fqdn = $host;
-		$host = substr($host, 0, -1);
-	}
-	else
-	{
-		$host_fqdn = $host . '.';
-	}
-	// $host		has format	some.host.example.com
-	// $host_fqdn	has format	some.host.example.com.
-
-	// If we're looking for an A record we can use gethostbyname()
-	if ($type == 'A' && function_exists('gethostbyname'))
-	{
-		return (@gethostbyname($host_fqdn) == $host_fqdn) ? false : true;
-	}
-
-	if (function_exists('checkdnsrr'))
-	{
-		return checkdnsrr($host_fqdn, $type);
-	}
-
-	if (function_exists('dns_get_record'))
-	{
-		// dns_get_record() expects an integer as second parameter
-		// We have to convert the string $type to the corresponding integer constant.
-		$type_constant = 'DNS_' . $type;
-		$type_param = (defined($type_constant)) ? constant($type_constant) : DNS_ANY;
-
-		// dns_get_record() might throw E_WARNING and return false for records that do not exist
-		$resultset = @dns_get_record($host_fqdn, $type_param);
-
-		if (empty($resultset) || !is_array($resultset))
-		{
-			return false;
-		}
-		else if ($type_param == DNS_ANY)
-		{
-			// $resultset is a non-empty array
-			return true;
-		}
-
-		foreach ($resultset as $result)
-		{
-			if (
-				isset($result['host']) && $result['host'] == $host &&
-				isset($result['type']) && $result['type'] == $type
-			)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	// If we're on Windows we can still try to call nslookup via exec() as a last resort
-	if (DIRECTORY_SEPARATOR == '\\' && function_exists('exec'))
-	{
-		@exec('nslookup -type=' . escapeshellarg($type) . ' ' . escapeshellarg($host_fqdn), $output);
-
-		// If output is empty, the nslookup failed
-		if (empty($output))
-		{
-			return NULL;
-		}
-
-		foreach ($output as $line)
-		{
-			$line = trim($line);
-
-			if (empty($line))
-			{
-				continue;
-			}
-
-			// Squash tabs and multiple whitespaces to a single whitespace.
-			$line = preg_replace('/\s+/', ' ', $line);
-
-			switch ($type)
-			{
-				case 'MX':
-					if (stripos($line, "$host MX") === 0)
-					{
-						return true;
-					}
-				break;
-
-				case 'NS':
-					if (stripos($line, "$host nameserver") === 0)
-					{
-						return true;
-					}
-				break;
-
-				case 'TXT':
-					if (stripos($line, "$host text") === 0)
-					{
-						return true;
-					}
-				break;
-
-				case 'CNAME':
-					if (stripos($line, "$host canonical name") === 0)
-					{
-						return true;
-					}
-				break;
-
-				default:
-				case 'AAAA':
-					// AAAA records returned by nslookup on Windows XP/2003 have this format.
-					// Later Windows versions use the A record format below for AAAA records.
-					if (stripos($line, "$host AAAA IPv6 address") === 0)
-					{
-						return true;
-					}
-				// No break
-
-				case 'A':
-					if (!empty($host_matches))
-					{
-						// Second line
-						if (stripos($line, "Address: ") === 0)
-						{
-							return true;
-						}
-						else
-						{
-							$host_matches = false;
-						}
-					}
-					else if (stripos($line, "Name: $host") === 0)
-					{
-						// First line
-						$host_matches = true;
-					}
-				break;
-			}
-		}
-
-		return false;
-	}
-
-	return NULL;
+	return $ip_normalised;
 }
 
 // Handler, header and footer
@@ -3258,6 +3003,7 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 {
 	global $cache, $db, $auth, $template, $config, $user, $request;
 	global $phpbb_root_path, $msg_title, $msg_long_text, $phpbb_log;
+	global $phpbb_container;
 
 	// Do not display notices if we suppress them via @
 	if (error_reporting() == 0 && $errno != E_USER_ERROR && $errno != E_USER_WARNING && $errno != E_USER_NOTICE)
@@ -3278,7 +3024,7 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 
 			// Check the error reporting level and return if the error level does not match
 			// If DEBUG is defined the default level is E_ALL
-			if (($errno & ((defined('DEBUG')) ? E_ALL : error_reporting())) == 0)
+			if (($errno & ($phpbb_container->getParameter('debug.show_errors') ? E_ALL : error_reporting())) == 0)
 			{
 				return;
 			}
@@ -3336,7 +3082,7 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 				$log_text .= '<br /><br />BACKTRACE<br />' . $backtrace;
 			}
 
-			if (defined('IN_INSTALL') || defined('DEBUG') || isset($auth) && $auth->acl_get('a_'))
+			if (defined('IN_INSTALL') || ($phpbb_container != null && $phpbb_container->getParameter('debug.show_errors')) || isset($auth) && $auth->acl_get('a_'))
 			{
 				$msg_text = $log_text;
 
@@ -4058,9 +3804,9 @@ function phpbb_get_user_avatar($user_row, $alt = 'USER_AVATAR', $ignore_config =
 *
 * @return string Avatar html
 */
-function phpbb_get_group_avatar($user_row, $alt = 'GROUP_AVATAR', $ignore_config = false, $lazy = false)
+function phpbb_get_group_avatar($group_row, $alt = 'GROUP_AVATAR', $ignore_config = false, $lazy = false)
 {
-	$row = \phpbb\avatar\manager::clean_row($user_row, 'group');
+	$row = \phpbb\avatar\manager::clean_row($group_row, 'group');
 	return phpbb_get_avatar($row, $alt, $ignore_config, $lazy);
 }
 
@@ -4224,7 +3970,8 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 	}
 	else
 	{
-		$u_login_logout = append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login');
+		$redirect = $request->variable('redirect', rawurlencode($user->page['page']));
+		$u_login_logout = append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login&amp;redirect=' . $redirect);
 		$l_login_logout = $user->lang['LOGIN'];
 	}
 
@@ -4365,6 +4112,23 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 	$controller_helper = $phpbb_container->get('controller.helper');
 	$notification_mark_hash = generate_link_hash('mark_all_notifications_read');
 
+	$s_login_redirect = build_hidden_fields(array('redirect' => $phpbb_path_helper->remove_web_root_path(build_url())));
+
+	// Add form token for login box, in case page is presenting a login form.
+	add_form_key('login', '_LOGIN');
+
+	/**
+	 * Workaround for missing template variable in pre phpBB 3.2.6 styles.
+	 * @deprecated 3.2.7 (To be removed: 4.0.0-a1)
+	 */
+	$form_token_login = $template->retrieve_var('S_FORM_TOKEN_LOGIN');
+	if (!empty($form_token_login))
+	{
+		$s_login_redirect .= $form_token_login;
+		// Remove S_FORM_TOKEN_LOGIN as it's already appended to S_LOGIN_REDIRECT
+		$template->assign_var('S_FORM_TOKEN_LOGIN', '');
+	}
+
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
 		'SITENAME'						=> $config['sitename'],
@@ -4424,7 +4188,7 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 		'U_SEARCH_ACTIVE_TOPICS'=> append_sid("{$phpbb_root_path}search.$phpEx", 'search_id=active_topics'),
 		'U_DELETE_COOKIES'		=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=delete_cookies'),
 		'U_CONTACT_US'			=> ($config['contact_admin_form_enable'] && $config['email_enable']) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=contactadmin') : '',
-		'U_TEAM'				=> ($user->data['user_id'] != ANONYMOUS && !$auth->acl_get('u_viewprofile')) ? '' : append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=team'),
+		'U_TEAM'				=> (!$auth->acl_get('u_viewprofile')) ? '' : append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=team'),
 		'U_TERMS_USE'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=terms'),
 		'U_PRIVACY'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=privacy'),
 		'UA_PRIVACY'			=> addslashes(append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=privacy')),
@@ -4454,7 +4218,7 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 		'S_TOPIC_ID'			=> $topic_id,
 
 		'S_LOGIN_ACTION'		=> ((!defined('ADMIN_START')) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') : append_sid("{$phpbb_admin_path}index.$phpEx", false, true, $user->session_id)),
-		'S_LOGIN_REDIRECT'		=> build_hidden_fields(array('redirect' => $phpbb_path_helper->remove_web_root_path(build_url()))),
+		'S_LOGIN_REDIRECT'		=> $s_login_redirect,
 
 		'S_ENABLE_FEEDS'			=> ($config['feed_enable']) ? true : false,
 		'S_ENABLE_FEEDS_OVERALL'	=> ($config['feed_overall']) ? true : false,
@@ -4482,12 +4246,12 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 		'T_STYLESHEET_LINK'		=> "{$web_path}styles/" . rawurlencode($user->style['style_path']) . '/theme/stylesheet.css?assets_version=' . $config['assets_version'],
 		'T_STYLESHEET_LANG_LINK'=> "{$web_path}styles/" . rawurlencode($user->style['style_path']) . '/theme/' . $user->lang_name . '/stylesheet.css?assets_version=' . $config['assets_version'],
 		'T_FONT_AWESOME_LINK'	=> !empty($config['allow_cdn']) && !empty($config['load_font_awesome_url']) ? $config['load_font_awesome_url'] : "{$web_path}assets/css/font-awesome.min.css?assets_version=" . $config['assets_version'],
-		'T_JQUERY_LINK'			=> !empty($config['allow_cdn']) && !empty($config['load_jquery_url']) ? $config['load_jquery_url'] : "{$web_path}assets/javascript/jquery.min.js?assets_version=" . $config['assets_version'],
+		'T_JQUERY_LINK'			=> !empty($config['allow_cdn']) && !empty($config['load_jquery_url']) ? $config['load_jquery_url'] : "{$web_path}assets/javascript/jquery-3.4.1.min.js?assets_version=" . $config['assets_version'],
 		'S_ALLOW_CDN'			=> !empty($config['allow_cdn']),
 		'S_COOKIE_NOTICE'		=> !empty($config['cookie_notice']),
 
 		'T_THEME_NAME'			=> rawurlencode($user->style['style_path']),
-		'T_THEME_LANG_NAME'		=> $user->data['user_lang'],
+		'T_THEME_LANG_NAME'		=> $user->lang_name,
 		'T_TEMPLATE_NAME'		=> $user->style['style_path'],
 		'T_SUPER_TEMPLATE_NAME'	=> rawurlencode((isset($user->style['style_parent_tree']) && $user->style['style_parent_tree']) ? $user->style['style_parent_tree'] : $user->style['style_path']),
 		'T_IMAGES'				=> 'images',
@@ -4505,12 +4269,13 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 
 	if ($send_headers)
 	{
-		// An array of http headers that phpbb will set. The following event may override these.
+		// An array of http headers that phpBB will set. The following event may override these.
 		$http_headers += array(
 			// application/xhtml+xml not used because of IE
 			'Content-type' => 'text/html; charset=UTF-8',
 			'Cache-Control' => 'private, no-cache="set-cookie"',
 			'Expires' => gmdate('D, d M Y H:i:s', time()) . ' GMT',
+			'Referrer-Policy' => 'strict-origin-when-cross-origin',
 		);
 		if (!empty($user->data['is_bot']))
 		{
@@ -4553,7 +4318,9 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 */
 function phpbb_check_and_display_sql_report(\phpbb\request\request_interface $request, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db)
 {
-	if ($request->variable('explain', false) && $auth->acl_get('a_') && defined('DEBUG'))
+	global $phpbb_container;
+
+	if ($phpbb_container->getParameter('debug.sql_explain') && $request->variable('explain', false) && $auth->acl_get('a_'))
 	{
 		$db->sql_report('display');
 	}
@@ -4571,19 +4338,22 @@ function phpbb_check_and_display_sql_report(\phpbb\request\request_interface $re
 */
 function phpbb_generate_debug_output(\phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\user $user, \phpbb\event\dispatcher_interface $phpbb_dispatcher)
 {
+	global $phpbb_container;
+
 	$debug_info = array();
 
 	// Output page creation time
-	if (defined('PHPBB_DISPLAY_LOAD_TIME'))
+	if ($phpbb_container->getParameter('debug.load_time'))
 	{
 		if (isset($GLOBALS['starttime']))
 		{
 			$totaltime = microtime(true) - $GLOBALS['starttime'];
 			$debug_info[] = sprintf('<span title="SQL time: %.3fs / PHP time: %.3fs">Time: %.3fs</span>', $db->get_sql_time(), ($totaltime - $db->get_sql_time()), $totaltime);
 		}
+	}
 
-		$debug_info[] = sprintf('<span title="Cached: %d">Queries: %d</span>', $db->sql_num_queries(true), $db->sql_num_queries());
-
+	if ($phpbb_container->getParameter('debug.memory'))
+	{
 		$memory_usage = memory_get_peak_usage();
 		if ($memory_usage)
 		{
@@ -4591,16 +4361,18 @@ function phpbb_generate_debug_output(\phpbb\db\driver\driver_interface $db, \php
 
 			$debug_info[] = 'Peak Memory Usage: ' . $memory_usage;
 		}
-	}
 
-	if (defined('DEBUG'))
-	{
 		$debug_info[] = 'GZIP: ' . (($config['gzip_compress'] && @extension_loaded('zlib')) ? 'On' : 'Off');
 
 		if ($user->load)
 		{
 			$debug_info[] = 'Load: ' . $user->load;
 		}
+	}
+
+	if ($phpbb_container->getParameter('debug.sql_explain'))
+	{
+		$debug_info[] = sprintf('<span title="Cached: %d">Queries: %d</span>', $db->sql_num_queries(true), $db->sql_num_queries());
 
 		if ($auth->acl_get('a_'))
 		{

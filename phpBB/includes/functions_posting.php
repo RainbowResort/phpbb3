@@ -52,9 +52,29 @@ function generate_smilies($mode, $forum_id)
 
 		page_header($user->lang['SMILIES']);
 
-		$sql = 'SELECT COUNT(smiley_id) AS item_count
-			FROM ' . SMILIES_TABLE . '
-			GROUP BY smiley_url';
+		$sql_ary = [
+			'SELECT'	=> 'COUNT(s.smiley_id) AS item_count',
+			'FROM'		=> [
+				SMILIES_TABLE => 's',
+			],
+			'GROUP_BY'	=> 's.smiley_url',
+		];
+
+		/**
+		* Modify SQL query that fetches the total number of smilies in window mode
+		*
+		* @event core.generate_smilies_count_sql_before
+		* @var int		forum_id	Forum where smilies are generated
+		* @var array	sql_ary		Array with the SQL query
+		* @since 3.2.9-RC1
+		*/
+		$vars = [
+			'forum_id',
+			'sql_ary',
+		];
+		extract($phpbb_dispatcher->trigger_event('core.generate_smilies_count_sql_before', compact($vars)));
+
+		$sql = $db->sql_build_query('SELECT', $sql_ary);
 		$result = $db->sql_query($sql, 3600);
 
 		$smiley_count = 0;
@@ -113,6 +133,22 @@ function generate_smilies($mode, $forum_id)
 		}
 	}
 	$db->sql_freeresult($result);
+
+	/**
+	* Modify smilies before they are assigned to the template
+	*
+	* @event core.generate_smilies_modify_rowset
+	* @var string	mode		Smiley mode, either window or inline
+	* @var int		forum_id	Forum where smilies are generated
+	* @var array	smilies		Smiley rows fetched from the database
+	* @since 3.2.9-RC1
+	*/
+	$vars = [
+		'mode',
+		'forum_id',
+		'smilies',
+	];
+	extract($phpbb_dispatcher->trigger_event('core.generate_smilies_modify_rowset', compact($vars)));
 
 	if (count($smilies))
 	{
@@ -202,11 +238,13 @@ function update_post_information($type, $ids, $return_update_sql = false)
 
 	if (count($ids) == 1)
 	{
-		$sql = 'SELECT MAX(p.post_id) as last_post_id
+		$sql = 'SELECT p.post_id as last_post_id
 			FROM ' . POSTS_TABLE . " p $topic_join
 			WHERE " . $db->sql_in_set('p.' . $type . '_id', $ids) . "
 				$topic_condition
-				AND p.post_visibility = " . ITEM_APPROVED;
+				AND p.post_visibility = " . ITEM_APPROVED . "
+			ORDER BY p.post_id DESC";
+		$result = $db->sql_query_limit($sql, 1);
 	}
 	else
 	{
@@ -216,8 +254,8 @@ function update_post_information($type, $ids, $return_update_sql = false)
 				$topic_condition
 				AND p.post_visibility = " . ITEM_APPROVED . "
 			GROUP BY p.{$type}_id";
+		$result = $db->sql_query($sql);
 	}
-	$result = $db->sql_query($sql);
 
 	$last_post_ids = array();
 	while ($row = $db->sql_fetchrow($result))
@@ -395,34 +433,6 @@ function posting_gen_topic_types($forum_id, $cur_topic_type = POST_NORMAL)
 //
 // Attachment related functions
 //
-
-/**
-* Upload Attachment - filedata is generated here
-* Uses upload class
-*
-* @deprecated 3.2.0-a1 (To be removed: 3.4.0)
-*
-* @param string			$form_name		The form name of the file upload input
-* @param int			$forum_id		The id of the forum
-* @param bool			$local			Whether the file is local or not
-* @param string			$local_storage	The path to the local file
-* @param bool			$is_message		Whether it is a PM or not
-* @param array			$local_filedata	A filespec object created for the local file
-*
-* @return array File data array
-*/
-function upload_attachment($form_name, $forum_id, $local = false, $local_storage = '', $is_message = false, $local_filedata = false)
-{
-	global $phpbb_container;
-
-	/** @var \phpbb\attachment\manager $attachment_manager */
-	$attachment_manager = $phpbb_container->get('attachment.manager');
-	$file = $attachment_manager->upload($form_name, $forum_id, $local, $local_storage, $is_message, $local_filedata);
-	unset($attachment_manager);
-
-	return $file;
-}
-
 /**
 * Calculate the needed size for Thumbnail
 */
@@ -519,7 +529,7 @@ function get_supported_image_types($type = false)
 */
 function create_thumbnail($source, $destination, $mimetype)
 {
-	global $config, $phpbb_filesystem;
+	global $config, $phpbb_filesystem, $phpbb_dispatcher;
 
 	$min_filesize = (int) $config['img_min_thumb_filesize'];
 	$img_filesize = (file_exists($source)) ? @filesize($source) : false;
@@ -551,25 +561,31 @@ function create_thumbnail($source, $destination, $mimetype)
 		return false;
 	}
 
-	$used_imagick = false;
+	$thumbnail_created = false;
 
-	// Only use ImageMagick if defined and the passthru function not disabled
-	if ($config['img_imagick'] && function_exists('passthru'))
-	{
-		if (substr($config['img_imagick'], -1) !== '/')
-		{
-			$config['img_imagick'] .= '/';
-		}
+	/**
+	 * Create thumbnail event to replace GD thumbnail creation with for example ImageMagick
+	 *
+	 * @event core.thumbnail_create_before
+	 * @var	string	source				Image source path
+	 * @var	string	destination			Thumbnail destination path
+	 * @var	string	mimetype			Image mime type
+	 * @var	float	new_width			Calculated thumbnail width
+	 * @var	float	new_height			Calculated thumbnail height
+	 * @var	bool	thumbnail_created	Set to true to skip default GD thumbnail creation
+	 * @since 3.2.4
+	 */
+	$vars = array(
+		'source',
+		'destination',
+		'mimetype',
+		'new_width',
+		'new_height',
+		'thumbnail_created',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.thumbnail_create_before', compact($vars)));
 
-		@passthru(escapeshellcmd($config['img_imagick']) . 'convert' . ((defined('PHP_OS') && preg_match('#^win#i', PHP_OS)) ? '.exe' : '') . ' -quality 85 -geometry ' . $new_width . 'x' . $new_height . ' "' . str_replace('\\', '/', $source) . '" "' . str_replace('\\', '/', $destination) . '"');
-
-		if (file_exists($destination))
-		{
-			$used_imagick = true;
-		}
-	}
-
-	if (!$used_imagick)
+	if (!$thumbnail_created)
 	{
 		$type = get_supported_image_types($type);
 
@@ -631,12 +647,6 @@ function create_thumbnail($source, $destination, $mimetype)
 				@imagesavealpha($new_image, true);
 
 				imagecopyresampled($new_image, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-			}
-
-			// If we are in safe mode create the destination file prior to using the gd functions to circumvent a PHP bug
-			if (@ini_get('safe_mode') || @strtolower(ini_get('safe_mode')) == 'on')
-			{
-				@touch($destination);
 			}
 
 			switch ($type['format'])
@@ -970,6 +980,30 @@ function topic_review($topic_id, $forum_id, $mode = 'topic_review', $cur_post_id
 			AND u.user_id = p.poster_id',
 	);
 
+	/**
+	* Event to modify the SQL query for topic reviews
+	*
+	* @event core.topic_review_modify_sql_ary
+	* @var	int		topic_id			The topic ID that is being reviewed
+	* @var	int		forum_id			The topic's forum ID
+	* @var	string	mode				The topic review mode
+	* @var	int		cur_post_id			Post offset ID
+	* @var	bool	show_quote_button	Flag indicating if the quote button should be displayed
+	* @var	array	post_list			Array with the post IDs
+	* @var	array	sql_ary				Array with the SQL query
+	* @since 3.2.8-RC1
+	*/
+	$vars = array(
+		'topic_id',
+		'forum_id',
+		'mode',
+		'cur_post_id',
+		'show_quote_button',
+		'post_list',
+		'sql_ary',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.topic_review_modify_sql_ary', compact($vars)));
+
 	$sql = $db->sql_build_query('SELECT', $sql_ary);
 	$result = $db->sql_query($sql);
 
@@ -1276,6 +1310,7 @@ function delete_post($forum_id, $topic_id, $post_id, &$data, $is_soft = false, $
 				delete_topics('topic_id', array($topic_id), false);
 
 				$phpbb_content_visibility->remove_topic_from_statistic($data, $sql_data);
+				$config->increment('num_posts', -1, false);
 
 				$update_sql = update_post_information('forum', $forum_id, true);
 				if (count($update_sql))
@@ -2046,6 +2081,11 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll_ary, &$data
 				continue;
 			}
 
+			if (preg_match('/[\x{10000}-\x{10FFFF}]/u', $attach_row['attach_comment']))
+			{
+				trigger_error('ATTACH_COMMENT_NO_EMOJIS');
+			}
+
 			if (!$attach_row['is_orphan'])
 			{
 				// update entry in db if attachment already stored in db and filespace
@@ -2282,6 +2322,19 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll_ary, &$data
 		'post_subject'		=> $subject,
 	));
 
+	/**
+	* This event allows you to modify the notification data upon submission
+	*
+	* @event core.modify_submit_notification_data
+	* @var	array	notification_data	The notification data to be inserted in to the database
+	* @var	array	data_ary			The data array with a lot of the post submission data
+	* @var 	string	mode				The posting mode
+	* @var	int		poster_id			The poster id
+	* @since 3.2.4-RC1
+	*/
+	$vars = array('notification_data', 'data_ary', 'mode', 'poster_id');
+	extract($phpbb_dispatcher->trigger_event('core.modify_submit_notification_data', compact($vars)));
+
 	/* @var $phpbb_notifications \phpbb\notification\manager */
 	$phpbb_notifications = $phpbb_container->get('notification_manager');
 
@@ -2309,8 +2362,14 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll_ary, &$data
 			case 'edit_first_post':
 			case 'edit':
 			case 'edit_last_post':
+				if ($user->data['user_id'] == $poster_id)
+				{
+					$phpbb_notifications->update_notifications(array(
+						'notification.type.quote',
+					), $notification_data);
+				}
+
 				$phpbb_notifications->update_notifications(array(
-					'notification.type.quote',
 					'notification.type.bookmark',
 					'notification.type.topic',
 					'notification.type.post',

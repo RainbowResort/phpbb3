@@ -15,6 +15,9 @@
 !/phpBB/language/en
 /phpBB/store/*
 !/phpBB/styles/prosilver
+/phpBB/styles/prosilver/theme/*/
+!/phpBB/styles/prosilver/theme/en
+!/phpBB/styles/prosilver/theme/images
 !/phpBB/styles/all
 /phpBB/vendor
 /tests/phpbb_unit_tests.sqlite*
@@ -23,3 +26,4 @@
 /tests/vendor
 /vagrant/phpbb-install-config.yml
 .vagrant
+*.DS_Store*

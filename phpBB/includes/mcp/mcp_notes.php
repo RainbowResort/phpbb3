@@ -28,9 +28,9 @@ class mcp_notes
 	var $p_master;
 	var $u_action;
 
-	function mcp_notes(&$p_master)
+	function __construct($p_master)
 	{
-		$this->p_master = &$p_master;
+		$this->p_master = $p_master;
 	}
 
 	function main($id, $mode)
@@ -42,7 +42,7 @@ class mcp_notes
 
 		if (is_array($action))
 		{
-			list($action, ) = each($action);
+			$action = key($action);
 		}
 
 		$this->page_title = 'MCP_NOTES';

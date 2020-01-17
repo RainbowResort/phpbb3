@@ -263,6 +263,20 @@ if (!$topic_data)
 
 $forum_id = (int) $topic_data['forum_id'];
 
+/**
+ * Modify the forum ID to handle the correct display of viewtopic if needed
+ *
+ * @event core.viewtopic_modify_forum_id
+ * @var string	forum_id		forum ID
+ * @var array	topic_data		array of topic's data
+ * @since 3.2.5-RC1
+ */
+$vars = array(
+	'forum_id',
+	'topic_data',
+);
+extract($phpbb_dispatcher->trigger_event('core.viewtopic_modify_forum_id', compact($vars)));
+
 // If the request is missing the f parameter, the forum id in the user session data is 0 at the moment.
 // Let's fix that now so that the user can't hide from the forum's Who Is Online list.
 $user->page['forum'] = $forum_id;
@@ -341,6 +355,12 @@ if (($topic_data['topic_type'] != POST_NORMAL) && $topic_data['topic_time_limit'
 
 // Setup look and feel
 $user->setup('viewtopic', $topic_data['forum_style']);
+
+if ($view == 'print' && !$auth->acl_get('f_print', $forum_id))
+{
+	send_status_line(403, 'Forbidden');
+	trigger_error('NO_AUTH_PRINT_TOPIC');
+}
 
 $overrides_f_read_check = false;
 $overrides_forum_password_check = false;
@@ -432,6 +452,38 @@ $sort_by_sql = array('a' => array('u.username_clean', 'p.post_id'), 't' => array
 $join_user_sql = array('a' => true, 't' => false, 's' => false);
 
 $s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
+
+/**
+* Event to add new sorting options
+*
+* @event core.viewtopic_gen_sort_selects_before
+* @var	array	limit_days		Limit results by time
+* @var	array	sort_by_text	Language strings for sorting options
+* @var	array	sort_by_sql		SQL conditions for sorting options
+* @var	array	join_user_sql	SQL joins required for sorting options
+* @var	int		sort_days		User selected sort days
+* @var	string	sort_key		User selected sort key
+* @var	string	sort_dir		User selected sort direction
+* @var	string	s_limit_days	Initial value of limit days selectbox
+* @var	string	s_sort_key		Initial value of sort key selectbox
+* @var	string	s_sort_dir		Initial value of sort direction selectbox
+* @var	string	u_sort_param	Initial value of sorting form action
+* @since 3.2.8-RC1
+*/
+$vars = array(
+	'limit_days',
+	'sort_by_text',
+	'sort_by_sql',
+	'join_user_sql',
+	'sort_days',
+	'sort_key',
+	'sort_dir',
+	's_limit_days',
+	's_sort_key',
+	's_sort_dir',
+	'u_sort_param',
+);
+extract($phpbb_dispatcher->trigger_event('core.viewtopic_gen_sort_selects_before', compact($vars)));
 
 gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param, $default_sort_days, $default_sort_key, $default_sort_dir);
 
@@ -780,7 +832,7 @@ $template->assign_vars(array(
 
 	'U_TOPIC'				=> "{$server_path}viewtopic.$phpEx?f=$forum_id&amp;t=$topic_id",
 	'U_FORUM'				=> $server_path,
-	'U_VIEW_TOPIC' 			=> $viewtopic_url,
+	'U_VIEW_TOPIC' 			=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") . (strlen($u_sort_param) ? "&amp;$u_sort_param" : '')),
 	'U_CANONICAL'			=> generate_board_url() . '/' . append_sid("viewtopic.$phpEx", "t=$topic_id" . (($start) ? "&amp;start=$start" : ''), true, ''),
 	'U_VIEW_FORUM' 			=> append_sid("{$phpbb_root_path}viewforum.$phpEx", 'f=' . $forum_id),
 	'U_VIEW_OLDER_TOPIC'	=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;view=previous"),
@@ -998,6 +1050,29 @@ if (!empty($topic_data['poll_start']))
 				'total_votes'		=> array_sum($vote_counts),
 				'can_vote'			=> !count($valid_user_votes) || ($auth->acl_get('f_votechg', $forum_id) && $topic_data['poll_vote_change']),
 			);
+
+			/**
+			* Event to manipulate the poll data sent by AJAX response
+			*
+			* @event core.viewtopic_modify_poll_ajax_data
+			* @var	array	data				JSON response data
+			* @var	array	valid_user_votes	Valid user votes
+			* @var	array	vote_counts			Vote counts
+			* @var	int		forum_id			Forum ID
+			* @var	array	topic_data			Topic data
+			* @var	array	poll_info			Array with the poll information
+			* @since 3.2.4-RC1
+			*/
+			$vars = array(
+				'data',
+				'valid_user_votes',
+				'vote_counts',
+				'forum_id',
+				'topic_data',
+				'poll_info',
+			);
+			extract($phpbb_dispatcher->trigger_event('core.viewtopic_modify_poll_ajax_data', compact($vars)));
+
 			$json_response = new \phpbb\json_response();
 			$json_response->send($data);
 		}
@@ -1148,6 +1223,29 @@ $sql = 'SELECT p.post_id
 		" . (($join_user_sql[$sort_key]) ? 'AND u.user_id = p.poster_id': '') . "
 		$limit_posts_time
 	ORDER BY $sql_sort_order";
+
+/**
+* Event to modify the SQL query that gets post_list
+*
+* @event core.viewtopic_modify_post_list_sql
+* @var	string	sql			The SQL query to generate the post_list
+* @var	int		sql_limit	The number of posts the query fetches
+* @var	int		sql_start	The index the query starts to fetch from
+* @var	string	sort_key	Key the posts are sorted by
+* @var	string	sort_days	Display posts of previous x days
+* @var	int		forum_id	Forum ID
+* @since 3.2.4-RC1
+*/
+$vars = array(
+	'sql',
+	'sql_limit',
+	'sql_start',
+	'sort_key',
+	'sort_days',
+	'forum_id',
+);
+extract($phpbb_dispatcher->trigger_event('core.viewtopic_modify_post_list_sql', compact($vars)));
+
 $result = $db->sql_query_limit($sql, $sql_limit, $sql_start);
 
 $i = ($store_reverse) ? $sql_limit - 1 : 0;
@@ -1946,6 +2044,7 @@ for ($i = 0, $end = count($post_list); $i < $end; ++$i)
 		'CONTACT_USER'		=> $user_cache[$poster_id]['contact_user'],
 
 		'POST_DATE'			=> $user->format_date($row['post_time'], false, ($view == 'print') ? true : false),
+		'POST_DATE_RFC3339'	=> gmdate(DATE_RFC3339, $row['post_time']),
 		'POST_SUBJECT'		=> $row['post_subject'],
 		'MESSAGE'			=> $message,
 		'SIGNATURE'			=> ($row['enable_sig']) ? $user_cache[$poster_id]['sig'] : '',
@@ -1993,6 +2092,7 @@ for ($i = 0, $end = count($post_list); $i < $end; ++$i)
 		'S_HAS_ATTACHMENTS'	=> (!empty($attachments[$row['post_id']])) ? true : false,
 		'S_MULTIPLE_ATTACHMENTS'	=> !empty($attachments[$row['post_id']]) && count($attachments[$row['post_id']]) > 1,
 		'S_POST_UNAPPROVED'	=> ($row['post_visibility'] == ITEM_UNAPPROVED || $row['post_visibility'] == ITEM_REAPPROVE) ? true : false,
+		'S_CAN_APPROVE'		=> $auth->acl_get('m_approve', $forum_id),
 		'S_POST_DELETED'	=> ($row['post_visibility'] == ITEM_DELETED) ? true : false,
 		'L_POST_DELETED_MESSAGE'	=> $l_deleted_message,
 		'S_POST_REPORTED'	=> ($row['post_reported'] && $auth->acl_get('m_report', $forum_id)) ? true : false,
@@ -2069,7 +2169,7 @@ for ($i = 0, $end = count($post_list); $i < $end; ++$i)
 		array(
 			'ID'		=> 'pm',
 			'NAME' 		=> $user->lang['SEND_PRIVATE_MESSAGE'],
-			'U_CONTACT'	=> $u_pm,
+			'U_CONTACT'	=> $post_row['U_PM'],
 		),
 		array(
 			'ID'		=> 'email',
@@ -2249,7 +2349,6 @@ if ($s_can_vote || $s_quick_reply)
 
 		$qr_hidden_fields = array(
 			'topic_cur_post_id'		=> (int) $topic_data['topic_last_post_id'],
-			'lastclick'				=> (int) time(),
 			'topic_id'				=> (int) $topic_data['topic_id'],
 			'forum_id'				=> (int) $forum_id,
 		);
@@ -2262,12 +2361,25 @@ if ($s_can_vote || $s_quick_reply)
 		($s_notify)						? $qr_hidden_fields['notify'] = 1				: true;
 		($topic_data['topic_status'] == ITEM_LOCKED) ? $qr_hidden_fields['lock_topic'] = 1 : true;
 
-		$template->assign_vars(array(
+		$tpl_ary = [
 			'S_QUICK_REPLY'			=> true,
 			'U_QR_ACTION'			=> append_sid("{$phpbb_root_path}posting.$phpEx", "mode=reply&amp;f=$forum_id&amp;t=$topic_id"),
 			'QR_HIDDEN_FIELDS'		=> build_hidden_fields($qr_hidden_fields),
 			'SUBJECT'				=> 'Re: ' . censor_text($topic_data['topic_title']),
-		));
+		];
+
+		/**
+		* Event after the quick-reply has been setup
+		*
+		* @event core.viewtopic_modify_quick_reply_template_vars
+		* @var	array	tpl_ary			Array with template data
+		* @var	array	topic_data		Array with topic data
+		* @since 3.2.9-RC1
+		*/
+		$vars = ['tpl_ary', 'topic_data'];
+		extract($phpbb_dispatcher->trigger_event('core.viewtopic_modify_quick_reply_template_vars', compact($vars)));
+
+		$template->assign_vars($tpl_ary);
 	}
 }
 // now I have the urge to wash my hands :(

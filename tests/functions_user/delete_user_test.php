@@ -19,13 +19,18 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 		return $this->createXMLDataSet(dirname(__FILE__) . '/fixtures/delete_user.xml');
 	}
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
-		global $cache, $config, $db, $phpbb_dispatcher, $phpbb_container, $phpbb_root_path;
+		global $cache, $config, $db, $user, $phpbb_dispatcher, $phpbb_container, $phpbb_root_path, $phpEx;
 
 		$db = $this->db = $this->new_dbal();
+
+		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
+		$lang = new \phpbb\language\language($lang_loader);
+		$user = new \phpbb\user($lang, '\phpbb\datetime');
+
 		$config = new \phpbb\config\config(array(
 			'load_online_time'	=> 5,
 			'search_type'		=> '\phpbb\search\fulltext_mysql',
@@ -46,6 +51,11 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 			'auth.provider_collection',
 			$provider_collection
 		);
+		$phpbb_container->setParameter('tables.auth_provider_oauth_token_storage', 'phpbb_oauth_tokens');
+		$phpbb_container->setParameter('tables.auth_provider_oauth_states', 'phpbb_oauth_states');
+		$phpbb_container->setParameter('tables.auth_provider_oauth_account_assoc', 'phpbb_oauth_accounts');
+
+		$phpbb_container->setParameter('tables.user_notifications', 'phpbb_user_notifications');
 	}
 
 	 public function first_last_post_data()
@@ -54,16 +64,16 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 			array(
 				'retain', false,
 				array(
-					array('post_id' => 1, 'poster_id' => ANONYMOUS, 'post_username' => ''),
+					array('post_id' => 1, 'poster_id' => ANONYMOUS, 'post_username' => 'Guest'),
 					array('post_id' => 2, 'poster_id' => ANONYMOUS, 'post_username' => 'Other'),
-					array('post_id' => 3, 'poster_id' => ANONYMOUS, 'post_username' => ''),
+					array('post_id' => 3, 'poster_id' => ANONYMOUS, 'post_username' => 'Guest'),
 					array('post_id' => 4, 'poster_id' => ANONYMOUS, 'post_username' => 'Other'),
 				),
 				array(
 					array(
 						'topic_id' => 1,
-						'topic_poster' => ANONYMOUS, 'topic_first_poster_name' => '', 'topic_first_poster_colour' => '',
-						'topic_last_poster_id' => ANONYMOUS, 'topic_last_poster_name' => '', 'topic_last_poster_colour' => '',
+						'topic_poster' => ANONYMOUS, 'topic_first_poster_name' => 'Guest', 'topic_first_poster_colour' => '',
+						'topic_last_poster_id' => ANONYMOUS, 'topic_last_poster_name' => 'Guest', 'topic_last_poster_colour' => '',
 					),
 					array(
 						'topic_id' => 2,
@@ -72,8 +82,8 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 					),
 					array(
 						'topic_id' => 3,
-						'topic_poster' => ANONYMOUS, 'topic_first_poster_name' => '', 'topic_first_poster_colour' => '',
-						'topic_last_poster_id' => ANONYMOUS, 'topic_last_poster_name' => '', 'topic_last_poster_colour' => '',
+						'topic_poster' => ANONYMOUS, 'topic_first_poster_name' => 'Guest', 'topic_first_poster_colour' => '',
+						'topic_last_poster_id' => ANONYMOUS, 'topic_last_poster_name' => 'Guest', 'topic_last_poster_colour' => '',
 					),
 					array(
 						'topic_id' => 4,
@@ -82,9 +92,9 @@ class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 					),
 				),
 				array(
-					array('forum_id' => 1, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => '', 'forum_last_poster_colour' => ''),
+					array('forum_id' => 1, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => 'Guest', 'forum_last_poster_colour' => ''),
 					array('forum_id' => 2, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => 'Other', 'forum_last_poster_colour' => ''),
-					array('forum_id' => 3, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => '', 'forum_last_poster_colour' => ''),
+					array('forum_id' => 3, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => 'Guest', 'forum_last_poster_colour' => ''),
 					array('forum_id' => 4, 'forum_last_poster_id' => ANONYMOUS, 'forum_last_poster_name' => 'Other', 'forum_last_poster_colour' => ''),
 				),
 			),

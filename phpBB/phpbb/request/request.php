@@ -150,8 +150,6 @@ class request implements \phpbb\request\request_interface
 			return;
 		}
 
-		$this->type_cast_helper->add_magic_quotes($value);
-
 		// setting to null means unsetting
 		if ($value === null)
 		{
@@ -181,7 +179,7 @@ class request implements \phpbb\request\request_interface
 	* 										then specifying array("var", 1) as the name will return "a".
 	* @param	mixed			$default	A default value that is returned if the variable was not set.
 	* 										This function will always return a value of the same type as the default.
-	* @param	bool			$multibyte	If $default is a string this paramater has to be true if the variable may contain any UTF-8 characters
+	* @param	bool			$multibyte	If $default is a string this parameter has to be true if the variable may contain any UTF-8 characters
 	*										Default is false, causing all bytes outside the ASCII range (0-127) to be replaced with question marks
 	* @param	\phpbb\request\request_interface::POST|GET|REQUEST|COOKIE	$super_global
 	* 										Specifies which super global should be used
@@ -205,7 +203,7 @@ class request implements \phpbb\request\request_interface
 	* 										then specifying array("var", 1) as the name will return "a".
 	* @param	mixed			$default	A default value that is returned if the variable was not set.
 	* 										This function will always return a value of the same type as the default.
-	* @param	bool			$multibyte	If $default is a string this paramater has to be true if the variable may contain any UTF-8 characters
+	* @param	bool			$multibyte	If $default is a string this parameter has to be true if the variable may contain any UTF-8 characters
 	*										Default is false, causing all bytes outside the ASCII range (0-127) to be replaced with question marks
 	* @param	\phpbb\request\request_interface::POST|GET|REQUEST|COOKIE	$super_global
 	* 										Specifies which super global should be used
@@ -270,7 +268,7 @@ class request implements \phpbb\request\request_interface
 	* whatever).
 	*
 	* @param	string|array	$var_name		See \phpbb\request\request_interface::variable
-	* @param	mixed			$Default		See \phpbb\request\request_interface::variable
+	* @param	mixed			$default		See \phpbb\request\request_interface::variable
 	*
 	* @return	mixed	The server variable value.
 	*/
@@ -397,7 +395,7 @@ class request implements \phpbb\request\request_interface
 	* 										then specifying array("var", 1) as the name will return "a".
 	* @param	mixed			$default	A default value that is returned if the variable was not set.
 	* 										This function will always return a value of the same type as the default.
-	* @param	bool			$multibyte	If $default is a string this paramater has to be true if the variable may contain any UTF-8 characters
+	* @param	bool			$multibyte	If $default is a string this parameter has to be true if the variable may contain any UTF-8 characters
 	*										Default is false, causing all bytes outside the ASCII range (0-127) to be replaced with question marks
 	* @param	\phpbb\request\request_interface::POST|GET|REQUEST|COOKIE	$super_global
 	* 										Specifies which super global should be used

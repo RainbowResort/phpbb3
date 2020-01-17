@@ -30,6 +30,12 @@ if (in_array($mode, array('login', 'login_link', 'logout', 'confirm', 'sendpassw
 	define('IN_LOGIN', true);
 }
 
+if ($mode === 'delete_cookies')
+{
+	define('SKIP_CHECK_BAN', true);
+	define('SKIP_CHECK_DISABLED', true);
+}
+
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
@@ -57,8 +63,10 @@ switch ($mode)
 	break;
 
 	case 'sendpassword':
-		$module->load('ucp', 'remind');
-		$module->display($user->lang['UCP_REMIND']);
+		/** @var \phpbb\controller\helper $controller_helper */
+		$controller_helper = $phpbb_container->get('controller.helper');
+
+		redirect($controller_helper->route('phpbb_ucp_forgot_password_controller'));
 	break;
 
 	case 'register':
@@ -138,7 +146,7 @@ switch ($mode)
 			'AGREEMENT_TITLE'		=> $user->lang[$title],
 			'AGREEMENT_TEXT'		=> sprintf($user->lang[$message], $config['sitename'], generate_board_url()),
 			'U_BACK'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
-			'L_BACK'				=> $user->lang['BACK_TO_LOGIN'],
+			'L_BACK'				=> $user->lang['BACK_TO_PREV'],
 		));
 
 		page_footer();
@@ -386,6 +394,11 @@ if (!$config['allow_topic_notify'] && !$config['allow_forum_notify'])
 */
 $vars = array('module', 'id', 'mode');
 extract($phpbb_dispatcher->trigger_event('core.ucp_display_module_before', compact($vars)));
+
+$template->assign_block_vars('navlinks', array(
+	'BREADCRUMB_NAME'	=> $user->lang('UCP'),
+	'U_BREADCRUMB'		=> append_sid("{$phpbb_root_path}ucp.$phpEx"),
+));
 
 // Select the active module
 $module->set_active($id, $mode);

@@ -627,7 +627,7 @@ function generate_text_for_display($text, $uid, $bitfield, $flags, $censor_text 
 			}
 			else
 			{
-				$bbcode->bbcode($bitfield);
+				$bbcode->bbcode_set_bitfield($bitfield);
 			}
 
 			$bbcode->bbcode_second_pass($text, $uid);
@@ -1245,11 +1245,6 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count_a
 				$display_cat = ATTACHMENT_CATEGORY_NONE;
 			}
 
-			if ($display_cat == ATTACHMENT_CATEGORY_FLASH && !$user->optionget('viewflash'))
-			{
-				$display_cat = ATTACHMENT_CATEGORY_NONE;
-			}
-
 			$download_link = append_sid("{$phpbb_root_path}download/file.$phpEx", 'id=' . $attachment['attach_id']);
 			$l_downloaded_viewed = 'VIEWED_COUNTS';
 
@@ -1278,21 +1273,6 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count_a
 						'THUMB_IMAGE'		=> $thumbnail_link,
 					);
 
-					$update_count_ary[] = $attachment['attach_id'];
-				break;
-
-				// Macromedia Flash Files
-				case ATTACHMENT_CATEGORY_FLASH:
-					list($width, $height) = @getimagesize($filename);
-
-					$block_array += array(
-						'S_FLASH_FILE'	=> true,
-						'WIDTH'			=> $width,
-						'HEIGHT'		=> $height,
-						'U_VIEW_LINK'	=> $download_link . '&amp;view=1',
-					);
-
-					// Viewed/Heared File ... update the download count
 					$update_count_ary[] = $attachment['attach_id'];
 				break;
 
@@ -1482,6 +1462,8 @@ function truncate_string($string, $max_length = 60, $max_store_length = 255, $al
 * Get username details for placing into templates.
 * This function caches all modes on first call, except for no_profile and anonymous user - determined by $user_id.
 *
+* @html Username spans and links
+*
 * @param string $mode Can be profile (for getting an url to the profile), username (for obtaining the username), colour (for obtaining the user colour), full (for obtaining a html string representing a coloured link to the users profile) or no_profile (the same as full but forcing no profile link)
 * @param int $user_id The users id
 * @param string $username The users name
@@ -1501,6 +1483,7 @@ function get_username_string($mode, $user_id, $username, $username_colour = '', 
 	{
 		global $phpbb_root_path, $phpEx;
 
+		/** @html Username spans and links for usage in the template */
 		$_profile_cache['base_url'] = append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=viewprofile&amp;u={USER_ID}');
 		$_profile_cache['tpl_noprofile'] = '<span class="username">{USERNAME}</span>';
 		$_profile_cache['tpl_noprofile_colour'] = '<span style="color: {USERNAME_COLOUR};" class="username-coloured">{USERNAME}</span>';
@@ -1672,7 +1655,7 @@ class bitfield
 {
 	var $data;
 
-	function bitfield($bitfield = '')
+	function __construct($bitfield = '')
 	{
 		$this->data = base64_decode($bitfield);
 	}
@@ -1756,5 +1739,50 @@ class bitfield
 	function merge($bitfield)
 	{
 		$this->data = $this->data | $bitfield->get_blob();
+	}
+}
+
+/**
+ * Formats the quote according to the given BBCode status setting
+ *
+ * @param phpbb\language\language				$language Language class
+ * @param parse_message 						$message_parser Message parser class
+ * @param phpbb\textformatter\utils_interface	$text_formatter_utils Text formatter utilities
+ * @param bool 									$bbcode_status The status of the BBCode setting
+ * @param array 								$quote_attributes The attributes of the quoted post
+ * @param string 								$message_link Link of the original quoted post
+ */
+function phpbb_format_quote($language, $message_parser, $text_formatter_utils, $bbcode_status, $quote_attributes, $message_link = '')
+{
+	if ($bbcode_status)
+	{
+		$quote_text = $text_formatter_utils->generate_quote(
+			censor_text($message_parser->message),
+			$quote_attributes
+		);
+
+		$message_parser->message = $quote_text . "\n\n";
+	}
+	else
+	{
+		$offset = 0;
+		$quote_string = "&gt; ";
+		$message = censor_text(trim($message_parser->message));
+		// see if we are nesting. It's easily tricked but should work for one level of nesting
+		if (strpos($message, "&gt;") !== false)
+		{
+			$offset = 10;
+		}
+		$message = utf8_wordwrap($message, 75 + $offset, "\n");
+
+		$message = $quote_string . $message;
+		$message = str_replace("\n", "\n" . $quote_string, $message);
+
+		$message_parser->message = $quote_attributes['author'] . " " . $language->lang('WROTE') . ":\n" . $message . "\n";
+	}
+
+	if ($message_link)
+	{
+		$message_parser->message = $message_link . $message_parser->message;
 	}
 }

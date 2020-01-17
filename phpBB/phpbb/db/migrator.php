@@ -760,7 +760,7 @@ class migrator
 
 				$condition = $parameters[0];
 
-				if (!$condition)
+				if (!$condition || (is_array($condition) && !$this->run_step($condition, $last_result, $reverse)))
 				{
 					return false;
 				}
@@ -784,7 +784,7 @@ class migrator
 				{
 					return array(
 						$parameters[0],
-						array($last_result),
+						isset($parameters[1]) ? array_merge($parameters[1], array($last_result)) : array($last_result),
 					);
 				}
 			break;

@@ -33,7 +33,6 @@ $post_id	= $request->variable('p', 0);
 $topic_id	= $request->variable('t', 0);
 $forum_id	= $request->variable('f', 0);
 $draft_id	= $request->variable('d', 0);
-$lastclick	= $request->variable('lastclick', 0);
 
 $preview	= (isset($_POST['preview'])) ? true : false;
 $save		= (isset($_POST['save'])) ? true : false;
@@ -41,7 +40,7 @@ $load		= (isset($_POST['load'])) ? true : false;
 $confirm	= $request->is_set_post('confirm');
 $cancel		= (isset($_POST['cancel']) && !isset($_POST['save'])) ? true : false;
 
-$refresh	= (isset($_POST['add_file']) || isset($_POST['delete_file']) || isset($_POST['cancel_unglobalise']) || $save || $load || $preview);
+$refresh	= (isset($_POST['add_file']) || isset($_POST['delete_file']) || $save || $load || $preview);
 $submit = $request->is_set_post('post') && !$refresh && !$preview;
 $mode		= $request->variable('mode', '');
 
@@ -68,7 +67,6 @@ $current_time = time();
 * @var	int		topic_id	ID of the topic
 * @var	int		forum_id	ID of the forum
 * @var	int		draft_id	ID of the draft
-* @var	int		lastclick	Timestamp of when the form was last loaded
 * @var	bool	submit		Whether or not the form has been submitted
 * @var	bool	preview		Whether or not the post is being previewed
 * @var	bool	save		Whether or not a draft is being saved
@@ -85,13 +83,13 @@ $current_time = time();
 *							language keys.
 * @since 3.1.0-a1
 * @changed 3.1.2-RC1			Removed 'delete' var as it does not exist
+* @changed 3.2.4-RC1		Remove unused 'lastclick' var
 */
 $vars = array(
 	'post_id',
 	'topic_id',
 	'forum_id',
 	'draft_id',
-	'lastclick',
 	'submit',
 	'preview',
 	'save',
@@ -224,6 +222,25 @@ if (!$post_data)
 	trigger_error(($mode == 'post' || $mode == 'bump' || $mode == 'reply') ? 'NO_TOPIC' : 'NO_POST');
 }
 
+/**
+* This event allows you to bypass reply/quote test of an unapproved post.
+*
+* @event core.posting_modify_row_data
+* @var	array	post_data	All post data from database
+* @var	string	mode		What action to take if the form has been submitted
+*							post|reply|quote|edit|delete|bump|smilies|popup
+* @var	int		topic_id	ID of the topic
+* @var	int		forum_id	ID of the forum
+* @since 3.2.8-RC1
+*/
+$vars = array(
+	'post_data',
+	'mode',
+	'topic_id',
+	'forum_id',
+);
+extract($phpbb_dispatcher->trigger_event('core.posting_modify_row_data', compact($vars)));
+
 // Not able to reply to unapproved posts/topics
 // TODO: add more descriptive language key
 if ($auth->acl_get('m_approve', $forum_id) && ((($mode == 'reply' || $mode == 'bump') && $post_data['topic_visibility'] != ITEM_APPROVED) || ($mode == 'quote' && $post_data['post_visibility'] != ITEM_APPROVED)))
@@ -238,12 +255,6 @@ if ($mode == 'popup')
 }
 
 $user->setup(array('posting', 'mcp', 'viewtopic'), $post_data['forum_style']);
-
-if ($config['enable_post_confirm'] && !$user->data['is_registered'])
-{
-	$captcha = $phpbb_container->get('captcha.factory')->get_instance($config['captcha_plugin']);
-	$captcha->init(CONFIRM_POST);
-}
 
 // Use post_row values in favor of submitted ones...
 $forum_id	= (!empty($post_data['forum_id'])) ? (int) $post_data['forum_id'] : (int) $forum_id;
@@ -354,7 +365,6 @@ switch ($mode)
 * @var	int		topic_id	ID of the topic
 * @var	int		forum_id	ID of the forum
 * @var	int		draft_id	ID of the draft
-* @var	int		lastclick	Timestamp of when the form was last loaded
 * @var	bool	submit		Whether or not the form has been submitted
 * @var	bool	preview		Whether or not the post is being previewed
 * @var	bool	save		Whether or not a draft is being saved
@@ -370,13 +380,13 @@ switch ($mode)
 * @var	array	post_data	All post data from database
 * @since 3.1.3-RC1
 * @changed 3.1.10-RC1 Added post_data
+* @changed 3.2.4-RC1 		Remove unused 'lastclick' var
 */
 $vars = array(
 	'post_id',
 	'topic_id',
 	'forum_id',
 	'draft_id',
-	'lastclick',
 	'submit',
 	'preview',
 	'save',
@@ -409,6 +419,12 @@ if (!$is_authed || !empty($error))
 	}
 
 	login_box('', $message);
+}
+
+if ($config['enable_post_confirm'] && !$user->data['is_registered'])
+{
+	$captcha = $phpbb_container->get('captcha.factory')->get_instance($config['captcha_plugin']);
+	$captcha->init(CONFIRM_POST);
 }
 
 // Is the user able to post within this forum?
@@ -599,6 +615,20 @@ if (isset($post_data['post_text']))
 
 // Set some default variables
 $uninit = array('post_attachment' => 0, 'poster_id' => $user->data['user_id'], 'enable_magic_url' => 0, 'topic_status' => 0, 'topic_type' => POST_NORMAL, 'post_subject' => '', 'topic_title' => '', 'post_time' => 0, 'post_edit_reason' => '', 'notify_set' => 0);
+
+/**
+* This event allows you to modify the default variables for post_data, and unset them in post_data if needed
+*
+* @event core.posting_modify_default_variables
+* @var	array	post_data	Array with post data
+* @var	array	uninit		Array with default vars to put into post_data, if they aren't there
+* @since 3.2.5-RC1
+*/
+$vars = array(
+	'post_data',
+	'uninit',
+);
+extract($phpbb_dispatcher->trigger_event('core.posting_modify_default_variables', compact($vars)));
 
 foreach ($uninit as $var_name => $default_value)
 {
@@ -835,6 +865,7 @@ if ($load && ($mode == 'reply' || $mode == 'quote' || $mode == 'post') && $post_
 	load_drafts($topic_id, $forum_id);
 }
 
+/** @var \phpbb\textformatter\utils_interface $bbcode_utils */
 $bbcode_utils = $phpbb_container->get('text_formatter.utils');
 
 if ($submit || $preview || $refresh)
@@ -943,7 +974,10 @@ if ($submit || $preview || $refresh)
 	}
 
 	// Parse Attachments - before checksum is calculated
-	$message_parser->parse_attachments('fileupload', $mode, $forum_id, $submit, $preview, $refresh);
+	if ($message_parser->check_attachment_form_token($language, $request, 'posting'))
+	{
+		$message_parser->parse_attachments('fileupload', $mode, $forum_id, $submit, $preview, $refresh);
+	}
 
 	/**
 	* This event allows you to modify message text before parsing
@@ -1147,12 +1181,27 @@ if ($submit || $preview || $refresh)
 		$error[] = $user->lang['EMPTY_SUBJECT'];
 	}
 
-	// Check for out-of-bounds characters that are currently
-	// not supported by utf8_bin in MySQL
-	if (preg_match_all('/[\x{10000}-\x{10FFFF}]/u', $post_data['post_subject'], $matches))
+	/**
+	 * Replace Emojis and other 4bit UTF-8 chars not allowed by MySQL to UCR/NCR.
+	 * Using their Numeric Character Reference's Hexadecimal notation.
+	 * Check the permissions for posting Emojis first.
+	 */
+	if ($auth->acl_get('u_emoji'))
 	{
-		$character_list = implode('<br />', $matches[0]);
-		$error[] = $user->lang('UNSUPPORTED_CHARACTERS_SUBJECT', $character_list);
+		$post_data['post_subject'] = utf8_encode_ucr($post_data['post_subject']);
+	}
+	else
+	{
+		/**
+		 * Check for out-of-bounds characters that are currently
+		 * not supported by utf8_bin in MySQL
+		 */
+		if (preg_match_all('/[\x{10000}-\x{10FFFF}]/u', $post_data['post_subject'], $matches))
+		{
+			$character_list = implode('<br>', $matches[0]);
+
+			$error[] = $user->lang('UNSUPPORTED_CHARACTERS_SUBJECT', $character_list);
+		}
 	}
 
 	$post_data['poll_last_vote'] = (isset($post_data['poll_last_vote'])) ? $post_data['poll_last_vote'] : 0;
@@ -1630,40 +1679,49 @@ if ($generate_quote)
 	// Remove attachment bbcode tags from the quoted message to avoid mixing with the new post attachments if any
 	$message_parser->message = preg_replace('#\[attachment=([0-9]+)\](.*?)\[\/attachment\]#uis', '\\2', $message_parser->message);
 
-	if ($config['allow_bbcode'])
-	{
-		$message_parser->message = $bbcode_utils->generate_quote(
-			censor_text($message_parser->message),
-			array(
-				'author'  => $post_data['quote_username'],
-				'post_id' => $post_data['post_id'],
-				'time'    => $post_data['post_time'],
-				'user_id' => $post_data['poster_id'],
-			)
-		);
-		$message_parser->message .= "\n\n";
-	}
-	else
-	{
-		$offset = 0;
-		$quote_string = "&gt; ";
-		$message = censor_text(trim($message_parser->message));
-		// see if we are nesting. It's easily tricked but should work for one level of nesting
-		if (strpos($message, "&gt;") !== false)
-		{
-			$offset = 10;
-		}
-		$message = utf8_wordwrap($message, 75 + $offset, "\n");
+	$quote_attributes = array(
+						'author'  => $post_data['quote_username'],
+						'post_id' => $post_data['post_id'],
+						'time'    => $post_data['post_time'],
+						'user_id' => $post_data['poster_id'],
+	);
 
-		$message = $quote_string . $message;
-		$message = str_replace("\n", "\n" . $quote_string, $message);
-		$message_parser->message =  $post_data['quote_username'] . " " . $user->lang['WROTE'] . ":\n" . $message . "\n";
-	}
+	/**
+	* This event allows you to modify the quote attributes of the post being quoted
+	*
+	* @event core.posting_modify_quote_attributes
+	* @var	array	quote_attributes	Array with quote attributes
+	* @var	array	post_data			Array with post data
+	* @since 3.2.6-RC1
+	*/
+	$vars = array(
+		'quote_attributes',
+		'post_data',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.posting_modify_quote_attributes', compact($vars)));
+
+	/** @var \phpbb\language\language $language */
+	$language = $phpbb_container->get('language');
+	phpbb_format_quote($language, $message_parser, $bbcode_utils, $bbcode_status, $quote_attributes);
 }
 
 if (($mode == 'reply' || $mode == 'quote') && !$submit && !$preview && !$refresh)
 {
 	$post_data['post_subject'] = ((strpos($post_data['post_subject'], 'Re: ') !== 0) ? 'Re: ' : '') . censor_text($post_data['post_subject']);
+
+	$post_subject = $post_data['post_subject'];
+
+	/**
+	* This event allows you to modify the post subject of the post being quoted
+	*
+	* @event core.posting_modify_post_subject
+	* @var	string		post_subject	String with the post subject already censored.
+	* @since 3.2.8-RC1
+	*/
+	$vars = array('post_subject');
+	extract($phpbb_dispatcher->trigger_event('core.posting_modify_post_subject', compact($vars)));
+
+	$post_data['post_subject'] = $post_subject;
 }
 
 $attachment_data = $message_parser->attachment_data;
@@ -1762,7 +1820,6 @@ if ($config['enable_post_confirm'] && !$user->data['is_registered'] && (isset($c
 }
 
 $s_hidden_fields = ($mode == 'reply' || $mode == 'quote') ? '<input type="hidden" name="topic_cur_post_id" value="' . $post_data['topic_last_post_id'] . '" />' : '';
-$s_hidden_fields .= '<input type="hidden" name="lastclick" value="' . $current_time . '" />';
 $s_hidden_fields .= ($draft_id || isset($_REQUEST['draft_loaded'])) ? '<input type="hidden" name="draft_loaded" value="' . $request->variable('draft_loaded', $draft_id) . '" />' : '';
 
 if ($mode == 'edit')

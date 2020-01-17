@@ -110,7 +110,7 @@ class user extends \phpbb\session
 	function setup($lang_set = false, $style_id = false)
 	{
 		global $db, $request, $template, $config, $auth, $phpEx, $phpbb_root_path, $cache;
-		global $phpbb_dispatcher;
+		global $phpbb_dispatcher, $phpbb_container;
 
 		$this->language->set_default_language($config['default_lang']);
 
@@ -188,6 +188,9 @@ class user extends \phpbb\session
 
 		/**
 		* Event to load language files and modify user data on every page
+		*
+		* Note: To load language file with this event, see description
+		* of lang_set_ext variable.
 		*
 		* @event core.user_setup
 		* @var	array	user_data			Array with user's data row
@@ -278,9 +281,43 @@ class user extends \phpbb\session
 			$db->sql_freeresult($result);
 		}
 
+		// Fallback to board's default style
 		if (!$this->style)
 		{
-			trigger_error('NO_STYLE_DATA', E_USER_ERROR);
+			// Verify default style exists in the database
+			$sql = 'SELECT style_id
+				FROM ' . STYLES_TABLE . '
+				WHERE style_id = ' . (int) $config['default_style'];
+			$result = $db->sql_query($sql);
+			$style_id = (int) $db->sql_fetchfield('style_id');
+			$db->sql_freeresult($result);
+
+			if ($style_id > 0)
+			{
+				$db->sql_transaction('begin');
+
+				// Update $user row
+				$sql = 'SELECT *
+					FROM ' . STYLES_TABLE . '
+					WHERE style_id = ' . (int) $config['default_style'];
+				$result = $db->sql_query($sql);
+				$this->style = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+
+				// Update user style preference
+				$sql = 'UPDATE ' . USERS_TABLE . '
+					SET user_style = ' . (int) $style_id . '
+					WHERE user_id = ' . (int) $this->data['user_id'];
+				$db->sql_query($sql);
+
+				$db->sql_transaction('commit');
+			}
+		}
+
+		// This should never happen
+		if (!$this->style)
+		{
+			trigger_error($this->language->lang('NO_STYLE_DATA', $this->data['user_style'], $this->data['user_id']), E_USER_ERROR);
 		}
 
 		// Now parse the cfg file and cache it
@@ -324,8 +361,8 @@ class user extends \phpbb\session
 		}
 
 		// Disable board if the install/ directory is still present
-		// For the brave development army we do not care about this, else we need to comment out this everytime we develop locally
-		if (!defined('DEBUG') && !defined('ADMIN_START') && !defined('IN_INSTALL') && !defined('IN_LOGIN') && file_exists($phpbb_root_path . 'install') && !is_file($phpbb_root_path . 'install'))
+		// For the brave development army we do not care about this, else we need to comment out this every time we develop locally
+		if (!$phpbb_container->getParameter('allow_install_dir') && !defined('ADMIN_START') && !defined('IN_INSTALL') && !defined('IN_LOGIN') && file_exists($phpbb_root_path . 'install') && !is_file($phpbb_root_path . 'install'))
 		{
 			// Adjust the message slightly according to the permissions
 			if ($auth->acl_gets('a_', 'm_') || $auth->acl_getf_global('m_'))
@@ -340,7 +377,7 @@ class user extends \phpbb\session
 		}
 
 		// Is board disabled and user not an admin or moderator?
-		if ($config['board_disable'] && !defined('IN_LOGIN') && !defined('SKIP_CHECK_DISABLED') && !$auth->acl_gets('a_', 'm_') && !$auth->acl_getf_global('m_'))
+		if ($config['board_disable'] && !defined('IN_INSTALL') && !defined('IN_LOGIN') && !defined('SKIP_CHECK_DISABLED') && !$auth->acl_gets('a_', 'm_') && !$auth->acl_getf_global('m_'))
 		{
 			if ($this->data['is_bot'])
 			{
@@ -443,7 +480,7 @@ class user extends \phpbb\session
 	* @return int|bool     The plural-case we need to use for the number plural-rule combination, false if $force_rule
 	* 					   was invalid.
 	*
-	* @deprecated: 3.2.0-dev (To be removed: 3.3.0)
+	* @deprecated: 3.2.0-dev (To be removed: 4.0.0)
 	*/
 	function get_plural_form($number, $force_rule = false)
 	{
@@ -454,8 +491,8 @@ class user extends \phpbb\session
 	* Add Language Items - use_db and use_help are assigned where needed (only use them to force inclusion)
 	*
 	* @param mixed $lang_set specifies the language entries to include
-	* @param bool $use_db internal variable for recursion, do not use	@deprecated 3.2.0-dev (To be removed: 3.3.0)
-	* @param bool $use_help internal variable for recursion, do not use	@deprecated 3.2.0-dev (To be removed: 3.3.0)
+	* @param bool $use_db internal variable for recursion, do not use	@deprecated 3.2.0-dev (To be removed: 4.0.0)
+	* @param bool $use_help internal variable for recursion, do not use	@deprecated 3.2.0-dev (To be removed: 4.0.0)
 	* @param string $ext_name The extension to load language from, or empty for core files
 	*
 	* Examples:
@@ -470,7 +507,7 @@ class user extends \phpbb\session
 	* Note: $use_db and $use_help should be removed. The old function was kept for BC purposes,
 	* 		so the BC logic is handled here.
 	*
-	* @deprecated: 3.2.0-dev (To be removed: 3.3.0)
+	* @deprecated: 3.2.0-dev (To be removed: 4.0.0)
 	*/
 	function add_lang($lang_set, $use_db = false, $use_help = false, $ext_name = '')
 	{
@@ -511,7 +548,7 @@ class user extends \phpbb\session
 	/**
 	 * BC function for loading language files
 	 *
-	 * @deprecated 3.2.0-dev (To be removed: 3.3.0)
+	 * @deprecated 3.2.0-dev (To be removed: 4.0.0)
 	 */
 	private function set_lang($lang_set, $use_help, $ext_name)
 	{
@@ -547,7 +584,7 @@ class user extends \phpbb\session
 	*
 	* Note: $use_db and $use_help should be removed. Kept for BC purposes.
 	*
-	* @deprecated: 3.2.0-dev (To be removed: 3.3.0)
+	* @deprecated: 3.2.0-dev (To be removed: 4.0.0)
 	*/
 	function add_lang_ext($ext_name, $lang_set, $use_db = false, $use_help = false)
 	{
@@ -749,7 +786,7 @@ class user extends \phpbb\session
 	}
 
 	/**
-	* Funtion to make the user leave the NEWLY_REGISTERED system group.
+	* Function to make the user leave the NEWLY_REGISTERED system group.
 	* @access public
 	*/
 	function leave_newly_registered()

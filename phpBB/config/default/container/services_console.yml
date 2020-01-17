@@ -158,14 +158,6 @@ services:
         tags:
             - { name: console.command }
 
-    console.command.fixup.recalculate_email_hash:
-        class: phpbb\console\command\fixup\recalculate_email_hash
-        arguments:
-            - '@user'
-            - '@dbal.conn'
-        tags:
-            - { name: console.command }
-
     console.command.fixup.update_hashes:
         class: phpbb\console\command\fixup\update_hashes
         arguments:
@@ -208,6 +200,7 @@ services:
     console.command.thumbnail.delete:
         class: phpbb\console\command\thumbnail\delete
         arguments:
+            - '@config'
             - '@user'
             - '@dbal.conn'
             - '%core.root_path%'
@@ -217,6 +210,7 @@ services:
     console.command.thumbnail.generate:
         class: phpbb\console\command\thumbnail\generate
         arguments:
+            - '@config'
             - '@user'
             - '@dbal.conn'
             - '@cache'

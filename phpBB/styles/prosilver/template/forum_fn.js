@@ -273,11 +273,9 @@ function insertUser(formId, value) {
 function insert_marked_users(formId, users) {
 	'use strict';
 
-	for (var i = 0; i < users.length; i++) {
-		if (users[i].checked) {
-			insertUser(formId, users[i].value);
-		}
-	}
+	$(users).filter(':checked').each(function() {
+		insertUser(formId, this.value);
+	});
 
 	window.close();
 }
@@ -462,7 +460,7 @@ function parseDocument($container) {
 			$linksLast = $linksNotSkip.filter(filterLast), // The items that will be hidden last
 			persistent = $this.attr('id') === 'nav-main', // Does this list already have a menu (such as quick-links)?
 			html = '<li class="responsive-menu hidden"><a href="javascript:void(0);" class="js-responsive-menu-link responsive-menu-link"><i class="icon fa-bars fa-fw" aria-hidden="true"></i></a><div class="dropdown"><div class="pointer"><div class="pointer-inner" /></div><ul class="dropdown-contents" /></div></li>',
-			slack = 3; // Vertical slack space (in pixels). Determines how sensitive the script is in determining whether a line-break has occured.
+			slack = 3; // Vertical slack space (in pixels). Determines how sensitive the script is in determining whether a line-break has occurred.
 
 		// Add a hidden drop-down menu to each links list (except those that already have one)
 		if (!persistent) {
@@ -612,7 +610,7 @@ function parseDocument($container) {
 
 		// If there are any images in the links list, run the check again after they have loaded
 		$linksAll.find('img').each(function() {
-			$(this).load(function() {
+			$(this).on('load', function() {
 				check();
 			});
 		});

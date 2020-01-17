@@ -176,6 +176,7 @@ a:hover	{ text-decoration: underline; }
 }
 
 .site_logo {
+	background-repeat: no-repeat;
 	display: inline-block;
 	width: 149px;
 	height: 52px;
@@ -1272,6 +1273,10 @@ ul.linklist:after,
 
 .dropdown-page-jump input.tiny {
 	width: 50px;
+}
+
+.dropdown .clone.hidden  {
+	display: none;
 }
 
 .dropdown .clone.hidden + li.separator {

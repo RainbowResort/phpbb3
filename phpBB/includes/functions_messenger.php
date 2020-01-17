@@ -37,7 +37,7 @@ class messenger
 	/**
 	* Constructor
 	*/
-	function messenger($use_queue = true)
+	function __construct($use_queue = true)
 	{
 		global $config;
 
@@ -181,10 +181,9 @@ class messenger
 	/**
 	* Adds X-AntiAbuse headers
 	*
-	* @param array $config		Configuration array
-	* @param user $user			A user object
-	*
-	* @return null
+	* @param \phpbb\config\config	$config		Config object
+	* @param \phpbb\user			$user		User object
+	* @return void
 	*/
 	function anti_abuse_headers($config, $user)
 	{
@@ -326,9 +325,26 @@ class messenger
 		));
 
 		$subject = $this->subject;
-		$message = $this->msg;
+		$template = $this->template;
 		/**
-		* Event to modify notification message text before parsing
+		* Event to modify the template before parsing
+		*
+		* @event core.modify_notification_template
+		* @var	int						method		User notification method NOTIFY_EMAIL|NOTIFY_IM|NOTIFY_BOTH
+		* @var	bool					break		Flag indicating if the function only formats the subject
+		*											and the message without sending it
+		* @var	string					subject		The message subject
+		* @var \phpbb\template\template template	The (readonly) template object
+		* @since 3.2.4-RC1
+		*/
+		$vars = array('method', 'break', 'subject', 'template');
+		extract($phpbb_dispatcher->trigger_event('core.modify_notification_template', compact($vars)));
+
+		// Parse message through template
+		$message = trim($this->template->assign_display('body'));
+
+		/**
+		* Event to modify notification message text after parsing
 		*
 		* @event core.modify_notification_message
 		* @var	int		method	User notification method NOTIFY_EMAIL|NOTIFY_IM|NOTIFY_BOTH
@@ -338,19 +354,12 @@ class messenger
 		* @var	string	message	The message text
 		* @since 3.1.11-RC1
 		*/
-		$vars = array(
-			'method',
-			'break',
-			'subject',
-			'message',
-		);
+		$vars = array('method', 'break', 'subject', 'message');
 		extract($phpbb_dispatcher->trigger_event('core.modify_notification_message', compact($vars)));
+
 		$this->subject = $subject;
 		$this->msg = $message;
-		unset($subject, $message);
-
-		// Parse message through template
-		$this->msg = trim($this->template->assign_display('body'));
+		unset($subject, $message, $template);
 
 		// Because we use \n for newlines in the body message we need to fix line encoding errors for those admins who uploaded email template files in the wrong encoding
 		$this->msg = str_replace("\r\n", "\n", $this->msg);
@@ -367,6 +376,12 @@ class messenger
 		else
 		{
 			$this->subject = (($this->subject != '') ? $this->subject : $user->lang['NO_EMAIL_SUBJECT']);
+		}
+
+		if (preg_match('#^(List-Unsubscribe:(.*?))$#m', $this->msg, $match))
+		{
+			$this->extra_headers[] = $match[1];
+			$drop_header .= '[\r\n]*?' . preg_quote($match[1], '#');
 		}
 
 		if ($drop_header)
@@ -517,7 +532,7 @@ class messenger
 	*/
 	function msg_email()
 	{
-		global $config;
+		global $config, $phpbb_dispatcher;
 
 		if (empty($config['email_enable']))
 		{
@@ -544,6 +559,33 @@ class messenger
 
 		$contact_name = htmlspecialchars_decode($config['board_contact_name']);
 		$board_contact = (($contact_name !== '') ? '"' . mail_encode($contact_name) . '" ' : '') . '<' . $config['board_contact'] . '>';
+
+		$break = false;
+		$addresses = $this->addresses;
+		$subject = $this->subject;
+		$msg = $this->msg;
+		/**
+		* Event to send message via external transport
+		*
+		* @event core.notification_message_email
+		* @var	bool	break		Flag indicating if the function return after hook
+		* @var	array	addresses 	The message recipients
+		* @var	string	subject		The message subject
+		* @var	string	msg			The message text
+		* @since 3.2.4-RC1
+		*/
+		$vars = array(
+			'break',
+			'addresses',
+			'subject',
+			'msg',
+		);
+		extract($phpbb_dispatcher->trigger_event('core.notification_message_email', compact($vars)));
+
+		if ($break)
+		{
+			return true;
+		}
 
 		if (empty($this->replyto))
 		{
@@ -750,7 +792,7 @@ class queue
 	/**
 	* constructor
 	*/
-	function queue()
+	function __construct()
 	{
 		global $phpEx, $phpbb_root_path, $phpbb_filesystem, $phpbb_container;
 
@@ -783,7 +825,7 @@ class queue
 	*/
 	function process()
 	{
-		global $config, $phpEx, $phpbb_root_path, $user;
+		global $config, $phpEx, $phpbb_root_path, $user, $phpbb_dispatcher;
 
 		$lock = new \phpbb\lock\flock($this->cache_file);
 		$lock->acquire();
@@ -880,23 +922,45 @@ class queue
 				switch ($object)
 				{
 					case 'email':
-						$err_msg = '';
-						$to = (!$to) ? 'undisclosed-recipients:;' : $to;
+						$break = false;
+						/**
+						* Event to send message via external transport
+						*
+						* @event core.notification_message_process
+						* @var	bool	break		Flag indicating if the function return after hook
+						* @var	array	addresses 	The message recipients
+						* @var	string	subject		The message subject
+						* @var	string	msg			The message text
+						* @since 3.2.4-RC1
+						*/
+						$vars = array(
+							'break',
+							'addresses',
+							'subject',
+							'msg',
+						);
+						extract($phpbb_dispatcher->trigger_event('core.notification_message_process', compact($vars)));
 
-						if ($config['smtp_delivery'])
+						if (!$break)
 						{
-							$result = smtpmail($addresses, mail_encode($subject), wordwrap(utf8_wordwrap($msg), 997, "\n", true), $err_msg, $headers);
-						}
-						else
-						{
-							$result = phpbb_mail($to, $subject, $msg, $headers, PHP_EOL, $err_msg);
-						}
+							$err_msg = '';
+							$to = (!$to) ? 'undisclosed-recipients:;' : $to;
 
-						if (!$result)
-						{
-							$messenger = new messenger();
-							$messenger->error('EMAIL', $err_msg);
-							continue 2;
+							if ($config['smtp_delivery'])
+							{
+								$result = smtpmail($addresses, mail_encode($subject), wordwrap(utf8_wordwrap($msg), 997, "\n", true), $err_msg, $headers);
+							}
+							else
+							{
+								$result = phpbb_mail($to, $subject, $msg, $headers, PHP_EOL, $err_msg);
+							}
+
+							if (!$result)
+							{
+								$messenger = new messenger();
+								$messenger->error('EMAIL', $err_msg);
+								continue 2;
+							}
 						}
 					break;
 
@@ -1264,7 +1328,7 @@ class smtp_class
 	var $backtrace = false;
 	var $backtrace_log = array();
 
-	function smtp_class()
+	function __construct()
 	{
 		// Always create a backtrace for admins to identify SMTP problems
 		$this->backtrace = true;
@@ -1517,6 +1581,14 @@ class smtp_class
 	*/
 	protected function starttls()
 	{
+		global $config;
+
+		// allow SMTPS (what was used by phpBB 3.0) if hostname is prefixed with tls:// or ssl://
+		if (strpos($config['smtp_host'], 'tls://') === 0 || strpos($config['smtp_host'], 'ssl://') === 0)
+		{
+			return true;
+		}
+
 		if (!function_exists('stream_socket_enable_crypto'))
 		{
 			return false;
@@ -1539,7 +1611,9 @@ class smtp_class
 
 		if (socket_set_blocking($this->socket, 1))
 		{
-			$result = stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+			// https://secure.php.net/manual/en/function.stream-socket-enable-crypto.php#119122
+			$crypto = (phpbb_version_compare(PHP_VERSION, '5.6.7', '<')) ? STREAM_CRYPTO_METHOD_TLS_CLIENT : STREAM_CRYPTO_METHOD_SSLv23_CLIENT;
+			$result = stream_socket_enable_crypto($this->socket, true, $crypto);
 			socket_set_blocking($this->socket, (int) $stream_meta['blocked']);
 		}
 
@@ -1819,14 +1893,21 @@ function mail_encode($str, $eol = "\r\n")
 }
 
 /**
-* Wrapper for sending out emails with the PHP's mail function
-*/
+ * Wrapper for sending out emails with the PHP's mail function
+ */
 function phpbb_mail($to, $subject, $msg, $headers, $eol, &$err_msg)
 {
 	global $config, $phpbb_root_path, $phpEx;
 
-	// We use the EOL character for the OS here because the PHP mail function does not correctly transform line endings. On Windows SMTP is used (SMTP is \r\n), on UNIX a command is used...
-	// Reference: http://bugs.php.net/bug.php?id=15841
+	// Convert Numeric Character References to UTF-8 chars (ie. Emojis)
+	$subject = utf8_decode_ncr($subject);
+	$msg = utf8_decode_ncr($msg);
+
+	/**
+	 * We use the EOL character for the OS here because the PHP mail function does not correctly transform line endings.
+	 * On Windows SMTP is used (SMTP is \r\n), on UNIX a command is used...
+	 * Reference: http://bugs.php.net/bug.php?id=15841
+	 */
 	$headers = implode($eol, $headers);
 
 	if (!class_exists('\phpbb\error_collector'))
@@ -1837,10 +1918,14 @@ function phpbb_mail($to, $subject, $msg, $headers, $eol, &$err_msg)
 	$collector = new \phpbb\error_collector;
 	$collector->install();
 
-	// On some PHP Versions mail() *may* fail if there are newlines within the subject.
-	// Newlines are used as a delimiter for lines in mail_encode() according to RFC 2045 section 6.8.
-	// Because PHP can't decide what is wanted we revert back to the non-RFC-compliant way of separating by one space (Use '' as parameter to mail_encode() results in SPACE used)
+	/**
+	 * On some PHP Versions mail() *may* fail if there are newlines within the subject.
+	 * Newlines are used as a delimiter for lines in mail_encode() according to RFC 2045 section 6.8.
+	 * Because PHP can't decide what is wanted we revert back to the non-RFC-compliant way of separating by one space
+	 * (Use '' as parameter to mail_encode() results in SPACE used)
+	 */
 	$additional_parameters = $config['email_force_sender'] ? '-f' . $config['board_email'] : '';
+
 	$result = mail($to, mail_encode($subject, ''), wordwrap(utf8_wordwrap($msg), 997, "\n", true), $headers, $additional_parameters);
 
 	$collector->uninstall();

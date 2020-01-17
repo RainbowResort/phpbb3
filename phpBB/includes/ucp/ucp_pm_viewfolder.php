@@ -32,6 +32,8 @@ function view_folder($id, $mode, $folder_id, $folder)
 
 	$folder_info = get_pm_from($folder_id, $folder, $user->data['user_id']);
 
+	add_form_key('ucp_pm_view_folder');
+
 	if (!$submit_export)
 	{
 		$user->add_lang('viewforum');
@@ -39,7 +41,7 @@ function view_folder($id, $mode, $folder_id, $folder)
 		// Grab icons
 		$icons = $cache->obtain_icons();
 
-		$color_rows = array('marked', 'replied');
+		$color_rows = array('message_reported', 'marked', 'replied');
 
 		$_module = new p_master();
 		$_module->list_modules('ucp');
@@ -138,9 +140,9 @@ function view_folder($id, $mode, $folder_id, $folder)
 				$row_indicator = '';
 				foreach ($color_rows as $var)
 				{
-					if (($var != 'friend' && $var != 'foe' && $row['pm_' . $var])
+					if (($var !== 'friend' && $var !== 'foe' && $row[($var === 'message_reported') ? $var : "pm_{$var}"])
 						||
-						(($var == 'friend' || $var == 'foe') && isset(${$var}[$row['author_id']]) && ${$var}[$row['author_id']]))
+						(($var === 'friend' || $var === 'foe') && isset(${$var}[$row['author_id']]) && ${$var}[$row['author_id']]))
 					{
 						$row_indicator = $var;
 						break;
@@ -196,6 +198,11 @@ function view_folder($id, $mode, $folder_id, $folder)
 		$export_type = $request->variable('export_option', '');
 		$enclosure = $request->variable('enclosure', '');
 		$delimiter = $request->variable('delimiter', '');
+
+		if (!check_form_key('ucp_pm_view_folder'))
+		{
+			trigger_error('FORM_INVALID');
+		}
 
 		if ($export_type == 'CSV' && ($delimiter === '' || $enclosure === ''))
 		{

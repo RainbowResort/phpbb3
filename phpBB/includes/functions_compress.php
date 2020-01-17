@@ -210,7 +210,7 @@ class compress_zip extends compress
 	/**
 	* Constructor
 	*/
-	function compress_zip($mode, $file)
+	function __construct($mode, $file)
 	{
 		global $phpbb_filesystem;
 
@@ -305,8 +305,8 @@ class compress_zip extends compress
 								}
 							}
 						}
-						// This is a directory, we are not writting files
-						continue;
+						// This is a directory, we are not writing files
+						continue 2;
 					}
 					else
 					{
@@ -569,7 +569,7 @@ class compress_tar extends compress
 	/**
 	* Constructor
 	*/
-	function compress_tar($mode, $file, $type = '')
+	function __construct($mode, $file, $type = '')
 	{
 		global $phpbb_filesystem;
 

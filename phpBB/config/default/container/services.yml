@@ -27,6 +27,7 @@ imports:
     - { resource: services_text_formatter.yml }
     - { resource: services_text_reparser.yml }
     - { resource: services_twig.yml }
+    - { resource: services_ucp.yml }
     - { resource: services_user.yml }
 
     - { resource: tables.yml }
@@ -122,7 +123,13 @@ services:
     group_helper:
         class: phpbb\group\helper
         arguments:
+            - '@auth'
+            - '@cache'
+            - '@config'
             - '@language'
+            - '@dispatcher'
+            - '@path_helper'
+            - '@user'
 
     log:
         class: phpbb\log\log

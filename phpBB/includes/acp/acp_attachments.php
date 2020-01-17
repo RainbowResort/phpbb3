@@ -27,6 +27,9 @@ class acp_attachments
 	/** @var \phpbb\config\config */
 	protected $config;
 
+	/** @var \phpbb\language\language */
+	protected $language;
+
 	/** @var ContainerBuilder */
 	protected $phpbb_container;
 
@@ -54,6 +57,7 @@ class acp_attachments
 		$this->id = $id;
 		$this->db = $db;
 		$this->config = $config;
+		$this->language = $phpbb_container->get('language');
 		$this->template = $template;
 		$this->user = $user;
 		$this->phpbb_container = $phpbb_container;
@@ -128,7 +132,7 @@ class acp_attachments
 				$s_assigned_groups = array();
 				while ($row = $db->sql_fetchrow($result))
 				{
-					$row['group_name'] = (isset($user->lang['EXT_GROUP_' . $row['group_name']])) ? $user->lang['EXT_GROUP_' . $row['group_name']] : $row['group_name'];
+					$row['group_name'] = $this->language->is_set('EXT_GROUP_' . utf8_strtoupper($row['group_name'])) ? $this->language->lang('EXT_GROUP_' . utf8_strtoupper($row['group_name'])) : $row['group_name'];
 					$s_assigned_groups[$row['cat_id']][] = $row['group_name'];
 				}
 				$db->sql_freeresult($result);
@@ -164,7 +168,6 @@ class acp_attachments
 						'img_create_thumbnail'		=> array('lang' => 'CREATE_THUMBNAIL',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'img_max_thumb_width'		=> array('lang' => 'MAX_THUMB_WIDTH',		'validate' => 'int:0:999999999999999',	'type' => 'number:0:999999999999999', 'explain' => true, 'append' => ' ' . $user->lang['PIXEL']),
 						'img_min_thumb_filesize'	=> array('lang' => 'MIN_THUMB_FILESIZE',	'validate' => 'int:0:999999999999999',	'type' => 'number:0:999999999999999', 'explain' => true, 'append' => ' ' . $user->lang['BYTES']),
-						'img_imagick'				=> array('lang' => 'IMAGICK_PATH',			'validate' => 'absolute_path',	'type' => 'text:20:200', 'explain' => true, 'append' => '&nbsp;&nbsp;<span>[ <a href="' . $this->u_action . '&amp;action=imgmagick">' . $user->lang['SEARCH_IMAGICK'] . '</a> ]</span>'),
 						'img_max'					=> array('lang' => 'MAX_IMAGE_SIZE',		'validate' => 'int:0:9999',	'type' => 'dimension:0:9999', 'explain' => true, 'append' => ' ' . $user->lang['PIXEL']),
 						'img_link'					=> array('lang' => 'IMAGE_LINK_SIZE',		'validate' => 'int:0:9999',	'type' => 'dimension:0:9999', 'explain' => true, 'append' => ' ' . $user->lang['PIXEL']),
 					)
@@ -233,38 +236,6 @@ class acp_attachments
 				}
 
 				$template->assign_var('S_ATTACHMENT_SETTINGS', true);
-
-				if ($action == 'imgmagick')
-				{
-					$this->new_config['img_imagick'] = $this->search_imagemagick();
-				}
-
-				// We strip eventually manual added convert program, we only want the patch
-				if ($this->new_config['img_imagick'])
-				{
-					// Change path separator
-					$this->new_config['img_imagick'] = str_replace('\\', '/', $this->new_config['img_imagick']);
-					$this->new_config['img_imagick'] = str_replace(array('convert', '.exe'), array('', ''), $this->new_config['img_imagick']);
-
-					// Check for trailing slash
-					if (substr($this->new_config['img_imagick'], -1) !== '/')
-					{
-						$this->new_config['img_imagick'] .= '/';
-					}
-				}
-
-				$supported_types = get_supported_image_types();
-
-				// Check Thumbnail Support
-				if (!$this->new_config['img_imagick'] && (!isset($supported_types['format']) || !count($supported_types['format'])))
-				{
-					$this->new_config['img_create_thumbnail'] = 0;
-				}
-
-				$template->assign_vars(array(
-					'U_SEARCH_IMAGICK'		=> $this->u_action . '&amp;action=imgmagick',
-					'S_THUMBNAIL_SUPPORT'	=> (!$this->new_config['img_imagick'] && (!isset($supported_types['format']) || !count($supported_types['format']))) ? false : true)
-				);
 
 				// Secure Download Options - Same procedure as with banning
 				$allow_deny = ($this->new_config['secure_allow_deny']) ? 'ALLOWED' : 'DISALLOWED';
@@ -606,7 +577,7 @@ class acp_attachments
 							$group_id = $db->sql_nextid();
 						}
 
-						$group_name = (isset($user->lang['EXT_GROUP_' . $group_name])) ? $user->lang['EXT_GROUP_' . $group_name] : $group_name;
+						$group_name = $this->language->is_set('EXT_GROUP_' . utf8_strtoupper($group_name)) ? $this->language->lang('EXT_GROUP_' . utf8_strtoupper($group_name)) : $group_name;
 						$phpbb_log->add('admin', $user->data['user_id'], $user->ip, 'LOG_ATTACH_EXTGROUP_' . strtoupper($action), false, array($group_name));
 					}
 
@@ -639,7 +610,6 @@ class acp_attachments
 				$cat_lang = array(
 					ATTACHMENT_CATEGORY_NONE		=> $user->lang['NO_FILE_CAT'],
 					ATTACHMENT_CATEGORY_IMAGE		=> $user->lang['CAT_IMAGES'],
-					ATTACHMENT_CATEGORY_FLASH		=> $user->lang['CAT_FLASH_FILES'],
 				);
 
 				$group_id = $request->variable('g', 0);
@@ -908,7 +878,7 @@ class acp_attachments
 						'U_EDIT'		=> $this->u_action . "&amp;action=edit&amp;g={$row['group_id']}",
 						'U_DELETE'		=> $this->u_action . "&amp;action=delete&amp;g={$row['group_id']}",
 
-						'GROUP_NAME'	=> (isset($user->lang['EXT_GROUP_' . $row['group_name']])) ? $user->lang['EXT_GROUP_' . $row['group_name']] : $row['group_name'],
+						'GROUP_NAME'	=> $this->language->is_set('EXT_GROUP_' . utf8_strtoupper($row['group_name'])) ? $this->language->lang('EXT_GROUP_' . utf8_strtoupper($row['group_name'])) : $row['group_name'],
 						'CATEGORY'		=> $cat_lang[$row['cat_id']],
 						)
 					);
@@ -1270,22 +1240,18 @@ class acp_attachments
 
 					$row['extension'] = strtolower(trim((string) $row['extension']));
 					$comment = ($row['attach_comment'] && !$row['in_message']) ? str_replace(array("\n", "\r"), array('<br />', "\n"), $row['attach_comment']) : '';
-					$display_cat = $extensions[$row['extension']]['display_cat'];
+					$display_cat = isset($extensions[$row['extension']]['display_cat']) ? $extensions[$row['extension']]['display_cat'] : ATTACHMENT_CATEGORY_NONE;
 					$l_downloaded_viewed = ($display_cat == ATTACHMENT_CATEGORY_NONE) ? 'DOWNLOAD_COUNTS' : 'VIEWED_COUNTS';
 
 					$template->assign_block_vars('attachments', array(
 						'ATTACHMENT_POSTER'	=> get_username_string('full', (int) $row['poster_id'], (string) $row['username'], (string) $row['user_colour'], (string) $row['username']),
 						'FILESIZE'			=> get_formatted_filesize((int) $row['filesize']),
 						'FILETIME'			=> $user->format_date((int) $row['filetime']),
-						'REAL_FILENAME'		=> (!$row['in_message']) ? utf8_basename((string) $row['real_filename']) : '',
-						'PHYSICAL_FILENAME'	=> utf8_basename((string) $row['physical_filename']),
-						'EXT_GROUP_NAME'	=> (!empty($extensions[$row['extension']]['group_name'])) ? $user->lang['EXT_GROUP_' . $extensions[$row['extension']]['group_name']] : '',
+						'REAL_FILENAME'		=> utf8_basename((string) $row['real_filename']),
+						'EXT_GROUP_NAME'	=> $this->language->is_set('EXT_GROUP_' . utf8_strtoupper($extensions[$row['extension']]['group_name'])) ?  $this->language->lang('EXT_GROUP_' . utf8_strtoupper($extensions[$row['extension']]['group_name'])) : $extensions[$row['extension']]['group_name'],
 						'COMMENT'			=> $comment,
 						'TOPIC_TITLE'		=> (!$row['in_message']) ? (string) $row['topic_title'] : '',
 						'ATTACH_ID'			=> (int) $row['attach_id'],
-						'POST_ID'			=> (int) $row['post_msg_id'],
-						'TOPIC_ID'			=> (int) $row['topic_id'],
-						'POST_IDS'			=> (!empty($post_ids[$row['attach_id']])) ? (int) $post_ids[$row['attach_id']] : '',
 
 						'L_DOWNLOAD_COUNT'	=> $user->lang($l_downloaded_viewed, (int) $row['download_count']),
 
@@ -1418,7 +1384,6 @@ class acp_attachments
 		$types = array(
 			ATTACHMENT_CATEGORY_NONE		=> $user->lang['NO_FILE_CAT'],
 			ATTACHMENT_CATEGORY_IMAGE		=> $user->lang['CAT_IMAGES'],
-			ATTACHMENT_CATEGORY_FLASH		=> $user->lang['CAT_FLASH_FILES'],
 		);
 
 		if ($group_id)
@@ -1467,7 +1432,7 @@ class acp_attachments
 		$group_name = array();
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$row['group_name'] = (isset($user->lang['EXT_GROUP_' . $row['group_name']])) ? $user->lang['EXT_GROUP_' . $row['group_name']] : $row['group_name'];
+			$row['group_name'] = $this->language->is_set('EXT_GROUP_' . utf8_strtoupper($row['group_name'])) ? $this->language->lang('EXT_GROUP_' . utf8_strtoupper($row['group_name'])) : $row['group_name'];
 			$group_name[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -1493,47 +1458,6 @@ class acp_attachments
 		$group_select .= '</select>';
 
 		return $group_select;
-	}
-
-	/**
-	* Search Imagick
-	*/
-	function search_imagemagick()
-	{
-		$imagick = '';
-
-		$exe = ((defined('PHP_OS')) && (preg_match('#^win#i', PHP_OS))) ? '.exe' : '';
-
-		$magic_home = getenv('MAGICK_HOME');
-
-		if (empty($magic_home))
-		{
-			$locations = array('C:/WINDOWS/', 'C:/WINNT/', 'C:/WINDOWS/SYSTEM/', 'C:/WINNT/SYSTEM/', 'C:/WINDOWS/SYSTEM32/', 'C:/WINNT/SYSTEM32/', '/usr/bin/', '/usr/sbin/', '/usr/local/bin/', '/usr/local/sbin/', '/opt/', '/usr/imagemagick/', '/usr/bin/imagemagick/');
-			$path_locations = str_replace('\\', '/', (explode(($exe) ? ';' : ':', getenv('PATH'))));
-
-			$locations = array_merge($path_locations, $locations);
-
-			foreach ($locations as $location)
-			{
-				// The path might not end properly, fudge it
-				if (substr($location, -1) !== '/')
-				{
-					$location .= '/';
-				}
-
-				if (@file_exists($location) && @is_readable($location . 'mogrify' . $exe) && @filesize($location . 'mogrify' . $exe) > 3000)
-				{
-					$imagick = str_replace('\\', '/', $location);
-					continue;
-				}
-			}
-		}
-		else
-		{
-			$imagick = str_replace('\\', '/', $magic_home);
-		}
-
-		return $imagick;
 	}
 
 	/**

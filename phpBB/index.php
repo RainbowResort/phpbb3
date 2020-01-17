@@ -55,6 +55,17 @@ if (($mark_notification = $request->variable('mark_notification', 0)))
 
 			$notification->mark_read();
 
+			/**
+			* You can use this event to perform additional tasks or redirect user elsewhere.
+			*
+			* @event core.index_mark_notification_after
+			* @var	int										mark_notification	Notification ID
+			* @var	\phpbb\notification\type\type_interface	notification		Notification instance
+			* @since 3.2.6-RC1
+			*/
+			$vars = array('mark_notification', 'notification');
+			extract($phpbb_dispatcher->trigger_event('core.index_mark_notification_after', compact($vars)));
+
 			if ($request->is_ajax())
 			{
 				$json_response = new \phpbb\json_response();
@@ -209,11 +220,6 @@ $template->assign_vars(array(
 
 	'LEGEND'		=> $legend,
 	'BIRTHDAY_LIST'	=> (empty($birthday_list)) ? '' : implode($user->lang['COMMA_SEPARATOR'], $birthday_list),
-
-	'FORUM_IMG'				=> $user->img('forum_read', 'NO_UNREAD_POSTS'),
-	'FORUM_UNREAD_IMG'			=> $user->img('forum_unread', 'UNREAD_POSTS'),
-	'FORUM_LOCKED_IMG'		=> $user->img('forum_read_locked', 'NO_UNREAD_POSTS_LOCKED'),
-	'FORUM_UNREAD_LOCKED_IMG'	=> $user->img('forum_unread_locked', 'UNREAD_POSTS_LOCKED'),
 
 	'S_LOGIN_ACTION'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
 	'U_SEND_PASSWORD'           => ($config['email_enable']) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=sendpassword') : '',
