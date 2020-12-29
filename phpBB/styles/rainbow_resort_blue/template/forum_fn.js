@@ -12,6 +12,11 @@ function popup(u, w, h, n) {
 		n = '_popup';
 	}
 
+	if (document.all && !window.XMLHttpRequest) {
+		if (screen.availHeight - 30 < h) {h = screen.availHeight - 30;}
+		if (screen.availWidth - 10 < w) {w = screen.availWidth - 10;}
+	}
+
 	window.open(u.replace(/&amp;/g, '&'), n, 'height=' + h + ',resizable=yes,scrollbars=yes,width=' + w);
 	return false;
 }
@@ -27,13 +32,21 @@ function jumpto(page, per_page, base_url) {
 }
 
 function marklist(id, name, state) {
-	var parent = document.getElementById(id) || document.all(id);
+	if (document.getElementById) {
+		var parent = document.getElementById(id) || document[id];
+	} else if (document.all) {
+		var parent = document.all(id);
+	}
 
 	if (!parent) {
 		return;
 	}
 
-	var rb = parent.getElementsByTagName('input') || parent.document.all.tags('input');
+	if (document.getElementsByTagName) {
+		var rb = parent.getElementsByTagName('input');
+	} else if (document.all) {
+		var rb = parent.document.all.tags('input');
+	}
 
 	for (var r = 0; r < rb.length; r++) {
 		if (rb[r].name.substr(0, name.length) == name && rb[r].disabled !== true) {
@@ -235,7 +248,7 @@ function bugFix(d, l, p, refresh) {
 * Dropdown menus initialisation
 */
 
-if (document.documentElement && (document.documentElement.className.indexOf('dropdown-enabled') > -1)) {
+if (document.body.className.indexOf('dropdown-enabled') > -1) {
 	var handler0 = function() {toggleLists();};
 	var handler1 = function() {bugFix(cd, cl, cp, true);};
 	var handler2 = function() {bugFix(cd, cl, cp);};
@@ -269,6 +282,7 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 			if (document.getElementById('notification_list') && document.getElementById('notification_link')) {
 				var nfl = document.getElementById('notification_list'); removeComment(nfl); nfl.onclick = function(e) {if (e) {e.stopPropagation();} else {window.event.cancelBubble = true;}};
 				document.getElementById('notification_link').onclick = function(e) {if (e) {e.stopPropagation();} else {window.event.cancelBubble = true;} toggleLists(nfl, this, parentBar); return false;};
+				if (document.uniqueID && !document.compatMode) {nfl.style.width='278px';} else {nfl.style.width='274px';}
 			}
 
 			var usl = document.getElementById('user_list'); removeComment(usl); usl.onclick = function(e) {if (e) {e.stopPropagation();} else {window.event.cancelBubble = true;}};
@@ -278,11 +292,11 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 }
 
 /**
-* Change the global class to .hasjs
+* Global class insertion
 */
 
-if (document.documentElement) {
-	document.documentElement.className = document.documentElement.className.replace(/nojs/gi,'hasjs');
-} else if (document.all && (document.all.tags('html')[0].className.indexOf('nojs') > -1)) {
+if (document.getElementById) {
+	document.body.className += ' hasjs';
+} else if (document.all) {
 	document.all.tags('html')[0].className = 'hasjs';
 }
