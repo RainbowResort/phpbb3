@@ -1,9 +1,9 @@
 /*  phpBB3 Style Sheet
     --------------------------------------------------------------
-	Style name:			Rainbow Resort Pink 1.2.2
-	Based on style: 	subSilver (the default phpBB 2.0.x style), Legacy 1.2.2
+	Style name:			Rainbow Resort Pink 1.3.0
+	Based on style: 	subSilver (the default phpBB 2.0.x style), Legacy 1.3.0
 	Original author:	Tom Beddard ( http://www.subblue.com/ )
-	Modified by:		Big Monstro (initial CSS by LiveKiller44)
+	Modified by:		Big Monstro ( http://www.win3x.org/ )
     Modified again by:  Diskmaster ( @TomeofElectrum on Twitter )
     --------------------------------------------------------------
 */
@@ -128,6 +128,11 @@ td.bg1, td.bg2, td.bg3 {
 	padding: 4px;
 }
 
+.pm-row td {
+	background-color: #FFFFFF;
+	border-width: 4px;
+}
+
 td.cat {
 	background-color: #e9cdff;
 	height: 28px;
@@ -152,12 +157,12 @@ th.category {
 
 table.fixed {
 	border-collapse: collapse;
-	table-layout: fixed;
 	width: 100%;
-	*width: auto;
+	/* **/ table-layout: fixed;
+	*width: auto; /** */
 }
 
-table.fixed td, table.fixed th {
+table.fixed td {
 	overflow: hidden;
 	padding: 0;
 	word-wrap: break-word;
@@ -165,6 +170,19 @@ table.fixed td, table.fixed th {
 
 table.main {
 	background-color: #660099;
+}
+
+table.message-box {
+	table-layout: fixed\9;
+	*table-layout: fixed;
+}
+
+table.message-box td {
+	padding: 2px 6px 2px 0;
+}
+
+.rtl table.message-box td {
+	padding: 2px 0 2px 6px;
 }
 
 table.profile {
@@ -203,7 +221,7 @@ a:hover {
 	text-decoration: underline;
 }
 
-a.forumlink, a.header, a.topictitle {
+a.forumtitle, a.header, a.topictitle {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 1.2em;
 	font-weight: bold;
@@ -314,8 +332,16 @@ textarea {
 	border: 1px solid #b8a9c2;
 	line-height: 1.4em;
 	font-size: 1.3em;
-	overflow: auto;
+	overflow-y: auto;
 	padding: 2px;
+}
+
+.message-box textarea {
+	width: 100%;
+	width: 230px\9;
+	min-width: 100%\9;
+	max-width: 100%\9;
+	*width: 100%
 }
 
 
@@ -324,7 +350,7 @@ textarea {
 blockquote, .codebox {
 	background-color: #b8a9c2;
 	border: 1px solid #b8a9c2;
-	margin: 10px 5px;
+	margin: 12px 5px;
 }
 
 .codecontent {
@@ -340,12 +366,12 @@ blockquote, .codebox {
 	line-height: normal;
 	padding: 5px;
 	word-wrap: normal;
-	_height: 37px;
-	*min-height: 37px;
+	*min-height: 30px;
+	_height: 40px;
+	_heig\ht: 30px;
 }
 
 .codetitle, .quotetitle {
-	background-color: #e9cdff;
 	color: #333333;
 	font-size: 0.9em;
 	font-weight: bold;
@@ -383,13 +409,9 @@ blockquote, .codebox {
 
 
 /* Private messages
- -------------------- */
-.pm-foe-colour {
-	border-color: #DD0000;
-}
-
-.pm-friend-colour {
-	border-color: #007700;
+ --------------------- */
+.pm-reported-colour {
+	border-color: #800000;
 }
 
 .pm-marked-colour {
@@ -398,6 +420,14 @@ blockquote, .codebox {
 
 .pm-replied-colour {
 	border-color: #b8a9c2;
+}
+
+.pm-friend-colour {
+	border-color: #007700;
+}
+
+.pm-foe-colour {
+	border-color: #DD0000;
 }
 
 
@@ -460,6 +490,11 @@ img {
 	min-width: 18px;
 	height: 1em;
 	width: 1em;
+}
+
+.footer-row {
+	font-size: 1em;
+	line-height: 1.8em;
 }
 
 .notification {

@@ -11,13 +11,6 @@ var is_ie = ((typeof document.all !== 'undefined') && (typeof window.opera === '
 var baseHeight;
 
 /**
-* Shows the help messages in the helpline window
-*/
-function helpline(help) {
-	document.forms[form_name].helpbox.value = help_line[help];
-}
-
-/**
 * Fix a bug involving the TextRange object. From
 * http://www.frostjedi.com/terra/scripts/demo/caretBug.html
 */
@@ -43,7 +36,7 @@ function initInsertions() {
 
 	if (document.forms[form_name]) {
 		// Allow to use tab character when typing code
-		if (window.InstallTrigger) {
+		if (window.InstallTrigger || (!window.matchMedia && window.opera)) {
 			textarea.onkeypress = function(event) {
 				if ((event.keyCode==9 || event.which==9) && inCodeTag() && !event.altKey && !event.ctrlKey && !event.shiftKey && !event.metaKey) {
 					event.preventDefault ? event.preventDefault() : (event.returnValue = false); bbfontstyle('\t','',true);
@@ -102,7 +95,7 @@ function bbfontstyle(bbopen, bbclose, appendText) {
 		return;
 	}
 
-	//The new position for the cursor after adding the bbcode
+	// The new position for the cursor after adding the bbcode
 	if (document.getElementById) {
 		var caret_pos = getCaretPosition(textarea).start;
 		var new_pos = caret_pos + bbopen.length;
@@ -405,6 +398,12 @@ function colorPalette() {
 	var r = 0, g = 0, b = 0;
 	var numberList = new Array(6);
 	var color = '';
+	var html = '';
+	var style = (is_ie && !document.querySelector) ? 'cursor: hand' : 'cursor: inherit';
+
+	if (is_ie && !window.XMLHttpRequest) {
+		style += '; overflow: hidden';
+	}
 
 	numberList[0] = '00';
 	numberList[1] = '40';
@@ -412,22 +411,25 @@ function colorPalette() {
 	numberList[3] = 'BF';
 	numberList[4] = 'FF';
 
-	document.writeln('<table width="61" cellspacing="1" class="main">');
+	html += '<table class="main" cellspacing="1" style="width: 61px">';
 
 	for (r = 0; r < 5; r++) {
 		for (g = 0; g < 5; g++) {
-				document.writeln('<tr>');
+				html += '<tr>';
 
 			for (b = 0; b < 5; b++) {
 				color = String(numberList[r]) + String(numberList[g]) + String(numberList[b]);
-				document.write('<td style="background-color: #' + color + '; height: 10px; padding: 0; width: 11px">');
-				document.write('<a style="height: 100%; width: 100%; display: block; _overflow: hidden" href="#" onclick="bbfontstyle(\'[color=#' + color + ']\', \'[/color]\'); return false;" title="#' + color + '"><div style="cursor: inherit; *cursor: hand; height: 100%; width: 100%"></div></a>');
-				document.write('</td>');
+				html += '<td style="background-color: #' + color + '; height: 10px; padding: 0; width: 11px">';
+				html += '<a style="display: block; height: 100%; width: 100%" href="#" onclick="bbfontstyle(\'[color=#' + color + ']\', \'[/color]\'); return false;" title="#' + color + '"><div style="height: 100%; width: 100%; ' + style + '"></div></a>';
+				html += '</td>';
 			}
-				document.writeln('</tr>');
+
+			html += '</tr>';
 		}
 	}
-	document.writeln('</table>');
+
+	html += '</table>';
+	return html;
 }
 
 /**

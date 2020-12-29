@@ -420,10 +420,12 @@ blockquote, .codebox {
 
 .pm-replied-colour {
 	border-color: #A9B8C2;
-
+}
 
 .pm-friend-colour {
 	border-color: #007700;
+}
+
 .pm-foe-colour {
 	border-color: #DD0000;
 }
