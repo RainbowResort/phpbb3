@@ -19,18 +19,20 @@
 		<tr><!-- IF unapproved.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
 			<td class="{$BG}">
 				<!-- IF unapproved.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF -->
-				<a href="{unapproved.U_POST_DETAILS}" class="big">{unapproved.SUBJECT}</a>
+				<a href="{unapproved.U_POST_DETAILS}" class="topictitle">{unapproved.SUBJECT}</a>
 				<div class="bigger">{L_FORUM}{L_COLON} <!-- IF unapproved.U_FORUM --><a href="{unapproved.U_FORUM}">{unapproved.FORUM_NAME}</a><!-- ELSE -->{unapproved.FORUM_NAME}<!-- ENDIF --></div>
 			</td>
-			<td class="{$BG}" align="center"><span class="big">{unapproved.AUTHOR_FULL}</span></td>
-			<td class="{$BG}" align="center"><span class="bigger">{unapproved.POST_TIME}</span></td>
+			<td class="{$BG}" align="center"><p>{unapproved.AUTHOR_FULL}</p></td>
+			<td class="{$BG}" align="center"><p>{unapproved.POST_TIME}</p></td>
 			<td class="{$BG}" align="center"><input type="checkbox" name="post_id_list[]" value="{unapproved.POST_ID}" /></td>
 		</tr>
 	<!-- END unapproved -->
 
 	<!-- IF .unapproved -->
+		</table>
+		<table cellspacing="0" width="100%">
 		<tr>
-			<td align="{S_CONTENT_FLOW_END}" class="cat" colspan="4">{S_HIDDEN_FIELDS}<input class="button2" type="submit" name="action[disapprove]" value="{L_DISAPPROVE}" /> &nbsp;<input class="button1" type="submit" name="action[approve]" value="{L_APPROVE}" /></td>
+			<td class="cat" align="{S_CONTENT_FLOW_END}">{S_HIDDEN_FIELDS}<input class="button2" type="submit" name="action[disapprove]" value="{L_DISAPPROVE}" /> &nbsp;<input class="button1" type="submit" name="action[approve]" value="{L_APPROVE}" /></td>
 		</tr>
 	<!-- ENDIF -->
 	</table>
@@ -66,11 +68,11 @@
 		<tr><!-- IF report.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
 			<td class="{$BG}">
 				<!-- IF report.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF -->
-				<a href="{report.U_POST_DETAILS}" class="big">{report.SUBJECT}</a>
+				<a href="{report.U_POST_DETAILS}" class="topictitle">{report.SUBJECT}</a>
 				<div class="bigger">{L_POSTED} {L_POST_BY_AUTHOR} {report.AUTHOR_FULL} &#187; {report.POST_TIME}</div> <div class="bigger">{L_FORUM}{L_COLON} <!-- IF report.U_FORUM --><a href="{report.U_FORUM}">{report.FORUM_NAME}</a><!-- ELSE -->{report.FORUM_NAME}<!-- ENDIF --></div>
 			</td>
-			<td class="{$BG}" align="center"><span class="big">{report.REPORTER_FULL}</span></td>
-			<td class="{$BG}" align="center"><span class="bigger">{report.REPORT_TIME}</span></td>
+			<td class="{$BG}" align="center"><p>{report.REPORTER_FULL}</p></td>
+			<td class="{$BG}" align="center"><p>{report.REPORT_TIME}</p></td>
 		</tr>
 	<!-- END report -->
 	</table>
@@ -94,11 +96,11 @@
 		<tr><!-- IF pm_report.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
 			<td class="{$BG}">
 				<!-- IF pm_report.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF -->
-				<a href="{pm_report.U_PM_DETAILS}" class="big">{pm_report.PM_SUBJECT}</a>
+				<a href="{pm_report.U_PM_DETAILS}" class="topictitle">{pm_report.PM_SUBJECT}</a>
 				<div class="bigger">{L_MESSAGE_BY_AUTHOR} {pm_report.PM_AUTHOR_FULL} &#187; {pm_report.PM_TIME}</div> <div class="bigger">{L_MESSAGE_TO} {pm_report.RECIPIENTS}</div>
 			</td>
-			<td class="{$BG}" align="center"><span class="big">{pm_report.REPORTER_FULL}</span></td>
-			<td class="{$BG}" align="center"><span class="bigger">{pm_report.REPORT_TIME}</span></td>
+			<td class="{$BG}" align="center"><p>{pm_report.REPORTER_FULL}</p></td>
+			<td class="{$BG}" align="center"><p>{pm_report.REPORT_TIME}</p></td>
 		</tr>
 	<!-- END pm_report -->
 	</table>
@@ -117,15 +119,15 @@
 		<th>{L_LATEST_LOGS}</th>
 	</tr>
 	<!-- BEGIN log -->
-		<tr class="bigger"><!-- IF log.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
-			<td class="{$BG}">{log.USERNAME}</td>
-			<td align="center" class="{$BG}">{log.IP}</td>
-			<td align="center" class="{$BG}">{log.TIME}</td>
-			<td class="{$BG}">{log.ACTION}<br /><!-- IF log.U_VIEW_TOPIC --><a href="{log.U_VIEW_TOPIC}">{L_VIEW_TOPIC}</a><!-- IF log.U_VIEWLOGS --> | <!-- ENDIF --><!-- ENDIF --><!-- IF log.U_VIEWLOGS --><a href="{log.U_VIEWLOGS}">{L_VIEW_TOPIC_LOGS}</a><!-- ENDIF --></td>
+		<tr><!-- IF log.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+			<td class="{$BG}"><span class="bigger">{log.USERNAME}</span></td>
+			<td align="center" class="{$BG}"><p>{log.IP}</p></td>
+			<td align="center" class="{$BG}"><p>{log.TIME}</p></td>
+			<td class="{$BG}"><p>{log.ACTION}<br /><!-- IF log.U_VIEW_TOPIC --><a href="{log.U_VIEW_TOPIC}">{L_VIEW_TOPIC}</a><!-- IF log.U_VIEWLOGS --> | <!-- ENDIF --><!-- ENDIF --><!-- IF log.U_VIEWLOGS --><a href="{log.U_VIEWLOGS}">{L_VIEW_TOPIC_LOGS}</a><!-- ENDIF --></p></td>
 		</tr>
 	<!-- BEGINELSE -->
-		<tr>
-			<td class="bg1" colspan="4" align="center"><span class="big">{L_NO_ENTRIES}</span></td>
+		<tr class="big">
+			<td class="bg1" colspan="4" align="center">{L_NO_ENTRIES}</td>
 		</tr>
 	<!-- END log -->
 	</table>

@@ -6,26 +6,19 @@
 <tr>
 	<th colspan="4">{L_TITLE}</th>
 </tr>
-<tr>
-	<td class="bg1" colspan="4" align="center"><span class="bigger">{L_ATTACHMENTS_EXPLAIN}</span></td>
+<tr class="bigger">
+	<td class="bg1" colspan="4" align="center">{L_ATTACHMENTS_EXPLAIN}</td>
 </tr>
-<!-- IF S_ATTACHMENT_ROWS -->
+<!-- IF .attachrow -->
 	<tr>
 		<th><a href="{U_SORT_FILENAME}">{L_FILENAME}</a></th>
-		<th><a href="{U_SORT_DOWNLOADS}">{L_DOWNLOADS}</a></th>
-		<th><a href="{U_SORT_POST_TIME}">{L_POST_TIME}</a></th>
+		<th width="10%"><a href="{U_SORT_DOWNLOADS}">{L_DOWNLOADS}</a></th>
+		<th width="15%"><a href="{U_SORT_POST_TIME}">{L_POST_TIME}</a></th>
 		<th width="5%">{L_MARK}</th>
 	</tr>
-	<!-- IF TOTAL_ATTACHMENTS -->
+	<!-- IF .pagination -->
 		<tr>
-			<td class="bg3" colspan="4">
-				<table width="100%" cellspacing="1">
-				<tr>
-					<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {NUM_ATTACHMENTS} ]</td>
-					<!-- IF .pagination --><td width="100%" align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
-				</tr>
-				</table>
-			</td>
+			<td class="bg3" colspan="4" align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td>
 		</tr>
 	<!-- ENDIF -->
 	<!-- BEGIN attachrow -->
@@ -36,21 +29,25 @@
 			<td align="center" class="{$BG}"><input type="checkbox" name="attachment[{attachrow.ATTACH_ID}]" value="1"<!-- IF attachrow.S_LOCKED --> disabled="disabled" title="{L_ATTACHMENT_LOCKED}"<!-- ENDIF --> /></td>
 		</tr>
 	<!-- END attachrow -->
+</table>
+<table cellspacing="0" width="100%">
 	<tr>
-		<td class="cat" colspan="4"><table cellspacing="0" width="100%"><tr><td><!-- INCLUDE display_options.html --></td><td align="{S_CONTENT_FLOW_END}"><input class="button2" type="submit" name="delete" value="{L_DELETE_MARKED}" /></td></tr></table></td>
+		<td class="cat"><!-- INCLUDE display_options.html --></td>
+		<td class="cat" align="{S_CONTENT_FLOW_END}"><input class="button2" type="submit" name="delete" value="{L_DELETE_MARKED}" /></td>
 	</tr>
-	</table>
-
-	<table width="100%" cellspacing="1">
-		<tr><td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('ucp', 'attachment', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp', 'attachment', false); return false;">{L_UNMARK_ALL}</a></b></td></tr>
-		<!-- IF .pagination --><tr><td align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td></tr><!-- ENDIF -->
-	</table>
 <!-- ELSE -->
-	<tr class="bg1">
-		<td align="center" colspan="4"><b class="bigger">{L_UCP_NO_ATTACHMENTS}</b></td>
+	<tr>
+		<td align="center" class="bg1" colspan="4"><b class="bigger">{L_UCP_NO_ATTACHMENTS}</b></td>
 	</tr>
-	</table>
+<!-- ENDIF -->
+</table>
 
+<!-- IF .attachrow -->
+	<table width="100%" cellspacing="1"><tr>
+		<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {NUM_ATTACHMENTS} ]</td>
+		<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('ucp', 'attachment', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp', 'attachment', false); return false;">{L_UNMARK_ALL}</a></b></td>
+		<!-- IF .pagination --></tr><tr><td align="{S_CONTENT_FLOW_END}" colspan="2"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+	</tr></table>
 <!-- ENDIF -->
 
 {S_FORM_TOKEN}

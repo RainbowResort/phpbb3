@@ -1,3 +1,3 @@
 <tr>
-	<td colspan="2"<!-- IF not S_REGISTER_ENABLED --> align="center"<!-- ENDIF -->><!-- BEGIN oauth --><a class="bigger" href="{oauth.REDIRECT_URL}">{oauth.SERVICE_NAME}</a><!-- IF not oauth.S_LAST_ROW --> | <!-- ENDIF --><!-- END oauth --></td>
+	<td colspan="2"<!-- IF S_REGISTRATION or not S_REGISTER_ENABLED --> align="center"<!-- ENDIF -->><!-- FOR oauth in oauth --><a href="{oauth.REDIRECT_URL}" class="bigger">{oauth.SERVICE_NAME}</a><!-- IF not loop.last --> | <!-- ENDIF --><!-- ENDFOR --></td>
 </tr>

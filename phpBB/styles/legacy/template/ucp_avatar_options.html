@@ -3,45 +3,48 @@
 		<td class="bg1" colspan="2" align="center"><p class="error">{ERROR}</p></td>
 	</tr>
 <!-- ENDIF -->
-<tr>
-	<td class="bg1" width="35%"><b class="bigger">{L_CURRENT_IMAGE}{L_COLON}</b><br /><span class="bigger">{L_AVATAR_EXPLAIN}</span></td>
-	<td class="bg1"><br />
-	<!-- IF AVATAR -->
-		<span class="bigger">{AVATAR}</span><br /><br /><input type="checkbox" name="avatar_delete" /> <span class="bigger">{L_DELETE_AVATAR}</span>
-	<!-- ELSE -->
-		<img src="{T_THEME_PATH}/images/no_avatar.gif" width="100" height="100" alt="" />
-	<!-- ENDIF -->
-	</td>
-</tr>
 <!-- IF not S_AVATARS_ENABLED -->
 	<tr>
 		<td class="bg1" colspan="2" align="center"><b class="bigger">{L_AVATAR_FEATURES_DISABLED}</b></td>
 	</tr>
 <!-- ENDIF -->
 <tr>
-	<th colspan="2">{L_AVATAR_SELECT}</th>
-</tr>
-<!-- BEGIN avatar_drivers -->
-	<!-- IF avatar_drivers.SELECTED --><!-- DEFINE $DEFINED_AVATAR = 1 --><!-- ENDIF -->
-<!-- END avatar_drivers -->
-<tr>
-	<td class="bg1"><b class="bigger">{L_AVATAR_TYPE}{L_COLON}</b></td>
-	<td class="bg1">
-		<select name="avatar_driver" id="avatar_driver"<!-- IF .avatar_drivers --> onchange="ChangeAvatarType();"<!-- ENDIF -->>
-			<!-- BEGIN avatar_drivers -->
-			<option value="{avatar_drivers.DRIVER}" id="{avatar_drivers.DRIVER}_0"<!-- IF avatar_drivers.SELECTED or (avatar_drivers.S_FIRST_ROW and not $DEFINED_AVATAR) --> selected="selected"<!-- ENDIF -->>{avatar_drivers.L_TITLE}</option>
-			<!-- END avatar_drivers -->
-		</select>
+	<td class="bg1" width="35%"><b class="bigger">{L_CURRENT_IMAGE}{L_COLON}</b><br /><span class="bigger">{L_AVATAR_EXPLAIN}</span></td>
+	<td class="bg1"><br />
+	<!-- IF AVATAR -->
+		{AVATAR}<br /><br /><input type="checkbox" name="avatar_delete" /> <span class="bigger">{L_DELETE_AVATAR}</span>
+	<!-- ELSE -->
+		<img src="{T_THEME_PATH}/images/no_avatar.gif" width="100" height="100" alt="" />
+	<!-- ENDIF -->
 	</td>
-</tr></table><table class="main" width="100%" cellspacing="1">
-<!-- BEGIN avatar_drivers -->
-	<tr id="{avatar_drivers.DRIVER}_1"<!-- IF not (avatar_drivers.SELECTED or (avatar_drivers.S_FIRST_ROW and not $DEFINED_AVATAR)) --> class="noscript"<!-- ENDIF -->>
-		<td class="bg1" colspan="2"><h4 class="noscript">{avatar_drivers.L_TITLE}</h4><p>{avatar_drivers.L_EXPLAIN}</p></td>
+</tr>
+<!-- IF .avatar_drivers -->
+	<tr>
+		<th colspan="2">{L_AVATAR_SELECT}</th>
 	</tr>
-	<tr id="{avatar_drivers.DRIVER}_2"<!-- IF not (avatar_drivers.SELECTED or (avatar_drivers.S_FIRST_ROW and not $DEFINED_AVATAR)) --> class="noscript"<!-- ENDIF -->>
-		<td colspan="2" style="padding: 0">{avatar_drivers.OUTPUT}</td>
-	</tr>
-<!-- END avatar_drivers -->
+	<!-- BEGIN avatar_drivers -->
+		<!-- IF avatar_drivers.SELECTED --><!-- DEFINE $DEFINED_AVATAR = 1 --><!-- ENDIF -->
+	<!-- END avatar_drivers -->
+	<tr>
+		<td class="bg1"><b class="bigger">{L_AVATAR_TYPE}{L_COLON}</b></td>
+		<td class="bg1">
+			<select name="avatar_driver" id="avatar_driver" onchange="ChangeAvatarType();">
+				<!-- BEGIN avatar_drivers -->
+				<option value="{avatar_drivers.DRIVER}" id="{avatar_drivers.DRIVER}_0"<!-- IF avatar_drivers.SELECTED or (avatar_drivers.S_FIRST_ROW and not $DEFINED_AVATAR) --> selected="selected"<!-- ENDIF -->>{avatar_drivers.L_TITLE}</option>
+				<!-- END avatar_drivers -->
+			</select>
+		</td>
+	</tr></table><table class="main" width="100%" cellspacing="1">
+	<!-- BEGIN avatar_drivers -->
+		<tr id="{avatar_drivers.DRIVER}_1"<!-- IF not (avatar_drivers.SELECTED or (avatar_drivers.S_FIRST_ROW and not $DEFINED_AVATAR)) --> class="noscript"<!-- ENDIF -->>
+			<td class="bg1" colspan="2"><h4 class="noscript">{avatar_drivers.L_TITLE}</h4><p>{avatar_drivers.L_EXPLAIN}</p></td>
+		</tr>
+		<tr id="{avatar_drivers.DRIVER}_2"<!-- IF not (avatar_drivers.SELECTED or (avatar_drivers.S_FIRST_ROW and not $DEFINED_AVATAR)) --> class="noscript"<!-- ENDIF -->>
+			<td colspan="2" style="padding: 0">{avatar_drivers.OUTPUT}</td>
+		</tr>
+	<!-- END avatar_drivers -->
+<!-- ENDIF -->
+</table>
 
 <!-- IF .avatar_drivers -->
 <script type="text/javascript"><!--
@@ -62,4 +65,11 @@ function ResetAvatarType() {
 	<!-- END avatar_drivers -->
 }
 //--></script>
+<!-- ENDIF -->
+
+<table cellspacing="0" width="100%">
+<!-- IF not S_GROUP_MANAGE -->
+	<tr>
+		<td class="cat" align="center"><input class="button2" type="reset" value="{L_RESET}" name="reset"<!-- IF .avatar_drivers --> onclick="ResetAvatarType();"<!-- ENDIF --> /> &nbsp;<input class="button1" type="submit" name="submit" value="{L_SUBMIT}" /></td>
+	</tr>
 <!-- ENDIF -->

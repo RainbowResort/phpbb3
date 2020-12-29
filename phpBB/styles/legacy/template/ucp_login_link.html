@@ -2,11 +2,10 @@
 
 <table class="main" width="100%" cellspacing="1">
 	<tr>
-		<th>{SITENAME} - {L_LOGIN_LINK}</th>
+		<th>{L_LOGIN_LINK}</th>
 	</tr>
-
-	<tr>
-		<td class="bg1" align="center"><span class="bigger">{L_LOGIN_LINK_EXPLAIN}</span></td>
+	<tr class="bigger">
+		<td class="bg1" align="center">{L_LOGIN_LINK_EXPLAIN}</td>
 	</tr>
 
 	<!-- IF LOGIN_LINK_ERROR -->
@@ -14,26 +13,15 @@
 			<td class="bg1" align="center"><p class="error">{LOGIN_LINK_ERROR}</p></td>
 		</tr>
 	<!-- ENDIF -->
-
+</table>
+<table cellspacing="0" width="100%">
 	<tr>
-		<th>{L_REGISTER}</th>
-	</tr>
-
-	<tr>
-		<td align="center" class="bg1">
-			<form action="{REGISTER_ACTION}" method="post" id="register">
-				{S_HIDDEN_FIELDS}<input type="submit" name="register" tabindex="1" value="{L_REGISTER}" class="button1" />
-			</form>
-		</td>
+		<td class="cat" align="center"><form action="{REGISTER_ACTION}" method="post" id="register">{S_HIDDEN_FIELDS}<input type="submit" name="register" tabindex="1" value="{L_REGISTER}" class="button1" /></form></td>
 	</tr>
 </table>
 
 <form action="{LOGIN_ACTION}" method="post" id="login">
 	<table class="main" width="100%" cellspacing="1">
-		<tr>
-			<th colspan="2">{L_LOGIN}</th>
-		</tr>
-
 		<tr>
 			<td class="bg1" colspan="2">
 				<table width="100%" cellspacing="1">
@@ -58,13 +46,15 @@
 		</tr>
 
 		<!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->
+			<!-- DEFINE $CAPTCHA_TD_WIDTH = 50 -->
 			<!-- DEFINE $CAPTCHA_TAB_INDEX = 4 -->
 			<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 		<!-- ENDIF -->
-
-		{S_LOGIN_REDIRECT}
+	</table>
+	{S_LOGIN_REDIRECT}
+	<table cellspacing="0" width="100%">
 		<tr>
-			<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="login" tabindex="5" value="{L_LOGIN}" class="button1" /></td>
+			<td class="cat" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="login" tabindex="5" value="{L_LOGIN}" class="button1" /></td>
 		</tr>
 	</table>
 </form>

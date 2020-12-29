@@ -2,20 +2,13 @@
 
 <form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
-<table width="100%" cellspacing="1">
-<tr>
-	<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL} ]</td>
-	<!-- IF .pagination --><td width="100%" align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
-</tr>
-</table>
+<table width="100%" cellspacing="1"><tr><td align="{S_CONTENT_FLOW_END}">
+	<span class="bigger">{L_FORUM}{L_COLON}</span> <select name="f">{S_FORUM_OPTIONS}</select>
+	<input class="button2" type="submit" name="sort" value="{L_GO}" />
+	{S_FORM_TOKEN}
+</td></tr></table>
 
 <table width="100%" class="main" cellspacing="1">
-<tr>
-	<th colspan="4">{L_TITLE}</th>
-</tr>
-<tr>
-	<td colspan="4" class="cat"><!-- INCLUDE display_options.html --></td>
-</tr>
 <tr>
 	<th><!-- IF S_TOPICS -->{L_TOPIC}<!-- ELSE -->{L_POST}<!-- ENDIF --></th>
 	<th width="20%">{L_AUTHOR}</th>
@@ -26,11 +19,11 @@
 	<tr><!-- IF postrow.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
 		<td class="{$BG}">
 			<!-- IF postrow.S_HAS_ATTACHMENTS --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF -->
-			<a href="{postrow.U_VIEW_DETAILS}" class="big">{postrow.POST_SUBJECT}</a>
+			<a href="{postrow.U_VIEW_DETAILS}" class="topictitle">{postrow.POST_SUBJECT}</a>
 			<div class="bigger">{L_FORUM}{L_COLON} <!-- IF postrow.U_VIEWFORUM --><a href="{postrow.U_VIEWFORUM}">{postrow.FORUM_NAME}</a><!-- ELSE -->{postrow.FORUM_NAME}<!-- ENDIF --></div>
 		</td>
-		<td align="center" class="{$BG}"><span class="big">{postrow.POST_AUTHOR_FULL}</span></td>
-		<td align="center" class="{$BG}"><span class="bigger">{postrow.POST_TIME}</span></td>
+		<td align="center" class="{$BG}"><p>{postrow.POST_AUTHOR_FULL}</p></td>
+		<td align="center" class="{$BG}"><p>{postrow.POST_TIME}</p></td>
 		<td align="center" class="{$BG}">
 			<!-- IF S_TOPICS -->
 				<input type="checkbox" name="topic_id_list[]" value="{postrow.TOPIC_ID}" />
@@ -40,22 +33,23 @@
 		</td>
 	</tr>
 <!-- BEGINELSE -->
-	<tr>
+	<tr class="big">
 		<td class="bg1" colspan="4" align="center">
-			<span class="big">
-				<!-- IF S_RESTORE -->
-					<!-- IF S_TOPICS -->{L_NO_TOPICS_DELETED}<!-- ELSE -->{L_NO_POSTS_DELETED}<!-- ENDIF -->
-				<!-- ELSE -->
-					<!-- IF S_TOPICS -->{L_NO_TOPICS_QUEUE}<!-- ELSE -->{L_NO_POSTS_QUEUE}<!-- ENDIF -->
-				<!-- ENDIF -->
-			</span>
+			<!-- IF S_RESTORE -->
+				<!-- IF S_TOPICS -->{L_NO_TOPICS_DELETED}<!-- ELSE -->{L_NO_POSTS_DELETED}<!-- ENDIF -->
+			<!-- ELSE -->
+				<!-- IF S_TOPICS -->{L_NO_TOPICS_QUEUE}<!-- ELSE -->{L_NO_POSTS_QUEUE}<!-- ENDIF -->
+			<!-- ENDIF -->
 		</td>
 	</tr>
 <!-- END postrow -->
 
 <!-- IF .postrow -->
+</table>
+<table cellspacing="0" width="100%">
 <tr>
-	<td class="cat" colspan="4" align="center">
+	<td class="cat"><!-- INCLUDE display_options.html --></td>
+	<td class="cat" align="{S_CONTENT_FLOW_END}">
 		<!-- IF S_RESTORE -->
 			<input class="button2" type="submit" name="action[delete]" value="{L_DELETE}" /> &nbsp;<input class="button1" type="submit" name="action[restore]" value="{L_RESTORE}" />
 		<!-- ELSE -->
@@ -66,12 +60,14 @@
 <!-- ENDIF -->
 </table>
 
-<table width="100%" cellspacing="1"><tr>
-	<!-- IF .postrow --><td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL} ]</td>
-	<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('mcp', '<!-- IF S_TOPICS -->topic<!-- ELSE -->post<!-- ENDIF -->_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '<!-- IF S_TOPICS -->topic<!-- ELSE -->post<!-- ENDIF -->_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td><!-- IF .pagination --></tr><tr><!-- ENDIF --><!-- ENDIF -->
-	<!-- IF .pagination --><td align="{S_CONTENT_FLOW_END}"<!-- IF .postrow --> colspan="2"<!-- ENDIF -->><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
-</tr></table>
-{S_FORM_TOKEN}
+<!-- IF .postrow or .pagination -->
+	<table width="100%" cellspacing="1"><tr>
+		<!-- IF .postrow --><td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL} ]</td>
+		<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('mcp', '<!-- IF S_TOPICS -->topic<!-- ELSE -->post<!-- ENDIF -->_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '<!-- IF S_TOPICS -->topic<!-- ELSE -->post<!-- ENDIF -->_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td><!-- IF .pagination --></tr><tr><!-- ENDIF --><!-- ENDIF -->
+		<!-- IF .pagination --><td align="{S_CONTENT_FLOW_END}"<!-- IF .postrow --> colspan="2"<!-- ENDIF -->><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+	</tr></table>
+<!-- ENDIF -->
+<!-- IF TOPIC_ID --> <table width="100%" cellspacing="1"><tr><td align="center"><input type="checkbox" name="t" value="{TOPIC_ID}" checked="checked" onclick="document.forms['mcp'].submit();" /> <b class="bigger">{L_ONLY_TOPIC}</b></td></tr></table><!-- ENDIF -->
 </form>
 
 <!-- INCLUDE mcp_footer.html -->

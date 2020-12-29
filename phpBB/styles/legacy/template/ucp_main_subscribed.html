@@ -6,8 +6,8 @@
 <tr>
 	<th colspan="4">{L_TITLE}</th>
 </tr>
-<tr>
-	<td class="bg1" colspan="4" align="center"><span class="bigger">{L_WATCHED_EXPLAIN}</span></td>
+<tr class="bigger">
+	<td class="bg1" colspan="4" align="center">{L_WATCHED_EXPLAIN}</td>
 </tr>
 
 <!-- IF S_FORUM_NOTIFY -->
@@ -37,23 +37,15 @@
 		<th colspan="4">{L_WATCHED_TOPICS}</th>
 	</tr>
 	<!-- ENDIF -->
-
-	<!-- IF TOTAL_TOPICS -->
+	<!-- IF .pagination -->
 		<tr>
-			<td class="bg3" colspan="4">
-				<table width="100%" cellspacing="1">
-				<tr>
-					<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL_TOPICS} ]</td>
-					<!-- IF .pagination --><td width="100%" align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
-				</tr>
-				</table>
-			</td>
+			<td class="bg3" colspan="4" align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td>
 		</tr>
 	<!-- ENDIF -->
 
 	<!-- BEGIN topicrow -->
 		<tr><!-- IF topicrow.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
-			<td align="center" class="{$BG}" <!-- IF not .forumrow -->width="25"<!-- ENDIF -->><!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}"><!-- ENDIF --><img src="{T_THEME_PATH}/images/{topicrow.TOPIC_IMG_STYLE}.gif" width="19" height="18" alt="<!-- IF topicrow.S_UNREAD_TOPIC -->+" border="0<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}" /><!-- IF topicrow.S_UNREAD_TOPIC --></a><!-- ENDIF --></td>
+			<td align="center" class="{$BG}"<!-- IF not .forumrow --> width="25"<!-- ENDIF -->><!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}"><!-- ENDIF --><img src="{T_THEME_PATH}/images/{topicrow.TOPIC_IMG_STYLE}.gif" width="19" height="18" alt="<!-- IF topicrow.S_UNREAD_TOPIC -->+" border="0<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}" /><!-- IF topicrow.S_UNREAD_TOPIC --></a><!-- ENDIF --></td>
 			<td class="{$BG}" width="83%">
 				<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_newest.gif" width="18" height="9" alt="&gt;&gt;&gt;" border="0" title="{L_UNREAD_POSTS}" /></a><!-- ENDIF -->
 				<!-- IF topicrow.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF -->
@@ -85,17 +77,20 @@
 <!-- ENDIF -->
 
 <!-- IF .forumrow or .topicrow -->
+	</table>
+	<table cellspacing="0" width="100%">
 	<tr>
-		<td class="cat" colspan="4" align="{S_CONTENT_FLOW_END}"><input class="button2" type="submit" name="unwatch" value="{L_UNWATCH_MARKED}" /></td>
+		<td class="cat" align="{S_CONTENT_FLOW_END}"><input class="button2" type="submit" name="unwatch" value="{L_UNWATCH_MARKED}" /></td>
 	</tr>
 <!-- ENDIF -->
 </table>
 
-<!-- IF .forumrow or .topicrow or .pagination -->
-	<table width="100%" cellspacing="1">
-		<!-- IF .forumrow or .topicrow --><tr><td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('ucp', 't', true); marklist('ucp', 'f', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp', 't', false); marklist('ucp', 'f', false); return false;">{L_UNMARK_ALL}</a></b></td></tr><!-- ENDIF -->
-		<!-- IF .pagination --><tr><td align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td></tr><!-- ENDIF -->
-	</table>
+<!-- IF .forumrow or .topicrow -->
+	<table width="100%" cellspacing="1"><tr>
+		<!-- IF .topicrow --><td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL_TOPICS} ]</td><!-- ENDIF -->
+		<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('ucp', 't', true); marklist('ucp', 'f', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp', 't', false); marklist('ucp', 'f', false); return false;">{L_UNMARK_ALL}</a></b></td>
+		<!-- IF .topicrow and .pagination --></tr><tr><td align="{S_CONTENT_FLOW_END}" colspan="2"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+	</tr></table>
 <!-- ENDIF -->
 
 {S_FORM_TOKEN}

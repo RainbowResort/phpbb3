@@ -2,13 +2,13 @@
 
 <table cellspacing="1" style="margin: 6px 0" width="100%">
 <tr>
-	<td><h3>{L_VIEWING_PROFILE}</h3></td>
+	<td><h3>{PAGE_TITLE}</h3></td>
 </tr>
 </table>
 
 <!-- EVENT memberlist_view_content_prepend -->
 
-<form method="post" action="{S_PROFILE_ACTION}">
+<form method="post" action="{S_PROFILE_ACTION}" name="viewprofile">
 
 <table class="main" width="100%" cellspacing="1">
 <tr>
@@ -87,7 +87,7 @@
 			<!-- IF POSTS_IN_QUEUE --><br />[&nbsp;<!-- IF U_MCP_QUEUE --><a href="{U_MCP_QUEUE}"><!-- ENDIF -->{L_POSTS_IN_QUEUE}<!-- IF U_MCP_QUEUE --></a><!-- ENDIF -->&nbsp;]<!-- ENDIF -->
 			<!-- IF S_DISPLAY_SEARCH --><br /><a href="{U_SEARCH_USER}">{L_SEARCH_USER_POSTS}</a><!-- ENDIF --></span></td>
 		</tr>
-		<!-- IF S_SHOW_ACTIVITY -->
+		<!-- IF S_SHOW_ACTIVITY and POSTS -->
 			<tr valign="top">
 				<td align="{S_CONTENT_FLOW_END}"><span class="big">{L_ACTIVE_IN_FORUM}{L_COLON}</span></td>
 				<td><!-- IF ACTIVE_FORUM != '' --><b><a class="big" href="{U_ACTIVE_FORUM}">{ACTIVE_FORUM}</a></b><br /><span class="bigger">[&nbsp;{ACTIVE_FORUM_POSTS} / {ACTIVE_FORUM_PCT}&nbsp;]</span><!-- ELSE --><span class="big">-</span><!-- ENDIF --></td>
@@ -176,7 +176,7 @@
 		<td colspan="2" style="padding: 0"><table cellspacing="0" width="100%"><tr><th width="40%">{L_SIGNATURE}</th><th></th></tr></table></td>
 	</tr>
 	<tr>
-		<td class="bg1" colspan="2"><table cellspacing="5" width="100%"><tr><td><span class="postbody"><span class="signature">{SIGNATURE}</span></span></td></tr></table></td>
+		<td class="bg1" colspan="2"><table cellspacing="5" width="100%"><tr><td><div class="postbody"><div class="signature">{SIGNATURE}</div></div></td></tr></table></td>
 	</tr>
 <!-- ENDIF -->
 </table>

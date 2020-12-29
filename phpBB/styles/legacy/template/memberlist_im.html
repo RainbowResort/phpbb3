@@ -7,17 +7,12 @@
 	<tr>
 		<th colspan="2">{L_SEND_IM}</th>
 	</tr>
-	<!-- IF S_SENT_JABBER -->
-        <tr>
-            <td class="bg1" colspan="2" align="center"><span class="big">{L_IM_SENT_JABBER}</span></td>
-        </tr>
-	<!-- ENDIF -->
 	<tr>
-		<td class="bg1" colspan="2"><span class="bigger">{L_SEND_IM_EXPLAIN}</span></td>
+		<td class="bg1" colspan="2"><span class="bigger">{L_SEND_IM_EXPLAIN}</span><!-- IF S_SENT_JABBER --><div class="bigger"><br />{L_IM_SENT_JABBER}</div><!-- ENDIF --></td>
 	</tr>
 	<tr>
 		<td class="bg1"><b class="bigger">{L_IM_RECIPIENT}{L_COLON}</b></td>
-		<td class="bg1"><span class="big"><b>{USERNAME}</b><!-- IF S_NO_SEND_JABBER --> [ {IM_CONTACT} ]<!-- ENDIF --></span></td>
+		<td class="bg1"><span class="bigger"><b>{USERNAME}</b><!-- IF S_NO_SEND_JABBER --> [ {IM_CONTACT} ]<!-- ENDIF --></span></td>
 	</tr>
 
 	<!-- IF S_SEND_JABBER -->
@@ -25,8 +20,10 @@
 			<td class="bg1"><b class="bigger">{L_IM_MESSAGE}{L_COLON}</b></td>
 			<td class="bg1"><textarea name="message" rows="5" cols="45"></textarea></td>
 		</tr>
+		</table>
+		<table cellspacing="0" width="100%">
 		<tr>
-			<td class="cat" colspan="2" align="center"><input class="button1" name="submit" type="submit" value="{L_IM_SEND}" /></td>
+			<td class="cat" align="center"><input class="button1" name="submit" type="submit" value="{L_IM_SEND}" /></td>
 		</tr>
 	<!-- ELSEIF S_NO_SEND_JABBER -->
 		<tr>

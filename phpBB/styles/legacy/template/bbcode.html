@@ -21,7 +21,11 @@
 <!-- END quote_close -->
 
 <!-- BEGIN quote_extended -->
-<blockquote><div class="quotetitle"><table class="table1"><tr>
+<blockquote>
+	<xsl:if test="@post_url">
+	<xsl:attribute name="cite"><xsl:value-of select="@post_url"/></xsl:attribute>
+	</xsl:if>
+<div class="quotetitle"><table class="table1"><tr>
 <xsl:if test="not(@author)">
 	<td class="cite">
 		<xsl:value-of select="$L_QUOTE"/>
@@ -46,7 +50,11 @@
 	<xsl:value-of select="$L_COLON"/>
 	<xsl:if test="@post_url">
 		<xsl:text> </xsl:text>
-		<a href="{@post_url}" data-post-id="{@post_id}">*</a>
+		<a href="{@post_url}">*</a>
+	</xsl:if>
+	<xsl:if test="@msg_url">
+		<xsl:text> </xsl:text>
+		<a href="{@msg_url}">*</a>
 	</xsl:if>
 	</td>
 	<xsl:if test="@date">

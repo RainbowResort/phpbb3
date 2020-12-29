@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="nojs" dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
+<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
 <head>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -36,12 +36,12 @@
 
 <!-- EVENT overall_header_stylesheets_after -->
 
-<script type="text/javascript"><!--
-	if (document.fireEvent || window.XMLHttpRequest) {document.documentElement.className += " dropdown-enabled";}
-//--></script>
 </head>
+<body class="{S_CONTENT_DIRECTION}">
 
-<body class="{S_CONTENT_DIRECTION}" marginwidth="25">
+<script type="text/javascript"><!--
+	if (document.fireEvent || window.XMLHttpRequest) {document.body.className += " dropdown-enabled";}
+//--></script>
 
 <!-- EVENT overall_header_body_before -->
 
@@ -49,16 +49,16 @@
 
 <!-- EVENT overall_header_headerbar_before -->
 
-<table cellspacing="0" height="100" width="100%"><tr>
-	<td class="site-logo" width="200"><a href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->"><img src="{T_THEME_PATH}/images/site_logo.gif" alt="" border="0" /></a></td>
+<table cellspacing="0" width="100%"><tr>
+	<td class="site-logo" height="100" width="200"><a href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->"><img src="{T_THEME_PATH}/images/site_logo.gif" alt="" border="0" /></a></td>
 	<td align="center" class="site-description"><h1>{SITENAME}</h1><div class="big">{SITE_DESCRIPTION}</div></td>
 	<td align="{S_CONTENT_FLOW_END}" class="search-header" width="200">
 		<!-- EVENT overall_header_searchbox_before -->
 		<!-- IF S_DISPLAY_SEARCH and not S_IN_SEARCH -->
 			<div class="search-box">
-				<form action="{U_SEARCH}" method="get" name="global_search">
+				<form action="{U_SEARCH}" method="get" name="search">
 					<input type="text" class="inputbox" name="keywords" size="20" title="{L_SEARCH_KEYWORDS}" value="<!-- IF SEARCH_WORDS -->{SEARCH_WORDS}<!-- ELSE -->{L_SEARCH_MINI}<!-- ENDIF -->" onfocus="if (this.value == '{LA_SEARCH_MINI}') {this.value='';}" />
-					<input type="image" src="{T_THEME_PATH}/images/icon_mini_search.gif" width="12" height="13" alt="*" title="{L_SEARCH}" style="margin-bottom: -3px" onclick="var h = document.forms['global_search'].elements[0]; if (h.value == '' || h.value == '{LA_SEARCH_MINI}') {h.focus(); return false;}" />
+					<input type="image" src="{T_THEME_PATH}/images/icon_mini_search.gif" alt="*" title="{L_SEARCH}" style="height: 13px; margin-bottom: -3px; width: 12px" onclick="var h = document.forms['search'].elements[0]; if (h.value == '' || h.value == '{LA_SEARCH_MINI}') {h.focus(); return false;}" />
 					{S_SEARCH_HIDDEN_FIELDS}
 				</form>
 				<p><a href="{U_SEARCH}">{L_SEARCH_ADV}</a></p>
@@ -75,7 +75,7 @@
 <div id="menubar"><table width="100%" cellspacing="0">
 	<tr class="bigger" valign="top"><td style="padding: 0">
 		<div style="padding: 4px 2px">
-			<!-- IF (S_DISPLAY_MEMBERLIST and not S_IS_BOT) or S_DISPLAY_SEARCH or (U_ACP and not U_RESTORE_PERMISSIONS) or U_MCP --><!-- DEFINE $QUICKLINKS = 1 -->
+			<!-- IF (S_DISPLAY_MEMBERLIST and not S_IS_BOT) or (U_TEAM and not S_IS_BOT) or S_DISPLAY_SEARCH or (U_ACP and not U_RESTORE_PERMISSIONS) or U_MCP --><!-- DEFINE $QUICKLINKS = 1 -->
 				<span class="quicktools"><a href="#" id="quick_link"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" alt="" /> {L_QUICK_LINKS}</a>&nbsp;</span>
 			<!-- ENDIF -->
 
@@ -87,14 +87,15 @@
 		<!-- IF $QUICKLINKS -->
 			<div id="quick_links_list" style="border-width: 0; display: none; {S_CONTENT_FLOW_BEGIN}: 0"><!--
 				<div><!-- IF U_ACP and not U_RESTORE_PERMISSIONS --><a href="{U_ACP}" title="{L_ACP}">{L_ACP_SHORT}</a><br /><!-- IF not U_MCP --><div class="separator"></div><!-- ENDIF --><!-- ENDIF -->
-				<!-- IF U_MCP --><a href="{U_MCP}" title="{L_MCP}">{L_MCP_SHORT}</a><br /><div class="separator"></div><!-- ENDIF -->
+				<!-- IF U_MCP --><a href="{U_MCP}" title="{L_MCP}">{L_MCP_SHORT}</a><br /><div class="separator"></div><!-- ENDIF --><!-- EVENT navbar_header_quick_links_before -->
 				<!-- IF S_DISPLAY_SEARCH -->
 					<!-- IF S_REGISTERED_USER --><a href="{U_SEARCH_SELF}">{L_SEARCH_SELF}</a><br /><!-- ENDIF -->
 					<!-- IF S_USER_LOGGED_IN --><a href="{U_SEARCH_NEW}">{L_SEARCH_NEW}</a><br /><!-- ENDIF -->
 					<!-- IF S_LOAD_UNREADS --><a href="{U_SEARCH_UNREAD}">{L_SEARCH_UNREAD}</a><br /><!-- ENDIF -->
 					<a href="{U_SEARCH_UNANSWERED}">{L_SEARCH_UNANSWERED}</a><br /><a href="{U_SEARCH_ACTIVE_TOPICS}">{L_SEARCH_ACTIVE_TOPICS}</a><br /><div class="separator"></div><a href="{U_SEARCH}">{L_SEARCH}</a>
 				<!-- ENDIF -->
-				<!-- IF S_DISPLAY_MEMBERLIST and not S_IS_BOT --><!-- IF S_DISPLAY_SEARCH --><br /><div class="separator"></div><!-- ENDIF --><a href="{U_MEMBERLIST}">{L_MEMBERLIST}</a><!-- IF U_TEAM --><br /><a href="{U_TEAM}">{L_THE_TEAM}</a><!-- ENDIF --><!-- ENDIF --></div>
+				<!-- IF (S_DISPLAY_MEMBERLIST or U_TEAM) and not S_IS_BOT --><!-- IF S_DISPLAY_SEARCH --><br /><div class="separator"></div><!-- ENDIF --><!-- IF S_DISPLAY_MEMBERLIST --><a href="{U_MEMBERLIST}">{L_MEMBERLIST}</a><!-- ENDIF --><!-- IF U_TEAM --><!-- IF S_DISPLAY_MEMBERLIST --><br /><!-- ENDIF --><a href="{U_TEAM}">{L_THE_TEAM}</a><!-- ENDIF --><!-- ENDIF -->
+				<!-- EVENT navbar_header_quick_links_after --></div>
 			--></div>
 		<!-- ENDIF -->
 	</td>
@@ -137,11 +138,11 @@
 
 			<div id="user_list" style="border-width: 0; display: none; {S_CONTENT_FLOW_END}: 0"><!--
 				<div align="{S_CONTENT_FLOW_BEGIN}"><!-- IF U_RESTORE_PERMISSIONS --><a href="{U_RESTORE_PERMISSIONS}">{L_RESTORE_PERMISSIONS}</a><br /><!-- ENDIF -->
-				<a href="{U_PROFILE}">{L_PROFILE}</a><!-- IF U_USER_PROFILE --><br />
+				<!-- EVENT navbar_header_profile_list_before --> <a href="{U_PROFILE}">{L_PROFILE}</a><!-- IF U_USER_PROFILE --><br />
 				<a href="{U_USER_PROFILE}">{L_READ_PROFILE}</a><!-- ENDIF -->
-				<br /><div class="separator"></div><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a></div>
+				<br /><!-- EVENT navbar_header_profile_list_after --><div class="separator"></div><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a></div>
 			--></div>
-		<!-- ELSE -->
+		<!-- ELSEIF not S_IS_BOT -->
 			<div align="{S_CONTENT_FLOW_END}" style="padding: 4px 2px">
 				<!-- EVENT navbar_header_logged_out_content -->
 
@@ -157,16 +158,6 @@
 		<tr class="bigger"><td colspan="2"><b class="error">{L_BOARD_DISABLED}</b></td></tr>
 	<!-- ENDIF -->
 </table></div>
-
-<!-- EVENT navbar_header_quick_links_before -->
-<!-- EVENT navbar_header_quick_links_after -->
-
-<!-- IF S_REGISTERED_USER -->
-	<!-- EVENT navbar_header_username_prepend -->
-	<!-- EVENT navbar_header_profile_list_before -->
-	<!-- EVENT navbar_header_profile_list_after -->
-	<!-- EVENT navbar_header_username_append -->
-<!-- ENDIF -->
 
 <script type="text/javascript" src="{T_TEMPLATE_PATH}/forum_fn.js?assets_version={T_ASSETS_VERSION}"></script>
 
@@ -196,14 +187,14 @@
 	</tr></table></div>
 <!-- ENDIF -->
 
-<!-- DEFINE $MICRODATA = ' itemtype="http://schema.org/ListItem" itemprop="itemListElement" itemscope' -->
+<!-- DEFINE $MICRODATA = 'itemtype="http://schema.org/ListItem" itemprop="itemListElement" itemscope' -->
 <!-- SET navlink_position = 1 -->
 <table cellspacing="1" width="100%" class="main" style="margin: 4px 0 8px">
 <tr class="bg1"><td><table cellspacing="0" width="100%"><tr class="breadcrumbs">
 	<td><!-- EVENT overall_header_breadcrumbs_before -->
-		<b><span itemscope itemtype="http://schema.org/BreadcrumbList"><!-- IF U_SITE_HOME --><span {$MICRODATA}><a href="{U_SITE_HOME}" itemtype="https://schema.org/Thing" itemprop="item" data-navbar-reference="home"><span itemprop="name">{L_SITE_HOME}</span></a><meta itemprop="position" content="{{ navlink_position }}<!-- SET navlink_position = navlink_position + 1 -->" /></span> <b>&#187;</b> <!-- ENDIF -->
-		<!-- EVENT overall_header_breadcrumb_prepend --><span {$MICRODATA}><a href="{U_INDEX}" itemtype="https://schema.org/Thing" itemprop="item" data-navbar-reference="index"><span itemprop="name">{L_INDEX}</span></a><meta itemprop="position" content="{{ navlink_position }}<!-- SET navlink_position = navlink_position + 1 -->" /></span>
-		<!-- BEGIN navlinks --><!-- EVENT overall_header_navlink_prepend --> &#187; <span {$MICRODATA}<!-- IF navlinks.MICRODATA --> {navlinks.MICRODATA}<!-- ENDIF -->><a href="{navlinks.U_VIEW_FORUM}" itemtype="https://schema.org/Thing" itemprop="item"><span itemprop="name">{navlinks.FORUM_NAME}</span></a><meta itemprop="position" content="{{ navlink_position }}<!-- SET navlink_position = navlink_position + 1 -->" /></span><!-- EVENT overall_header_navlink_append --><!-- END navlinks -->
+		<b><span itemscope itemtype="http://schema.org/BreadcrumbList"><!-- IF U_SITE_HOME --><span {$MICRODATA}><a itemprop="item" href="{U_SITE_HOME}" data-navbar-reference="home"><span itemprop="name">{L_SITE_HOME}</span></a><meta itemprop="position" content="{{ navlink_position }}<!-- SET navlink_position = navlink_position + 1 -->" /></span> <b>&#187;</b> <!-- ENDIF -->
+		<!-- EVENT overall_header_breadcrumb_prepend --><span {$MICRODATA}><a itemprop="item" href="{U_INDEX}" data-navbar-reference="index"><span itemprop="name">{L_INDEX}</span></a><meta itemprop="position" content="{{ navlink_position }}<!-- SET navlink_position = navlink_position + 1 -->" /></span>
+		<!-- IF not S_IN_MCP and not S_IN_UCP --><!-- BEGIN navlinks --><!-- SET NAVLINK_NAME = navlinks.BREADCRUMB_NAME | default(navlinks.FORUM_NAME) --><!-- SET NAVLINK_LINK = navlinks.U_BREADCRUMB | default(navlinks.U_VIEW_FORUM) --><!-- EVENT overall_header_navlink_prepend --> &#187; <span {$MICRODATA}<!-- IF navlinks.MICRODATA --> {navlinks.MICRODATA}<!-- ENDIF -->><a itemprop="item" href="{NAVLINK_LINK}"><span itemprop="name">{NAVLINK_NAME}</span></a><meta itemprop="position" content="{{ navlink_position }}<!-- SET navlink_position = navlink_position + 1 -->" /></span> <!-- EVENT overall_header_navlink_append --> <!-- END navlinks --><!-- ENDIF -->
 		<!-- EVENT overall_header_breadcrumb_append --></span></b>
 		<!-- EVENT overall_header_breadcrumbs_after -->
 	</td>

@@ -9,25 +9,25 @@
 <tr>
 	<td class="bg1">
 		<!-- IF ADDITIONAL_MSG -->
-			<p align="center" class="error">{ADDITIONAL_MSG}</p><br />
+			<br /><p align="center" class="error">{ADDITIONAL_MSG}</p>
 		<!-- ENDIF -->
 		<!-- IF S_NOTIFY_POSTER -->
-			<div align="center"><input type="checkbox" name="notify_poster" checked="checked" /> <span class="big"><!-- IF S_APPROVE -->{L_NOTIFY_POSTER_APPROVAL}<!-- ELSE -->{L_NOTIFY_POSTER_DISAPPROVAL}<!-- ENDIF --></span></div><br />
+			<br /><div align="center"><input type="checkbox" name="notify_poster" checked="checked" /> <span class="bigger"><!-- IF S_APPROVE -->{L_NOTIFY_POSTER_APPROVAL}<!-- ELSE -->{L_NOTIFY_POSTER_DISAPPROVAL}<!-- ENDIF --></span></div>
 		<!-- ENDIF -->
 		<!-- IF not S_APPROVE and not S_RESTORE and .reason -->
 			<br />
 			<table width="90%" cellspacing="2" align="center">
 			<tr>
-				<td width="22%"><b class="big">{L_DISAPPROVE_REASON}{L_COLON}</b></td>
+				<td width="22%"><b class="bigger">{L_DISAPPROVE_REASON}{L_COLON}</b></td>
 				<td><select name="reason_id"><!-- BEGIN reason --><option value="{reason.ID}"<!-- IF reason.S_SELECTED --> selected="selected"<!-- ENDIF -->>{reason.DESCRIPTION}</option><!-- END reason --></select></td>
 			</tr>
 			<tr>
-				<td valign="top"><span class="big"><b>{L_MORE_INFO}{L_COLON}</b></span><br /><span class="bigger">{L_CAN_LEAVE_BLANK}</span></td>
-				<td><textarea name="reason" rows="10" cols="76">{REASON}</textarea></td>
+				<td valign="top"><b class="bigger">{L_MORE_INFO}{L_COLON}</b><br /><span class="bigger">{L_CAN_LEAVE_BLANK}</span></td>
+				<td><textarea name="reason" rows="4" cols="50">{REASON}</textarea></td>
 			</tr>
 			</table>
 		<!-- ENDIF -->
-		<br /><div align="center"><div class="big">{MESSAGE_TEXT}</div><br />
+		<br /><div align="center"><div class="bigger"><b>{MESSAGE_TEXT}</b></div><br />
 		{S_HIDDEN_FIELDS}<input type="submit" name="confirm" value="{YES_VALUE}" class="button1" /> &nbsp;<input type="submit" name="cancel" value="{L_NO}" class="button2" /></div>
 	</td>
 </tr>

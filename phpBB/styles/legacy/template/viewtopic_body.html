@@ -9,7 +9,7 @@
 <!-- IF S_FORUM_RULES -->
 	<div style="margin: 14px 4px">
 		<h4 class="forumrules">{L_FORUM_RULES}</h4>
-		<p class="forumdesc"><!-- IF U_FORUM_RULES --><a href="{U_FORUM_RULES}"><b>{L_FORUM_RULES_LINK}</b></a><!-- ELSE -->{FORUM_RULES}<!-- ENDIF --></p>
+		<p class="forumdesc"><!-- IF U_FORUM_RULES --><b><a href="{U_FORUM_RULES}">{L_FORUM_RULES_LINK}</a></b><!-- ELSE -->{FORUM_RULES}<!-- ENDIF --></p>
 	</div>
 <!-- ENDIF -->
 
@@ -42,11 +42,11 @@
 						<span class="quicktools"><a class="button" id="topictools_link" name="#topictools" style="background-image: url('{T_THEME_PATH}/images/icon_topic_tools.gif'); background-repeat: no-repeat; background-position: center; display: block; margin: 0 3px; padding-{S_CONTENT_FLOW_BEGIN}: 14px; padding-{S_CONTENT_FLOW_END}: 14px">&nbsp;</a></span>
 
 						<div id="topictools_list" style="border-width: 0; display: none; margin-{S_CONTENT_FLOW_BEGIN}: 2px"><!--
-							<div><!-- IF U_WATCH_TOPIC --><a href="{U_WATCH_TOPIC}">{S_WATCH_TOPIC_TITLE}</a><!-- IF U_BOOKMARK_TOPIC or U_BUMP_TOPIC or U_EMAIL_TOPIC or U_PRINT_TOPIC --><br /><!-- ENDIF --><!-- ENDIF -->
+							<div><!-- EVENT viewtopic_topic_tools_before --> <!-- IF U_WATCH_TOPIC --><a href="{U_WATCH_TOPIC}">{S_WATCH_TOPIC_TITLE}</a><!-- IF U_BOOKMARK_TOPIC or U_BUMP_TOPIC or U_EMAIL_TOPIC or U_PRINT_TOPIC --><br /><!-- ENDIF --><!-- ENDIF -->
 							<!-- IF U_BOOKMARK_TOPIC --><a href="{U_BOOKMARK_TOPIC}">{S_BOOKMARK_TOPIC}</a><!-- IF U_BUMP_TOPIC or U_EMAIL_TOPIC or U_PRINT_TOPIC --><br /><!-- ENDIF --><!-- ENDIF -->
 							<!-- IF U_BUMP_TOPIC --><a href="{U_BUMP_TOPIC}">{L_BUMP_TOPIC}</a><!-- IF U_EMAIL_TOPIC or U_PRINT_TOPIC --><br /><!-- ENDIF --><!-- ENDIF -->
 							<!-- IF U_EMAIL_TOPIC --><a href="{U_EMAIL_TOPIC}">{L_EMAIL_TOPIC}</a><!-- IF U_PRINT_TOPIC --><br /><!-- ENDIF --><!-- ENDIF -->
-							<!-- IF U_PRINT_TOPIC --><a href="{U_PRINT_TOPIC}">{L_PRINT_TOPIC}</a><!-- ENDIF --></div>
+							<!-- IF U_PRINT_TOPIC --><a href="{U_PRINT_TOPIC}">{L_PRINT_TOPIC}</a><!-- ENDIF --> <!-- EVENT viewtopic_topic_tools_after --></div>
 						--></div>
 					</td>
 				<!-- ELSE -->
@@ -61,21 +61,12 @@
 			</tr>
 			</table>
 		</td>
-		<td align="{S_CONTENT_FLOW_END}" valign="middle"><!-- IF U_VIEW_UNREAD_POST and not S_IS_BOT --><b><a href="{U_VIEW_UNREAD_POST}" class="nowrap">{L_VIEW_UNREAD_POST}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- ENDIF --><!-- INCLUDE pagination.html --><!-- EVENT viewtopic_body_pagination_top_after --></td>
+		<td align="{S_CONTENT_FLOW_END}" valign="middle"><!-- IF U_VIEW_UNREAD_POST and not S_IS_BOT --><b><a class="nowrap" href="{U_VIEW_UNREAD_POST}">{L_VIEW_UNREAD_POST}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- ENDIF --><!-- INCLUDE pagination.html --><!-- EVENT viewtopic_body_pagination_top_after --></td>
 	</tr>
 	</table>
 </div>
 
 <!-- IF $TOPICTOOLS -->
-<script type="text/javascript"><!--
-if (document.documentElement && (document.documentElement.className.indexOf('dropdown-enabled') > -1 && typeof removeComment === 'function')) {
-	var ttl = document.getElementById('topictools_list'); removeComment(ttl); ttl.onclick = function(e) {if (e) {e.stopPropagation();} else {window.event.cancelBubble = true;}};
-	if (document.uniqueID && !document.querySelector) {ttl.parentNode.style.position = 'relative'; if (document.documentElement.dir == 'ltr') {ttl.style.left = '0';} else {ttl.style.right = '0';}}
-	document.getElementById('topictools_link').onclick = function(e) {if (e) {e.stopPropagation();} else {window.event.cancelBubble = true;} toggleLists(ttl, this, ttl.parentNode); return false;};
-	document.getElementById('topictools_link').href = document.getElementById('topictools_link').name;
-}
-//--></script>
-	<!-- EVENT viewtopic_topic_tools_before --> <!-- EVENT viewtopic_topic_tools_after -->
 	<div class="hidden_links"><table width="100%" cellspacing="1"><tr class="bigger"><td>
 		<!-- IF U_WATCH_TOPIC --><a href="{U_WATCH_TOPIC}">{S_WATCH_TOPIC_TITLE}</a><!-- IF U_BOOKMARK_TOPIC or U_PRINT_TOPIC or U_EMAIL_TOPIC or U_BUMP_TOPIC --> | <!-- ENDIF --><!-- ENDIF -->
 		<!-- IF U_BOOKMARK_TOPIC --><a href="{U_BOOKMARK_TOPIC}">{S_BOOKMARK_TOPIC}</a><!-- IF U_PRINT_TOPIC or U_EMAIL_TOPIC or U_BUMP_TOPIC --> | <!-- ENDIF --><!-- ENDIF -->
@@ -83,6 +74,14 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 		<!-- IF U_EMAIL_TOPIC --><a href="{U_EMAIL_TOPIC}">{L_EMAIL_TOPIC}</a><!-- IF U_BUMP_TOPIC --> | <!-- ENDIF --><!-- ENDIF -->
 		<!-- IF U_BUMP_TOPIC --><a href="{U_BUMP_TOPIC}">{L_BUMP_TOPIC}</a><!-- ENDIF -->
 	</td></tr></table></div>
+
+	<script type="text/javascript"><!--
+		if (document.body.className.indexOf('dropdown-enabled') > -1 && typeof removeComment === 'function') {
+			var ttl = document.getElementById('topictools_list'); removeComment(ttl); ttl.onclick = function(e) {if (e) {e.stopPropagation();} else {window.event.cancelBubble = true;}};
+			document.getElementById('topictools_link').onclick = function(e) {if (e) {e.stopPropagation();} else {window.event.cancelBubble = true;} toggleLists(ttl, this, ttl.parentNode); return false;};
+			document.getElementById('topictools_link').href = document.getElementById('topictools_link').name;
+		}
+	//--></script>
 <!-- ENDIF -->
 
 <!-- EVENT viewtopic_body_poll_before -->
@@ -99,8 +98,8 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 				<td>
 				<table align="center" cellspacing="1">
 				<!-- BEGIN poll_option -->
-					<tr<!-- IF poll_option.POLL_OPTION_MOST_VOTES --> class="most-votes"<!-- ENDIF -->>
 					<!-- EVENT viewtopic_body_poll_option_before -->
+					<tr<!-- IF poll_option.POLL_OPTION_MOST_VOTES --> class="most-votes"<!-- ENDIF -->>
 						<!-- IF S_CAN_VOTE -->
 							<td>
 								<input type="<!-- IF S_IS_MULTI_CHOICE -->checkbox<!-- ELSE -->radio<!-- ENDIF -->" name="vote_id[]" value="{poll_option.POLL_OPTION_ID}"<!-- IF poll_option.POLL_OPTION_VOTED --> checked="checked"<!-- ENDIF --> />
@@ -112,8 +111,8 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 							<td align="{S_CONTENT_FLOW_END}"><b class="big">{poll_option.POLL_OPTION_PERCENT}</b></td>
 							<td nowrap="nowrap"><span class="big">[ {poll_option.POLL_OPTION_RESULT} ]</span><!-- IF poll_option.POLL_OPTION_VOTED --> <b title="{L_POLL_VOTED_OPTION}">x</b><!-- ENDIF --></td>
 						<!-- ENDIF -->
-					<!-- EVENT viewtopic_body_poll_option_after -->
 					</tr>
+					<!-- EVENT viewtopic_body_poll_option_after -->
 				<!-- END poll_option -->
 				</table>
 				</td>
@@ -133,8 +132,8 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 			</tr>
 		<!-- ENDIF -->
 			</table>
-			{S_HIDDEN_FIELDS}
 			{S_FORM_TOKEN}
+			{S_HIDDEN_FIELDS}
 			</form>
 		</td>
 	</tr>
@@ -155,7 +154,7 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 	<tr class="{$BG}">
 	<!-- IF postrow.S_POST_HIDDEN -->
 		<td align="center" class="member"<!-- IF postrow.S_FIRST_ROW or postrow.S_LAST_ROW --> colspan="2"<!-- ENDIF -->>
-			<!-- IF postrow.S_FIRST_UNREAD --><a name="unread" class="anchor" data-url="{postrow.U_MINI_POST}"></a><!-- ENDIF -->
+			<!-- IF postrow.S_FIRST_UNREAD --><a name="unread" class="anchor"></a><!-- ENDIF -->
 			<a name="p{postrow.POST_ID}" class="anchor"></a>
 				<!-- IF postrow.S_POST_DELETED -->
 					{postrow.L_POST_DELETED_MESSAGE}
@@ -167,30 +166,27 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 	<!-- ELSE -->
 		<td align="center">
 			<!-- IF postrow.S_FIRST_UNREAD -->
-				<a name="unread" class="anchor"<!-- IF S_UNREAD_VIEW --> data-url="{postrow.U_MINI_POST}"<!-- ENDIF -->></a>
+				<a name="unread" class="anchor"></a>
 			<!-- ENDIF -->
 			<a name="p{postrow.POST_ID}" class="anchor"></a>
 			<!-- EVENT viewtopic_body_post_author_before -->
 			<b>{postrow.POST_AUTHOR_FULL}</b>
 			<!-- EVENT viewtopic_body_post_author_after -->
 		</td>
-		<!-- EVENT viewtopic_body_postrow_post_details_before -->
-		<!-- EVENT viewtopic_body_post_subject_before -->
-		<td width="100%">
-			<table cellspacing="0" height="20" width="100%">
+		<td height="20" width="100%">
+			<table cellspacing="0" width="100%">
 			<tr>
 				<td>
-					<table cellspacing="0"><tr>
-						<!-- IF postrow.POST_ICON_IMG --><td><img src="{T_ICONS_PATH}{postrow.POST_ICON_IMG}" width="{postrow.POST_ICON_IMG_WIDTH}" height="{postrow.POST_ICON_IMG_HEIGHT}" alt="" title="{postrow.POST_ICON_IMG_ALT}" /></td><!-- ENDIF --><td class="bigger"><b>{L_POST_SUBJECT}{L_COLON}</b> <a href="#p{postrow.POST_ID}">{postrow.POST_SUBJECT}</a></td>
+					<table cellspacing="0"><tr><!-- EVENT viewtopic_body_post_subject_before -->
+						<!-- IF postrow.POST_ICON_IMG --><td><img src="{T_ICONS_PATH}{postrow.POST_ICON_IMG}" width="{postrow.POST_ICON_IMG_WIDTH}" height="{postrow.POST_ICON_IMG_HEIGHT}" alt="" title="{postrow.POST_ICON_IMG_ALT}" /></td><!-- ENDIF --><td class="bigger"><b>{L_POST_SUBJECT}{L_COLON}</b> <a href="{postrow.U_MINI_POST}">{postrow.POST_SUBJECT}</a></td>
 					</tr></table>
 				</td>
-				<td align="{S_CONTENT_FLOW_END}" class="bigger">
-					<!-- IF S_IS_BOT --><img src="{T_THEME_PATH}/images/icon_post_target.gif" width="12" height="9" alt="" /><!-- ELSE --><a href="{postrow.U_MINI_POST}"><img src="{T_THEME_PATH}/images/icon_post_target<!-- IF postrow.S_UNREAD_POST -->_unread<!-- ENDIF -->.gif" width="12" height="9" alt="<!-- IF postrow.S_UNREAD_POST -->+ " title="{L_UNREAD_POST}<!-- ENDIF -->" border="0" /></a><!-- ENDIF --><b>{L_POSTED}{L_COLON}</b> {postrow.POST_DATE}
-				</td>
+				<td align="{S_CONTENT_FLOW_END}" class="bigger"><!-- EVENT viewtopic_body_postrow_post_details_before -->
+					<!-- IF not S_IS_BOT --><a href="{postrow.U_MINI_POST}"><!-- ENDIF --><img src="{T_THEME_PATH}/images/icon_post_target<!-- IF postrow.S_UNREAD_POST -->_unread<!-- ENDIF -->.gif" width="12" height="9" alt="<!-- IF postrow.S_UNREAD_POST -->+ " title="{L_UNREAD_POST}<!-- ENDIF -->" border="0" /><!-- IF not S_IS_BOT --></a><!-- ENDIF --><b>{L_POSTED}{L_COLON}</b> {postrow.POST_DATE}
+				<!-- EVENT viewtopic_body_postrow_post_details_after --></td>
 			</tr>
 			</table>
 		</td>
-		<!-- EVENT viewtopic_body_postrow_post_details_after -->
 		</tr>
 
 		<tr class="{$BG}" valign="top">
@@ -227,7 +223,7 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 			</table>
 
 			<table class="profile"><tr><td>&nbsp;</td><td width="100%"><table class="fixed"><tr><td>
-				<!-- IF postrow.POSTER_POSTS != '' --><div><b>{L_POSTS}{L_COLON}</b> <!-- IF postrow.U_SEARCH !== '' --><a title="{L_SEARCH_USER_POSTS}" href="{postrow.U_SEARCH}"><!-- ENDIF -->{postrow.POSTER_POSTS}<!-- IF postrow.U_SEARCH !== '' --></a><!-- ENDIF --></div><!-- ENDIF -->
+				<!-- IF postrow.POSTER_POSTS != '' --><div><b>{L_POSTS}{L_COLON}</b> <!-- IF postrow.U_SEARCH !== '' --><a href="{postrow.U_SEARCH}"><!-- ENDIF -->{postrow.POSTER_POSTS}<!-- IF postrow.U_SEARCH !== '' --></a><!-- ENDIF --></div><!-- ENDIF -->
 				<!-- IF postrow.POSTER_WARNINGS --><div><b>{L_WARNINGS}{L_COLON}</b> <b>{postrow.POSTER_WARNINGS}</b></div><!-- ENDIF -->
 				<!-- IF postrow.POSTER_JOINED --><div><b>{L_JOINED}{L_COLON}</b> {postrow.POSTER_JOINED}</div><!-- ENDIF -->
 
@@ -255,8 +251,15 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 					<table width="100%" cellspacing="0">
 					<tr>
 						<td class="bigger">
-							<!-- IF postrow.S_POST_UNAPPROVED --><div><b><a href="{postrow.U_MCP_APPROVE}" class="postapprove"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="" border="0" /> {L_POST_UNAPPROVED}</a></b></div><!-- ENDIF -->
-							<!-- IF postrow.S_POST_DELETED --><div><b><a href="{postrow.U_MCP_APPROVE}" class="postapprove"><img src="{T_THEME_PATH}/images/icon_topic_deleted.gif" width="14" height="14" alt="" border="0" /> {L_POST_DELETED}</a></b></div><!-- ENDIF -->
+							<!-- IF postrow.S_POST_UNAPPROVED -->
+								<!-- IF postrow.S_CAN_APPROVE -->
+								<div><b><a href="{postrow.U_MCP_APPROVE}" class="postapprove"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="" border="0" /> {L_POST_UNAPPROVED}</a></b></div>
+								<!-- ELSE -->
+								<div><b class="error"><img src="{T_THEME_PATH}/images/icon_topic_reported.gif" width="19" height="18" alt="" border="0" /> {L_POST_UNAPPROVED_EXPLAIN}</b></div>
+								<!-- ENDIF -->
+							<!-- ELSEIF postrow.S_POST_DELETED -->
+								<div><b><a href="{postrow.U_MCP_APPROVE}" class="postapprove"><img src="{T_THEME_PATH}/images/icon_topic_deleted.gif" width="14" height="14" alt="" border="0" /> {L_POST_DELETED}</a></b></div>
+							<!-- ENDIF -->
 							<!-- IF postrow.S_POST_REPORTED --><div><b><a href="{postrow.U_MCP_REPORT}" class="postreported"><img src="{T_THEME_PATH}/images/icon_topic_reported.gif" width="19" height="18" alt="" border="0" /> {L_POST_REPORTED}</a></b></div><!-- ENDIF -->
 						</td>
 					</tr>
@@ -321,15 +324,15 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 				<!-- ENDIF -->
 				<!-- EVENT viewtopic_body_postrow_post_notices_after -->
 				<!-- IF postrow.SIGNATURE -->
-					<span class="postbody"><span class="signature"><p>_________________</p>{postrow.SIGNATURE}</span></span>
+					<div class="postbody"><div class="signature"><p>_________________</p>{postrow.SIGNATURE}</div></div>
 				<!-- ENDIF -->
 
 				<!-- EVENT viewtopic_body_postrow_post_content_footer -->
 
 				<br clear="all" /><br />
 
+				<!-- EVENT viewtopic_body_post_buttons_list_before -->
 				<!-- IF (postrow.U_REPORT or postrow.U_INFO or postrow.U_WARN or postrow.U_DELETE) and not S_IS_BOT -->
-					<!-- EVENT viewtopic_body_post_buttons_list_before -->
 					<table width="100%" cellspacing="0">
 					<tr><td align="{S_CONTENT_FLOW_END}">
 						<!-- IF postrow.U_REPORT --><a href="{postrow.U_REPORT}"><img src="{T_THEME_PATH}/images/icon_post_report.gif" width="20" height="20" alt="[!]" border="0" title="{L_REPORT_POST}" /></a> <!-- ENDIF -->
@@ -338,8 +341,8 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 						<!-- IF postrow.U_DELETE --><a href="{postrow.U_DELETE}"><img src="{T_THEME_PATH}/images/icon_post_delete.gif" width="20" height="20" alt="[X]" border="0" title="{L_DELETE_POST}" /></a> <!-- ENDIF -->
 					</td></tr>
 					</table>
-					<!-- EVENT viewtopic_body_post_buttons_list_after -->
 				<!-- ENDIF -->
+				<!-- EVENT viewtopic_body_post_buttons_list_after -->
 				</td>
 			</tr>
 			</table>
@@ -348,19 +351,17 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 
 		<tr class="{$BG}">
 
-			<!-- EVENT viewtopic_body_postrow_back2top_before -->
-			<td><table cellspacing="0"><tr><td><!-- EVENT viewtopic_body_postrow_back2top_prepend --><a class="top" href="#top"><b>{L_BACK_TO_TOP}</b></a><!-- EVENT viewtopic_body_postrow_back2top_append --></td></tr></table></td>
-			<!-- EVENT viewtopic_body_postrow_back2top_after -->
+			<td><!-- EVENT viewtopic_body_postrow_back2top_before --><table cellspacing="0"><tr><td><!-- EVENT viewtopic_body_postrow_back2top_prepend --><b><a class="top" href="#top">{L_BACK_TO_TOP}</a></b><!-- EVENT viewtopic_body_postrow_back2top_append --></td></tr></table><!-- EVENT viewtopic_body_postrow_back2top_after --></td>
 			<td>
 			<table width="100%" cellspacing="0"><tr>
 				<!-- IF postrow.U_POST_AUTHOR --><td><a class="button" href="{postrow.U_POST_AUTHOR}" title="{L_READ_PROFILE}{L_COLON} {postrow.POST_AUTHOR}">{L_READ_PROFILE}</a></td><!-- ENDIF -->
 				<td align="{S_CONTENT_FLOW_END}">
-					<!-- EVENT viewtopic_body_post_buttons_before -->
 					<!-- IF not S_IS_BOT -->
+						<!-- EVENT viewtopic_body_post_buttons_before -->
 						<!-- IF postrow.U_EDIT --><a class="button" href="{postrow.U_EDIT}" title="{L_EDIT_POST}">{L_BUTTON_EDIT}</a> <!-- ENDIF -->
 						<!-- IF postrow.U_QUOTE --><a class="button" href="{postrow.U_QUOTE}" title="{L_REPLY_WITH_QUOTE}">{L_BUTTON_QUOTE}</a><!-- ENDIF -->
+						<!-- EVENT viewtopic_body_post_buttons_after -->
 					<!-- ENDIF -->
-					<!-- EVENT viewtopic_body_post_buttons_after -->
 				</td>
 			</tr></table>
 			</td>
@@ -373,7 +374,7 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 	<!-- ELSEIF not S_IS_BOT -->
 		<table cellspacing="0" width="100%">
 		<tr>
-			<td class="cat" align="center"><form name="viewtopic" method="post" action="{S_TOPIC_ACTION}"><!-- INCLUDE display_options.html --></form></td>
+			<td class="cat" align="center"><form method="post" action="{S_TOPIC_ACTION}"><!-- INCLUDE display_options.html --></form></td>
 		</tr>
 		</table>
 	<!-- ENDIF -->	
@@ -407,7 +408,7 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 			</tr>
 			</table>
 		</td>
-		<td align="{S_CONTENT_FLOW_END}" valign="middle"><b class="nowrap"><a href="{U_VIEW_FORUM}">{L_RETURN_TO_FORUM}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- INCLUDE pagination.html --></td>
+		<td align="{S_CONTENT_FLOW_END}" valign="middle"><b><a class="nowrap" href="{U_VIEW_FORUM}">{L_RETURN_TO_FORUM}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- INCLUDE pagination.html --></td>
 	</tr>
 	</table>
 </div>
@@ -425,7 +426,7 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 	<td><!-- IF .quickmod -->
 		<div class="quickmod"<!-- IF S_DISPLAY_SEARCHBOX --> style="margin-bottom: 7px"<!-- ENDIF -->>
 		<form method="post" action="{S_MOD_ACTION}">
-			<select name="action" id="quick-mod-select" title="{L_QUICK_MOD}">
+			<select name="action" title="{L_QUICK_MOD}">
 				<!-- BEGIN quickmod -->
 				<option value="{quickmod.VALUE}">{quickmod.TITLE}</option>
 				<!-- END quickmod -->
@@ -435,7 +436,7 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 		</div>
 	<!-- ENDIF --><!-- IF S_DISPLAY_SEARCHBOX -->
 		<div class="search-box">
-			<form action="{S_SEARCHBOX_ACTION}" method="get" name="search">
+			<form action="{S_SEARCHBOX_ACTION}" method="get" name="topic-search">
 				<input type="text" class="inputbox" name="keywords" size="20" value="{L_SEARCH_TOPIC}" onfocus="if (this.value == '{LA_SEARCH_TOPIC}') {this.value='';}" />
 				<input type="submit" class="button2" title="{L_SEARCH}" value="{L_GO}" onclick="var h = this.form.elements[0]; if (h.value == '' || h.value == '{LA_SEARCH_TOPIC}') {h.focus(); return false;}" />
 				{S_SEARCH_LOCAL_HIDDEN_FIELDS}
@@ -445,6 +446,8 @@ if (document.documentElement && (document.documentElement.className.indexOf('dro
 	<td><!-- INCLUDE jumpbox.html --></td>
 	</tr></table>
 <!-- ENDIF -->
+
+<!-- EVENT viewtopic_body_online_list_before -->
 
 <!-- IF S_DISPLAY_ONLINE_LIST and U_VIEWONLINE -->
 	<table class="main" width="100%" cellspacing="1" style="margin: 5px 0 8px">

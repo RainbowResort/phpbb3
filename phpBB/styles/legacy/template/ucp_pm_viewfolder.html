@@ -15,8 +15,10 @@
 		<td class="bg1"><b class="bigger">{L_ENCLOSURE}{L_COLON}</b></td>
 		<td class="bg1"><input type="text" class="inputbox" name="enclosure" value="&#034;" /></td>
 	</tr>
+	</table>
+	<table cellspacing="0" width="100%">
 	<tr>
-		<td class="cat" colspan="2" align="center"><input type="hidden" name="export_option" value="CSV" /><input class="button1" type="submit" name="submit_export" value="{L_EXPORT_FOLDER}" /> &nbsp;<input class="button2" type="reset" value="{L_RESET}" name="reset" /></td>
+		<td class="cat" align="center"><input type="hidden" name="export_option" value="CSV" /><input class="button1" type="submit" name="submit_export" value="{L_EXPORT_FOLDER}" /> &nbsp;<input class="button2" type="reset" value="{L_RESET}" name="reset" /></td>
 	</tr>
 	</table>
 	{S_FORM_TOKEN}
@@ -30,17 +32,15 @@
 		<tr>
 			<th>{L_INFORMATION}</th>
 		</tr>
-		<tr>
-			<td align="center" class="bg1">
-				<span class="big">
-					<!-- IF NUM_REMOVED -->
-						{RULE_REMOVED_MESSAGES}
-						<!-- IF NUM_NOT_MOVED --><br /><!-- ENDIF -->
-					<!-- ENDIF -->
-					<!-- IF NUM_NOT_MOVED -->
-						{NOT_MOVED_MESSAGES}<br />{RELEASE_MESSAGE_INFO}
-					<!-- ENDIF -->
-				</span>
+		<tr class="big">
+			<td class="bg1" align="center">
+				<!-- IF NUM_REMOVED -->
+					{RULE_REMOVED_MESSAGES}
+					<!-- IF NUM_NOT_MOVED --><br /><!-- ENDIF -->
+				<!-- ENDIF -->
+				<!-- IF NUM_NOT_MOVED -->
+					{NOT_MOVED_MESSAGES}<br />{RELEASE_MESSAGE_INFO}
+				<!-- ENDIF -->
 			</td>
 		</tr>
 		</table>
@@ -55,37 +55,33 @@
 			<th width="5%">{L_MARK}</th>
 		</tr>
 
-		<!-- DEFINE $PM = '4px' -->
-
 		<!-- BEGIN messagerow -->
 			<!-- IF messagerow.PM_CLASS eq 'pm_message_reported_colour' --><!-- DEFINE $CLASS = 'pm-reported-colour' --><!-- ELSEIF messagerow.PM_CLASS eq 'pm_marked_colour' --><!-- DEFINE $CLASS = 'pm-marked-colour' --><!-- ELSEIF messagerow.PM_CLASS eq 'pm_replied_colour' --><!-- DEFINE $CLASS = 'pm-replied-colour' --><!-- ELSEIF messagerow.PM_CLASS eq 'pm_friend_colour' --><!-- DEFINE $CLASS = 'pm-friend-colour' --><!-- ELSEIF messagerow.PM_CLASS eq 'pm_foe_colour' --><!-- DEFINE $CLASS = 'pm-foe-colour' --><!-- ELSE --><!-- DEFINE $CLASS = '{messagerow.PM_CLASS}' --><!-- ENDIF -->
-			<tr class="bg1">
-				<td align="center" width="25" style="padding: {$PM}<!-- IF messagerow.PM_CLASS -->; border-{S_CONTENT_FLOW_BEGIN}-style: solid; border-{S_CONTENT_FLOW_BEGIN}-width: {$PM}; padding-{S_CONTENT_FLOW_BEGIN}: 0" class="{$CLASS}<!-- ENDIF -->">
+			<tr class="pm-row">
+				<td align="center" width="25"<!-- IF messagerow.PM_CLASS --> class="{$CLASS}" style="border-{S_CONTENT_FLOW_BEGIN}-style: solid; padding-{S_CONTENT_FLOW_BEGIN}: 0"<!-- ENDIF -->>
 					<!-- IF messagerow.S_PM_UNREAD and not messagerow.S_PM_DELETED --><a href="{messagerow.U_VIEW_PM}"><!-- ENDIF --><img src="{T_THEME_PATH}/images/topic_<!-- IF messagerow.S_PM_UNREAD -->un<!-- ENDIF -->read.gif" width="19" height="18" alt="<!-- IF messagerow.S_PM_UNREAD -->+" border="0" title="{L_UNREAD_POST}<!-- ENDIF -->" /><!-- IF messagerow.S_PM_UNREAD and not messagerow.S_PM_DELETED --></a><!-- ENDIF -->
 				</td>
 				<!-- IF S_PM_ICONS -->
-					<td align="center" class="bg1" width="25">{messagerow.PM_ICON_IMG}</td>
+					<td align="center" width="24"><!-- IF messagerow.PM_ICON_URL --><img src="{messagerow.PM_ICON_URL}" width="16" height="16" alt="" /><!-- ENDIF --></td>
 				<!-- ENDIF -->
-				<td class="<!-- IF messagerow.S_PM_DELETED -->bg2<!-- ELSE -->bg1<!-- ENDIF -->">
-					<p>
+				<td>
 					<!-- IF messagerow.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF -->
 					<!-- IF messagerow.S_PM_DELETED -->
-						<b class="error">{L_MESSAGE_REMOVED_FROM_OUTBOX}</b>
+						<div class="bigger"><b class="error">{L_MESSAGE_REMOVED_FROM_OUTBOX}</b></div>
 						<div align="{S_CONTENT_FLOW_END}"><b><a href="{messagerow.U_REMOVE_PM}">{L_DELETE_MESSAGE}</a></b></div>
 					<!-- ELSE -->
-						<a href="{messagerow.U_VIEW_PM}">{messagerow.SUBJECT}</a>
+						<a href="{messagerow.U_VIEW_PM}" class="topictitle">{messagerow.SUBJECT}</a>
 					<!-- ENDIF -->
 					<!-- IF messagerow.S_PM_REPORTED -->
 						<a href="{messagerow.U_MCP_REPORT}"><img src="{T_THEME_PATH}/images/icon_topic_reported.gif" width="19" height="18" alt="(!)" border="0" title="{L_PM_REPORTED}" /></a>
 					<!-- ENDIF -->
 					<!-- IF messagerow.S_AUTHOR_DELETED -->
-						<br /><i>{L_PM_FROM_REMOVED_AUTHOR}</i>
+						<div class="bigger"><i>{L_PM_FROM_REMOVED_AUTHOR}</i></div>
 					<!-- ENDIF -->
-					</p>
 				</td>
-				<td align="center" class="bg1"><p><!-- IF S_SHOW_RECIPIENTS -->{messagerow.RECIPIENTS}<!-- ELSE -->{messagerow.MESSAGE_AUTHOR_FULL}<!-- ENDIF --></p></td>
-				<td align="center" class="bg1"><p>{messagerow.SENT_TIME}</p></td>
-				<td align="center" style="padding: {$PM}<!-- IF messagerow.PM_CLASS -->; border-{S_CONTENT_FLOW_END}-style: solid; border-{S_CONTENT_FLOW_END}-width: {$PM}; padding-{S_CONTENT_FLOW_END}: 0" class="{$CLASS}<!-- ENDIF -->">
+				<td align="center"><p><!-- IF S_SHOW_RECIPIENTS -->{messagerow.RECIPIENTS}<!-- ELSE -->{messagerow.MESSAGE_AUTHOR_FULL}<!-- ENDIF --></p></td>
+				<td align="center"><p>{messagerow.SENT_TIME}</p></td>
+				<td align="center"<!-- IF messagerow.PM_CLASS --> class="{$CLASS}" style="border-{S_CONTENT_FLOW_END}-style: solid; padding-{S_CONTENT_FLOW_END}: 0"<!-- ENDIF -->>
 					<input type="checkbox" name="marked_msg_id[]" value="{messagerow.MESSAGE_ID}" />
 				</td>
 			</tr>
@@ -94,28 +90,20 @@
 		<tr>
 			<th>{L_UCP_PM_COMPOSE}</th>
 		</tr>
-		<tr>
-			<td align="center" class="bg1">
-				<span class="big">
-					<!-- IF S_USER_NEW -->{L_USER_NEW_PERMISSION_DISALLOWED}<!-- ELSE -->{L_NO_AUTH_SEND_MESSAGE}<!-- ENDIF -->
-				</span>
-			</td>
+		<tr class="big">
+			<td class="bg1" align="center"><!-- IF S_USER_NEW -->{L_USER_NEW_PERMISSION_DISALLOWED}<!-- ELSE -->{L_NO_AUTH_SEND_MESSAGE}<!-- ENDIF --></td>
 		</tr>
 	<!-- ELSE -->
 		<tr>
 			<th>{L_INFORMATION}</th>
 		</tr>
-		<tr>
-			<td align="center" class="bg1">
-				<span class="big">
-						{L_NO_MESSAGES}
-				</span>
-			</td>
+		<tr class="big">
+			<td class="bg1" align="center">{L_NO_MESSAGES}</td>
 		</tr>
 	<!-- ENDIF -->
 	</table>
 
-	<!-- IF .messagerow -->
+	<!-- IF FOLDER_CUR_MESSAGES neq 0 -->
 		<table cellspacing="0" width="100%">
 		<tr>
 			<td class="cat" align="center">
@@ -124,10 +112,27 @@
 			</td>
 		</tr>
 		</table>
+
+		<table cellspacing="1" class="main" style="margin-top: 4px" width="100%">
+		<tr>
+			<td class="bg1">
+				<table cellspacing="0" width="100%">
+				<tr>
+					<td><select name="export_option"><option value="CSV">{L_EXPORT_AS_CSV}</option><option value="CSV_EXCEL">{L_EXPORT_AS_CSV_EXCEL}</option><option value="XML">{L_EXPORT_AS_XML}</option></select> <input class="button2" type="submit" name="submit_export" value="{L_GO}" /></td>
+					<td align="{S_CONTENT_FLOW_END}"><select name="mark_option">{S_MARK_OPTIONS}{S_MOVE_MARKED_OPTIONS}</select> <input class="button2" type="submit" name="submit_mark" value="{L_GO}" /></td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+		</table>
+
+		<table width="100%" cellspacing="1"><tr>
+			<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;<!-- IF FOLDER_MAX_MESSAGES neq 0 -->[ {FOLDER_CUR_MESSAGES}/{FOLDER_MAX_MESSAGES} {L_MESSAGES} ]<!-- ELSE -->[ {TOTAL_MESSAGES} ]<!-- ENDIF --></td>
+			<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('viewfolder', 'marked_msg_id', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('viewfolder', 'marked_msg_id', false); return false;">{L_UNMARK_ALL}</a></b></td>
+			<!-- IF .pagination --></tr><tr><td align="{S_CONTENT_FLOW_END}" colspan="2"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+		</tr></table>
 	<!-- ENDIF -->
-
 	<!-- INCLUDE ucp_pm_message_footer.html -->
-
 <!-- ENDIF -->
 
 <!-- INCLUDE ucp_footer.html -->

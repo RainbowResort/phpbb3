@@ -12,11 +12,16 @@
 	<th>{L_SMILIES}</th>
 </tr>
 <tr>
-	<td align="center" class="bg1"><!-- BEGIN smiley --> <a href="#" onclick="initInsertions(); insert_text('{smiley.A_SMILEY_CODE}', true, true); return false;" style="line-height: 20px"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" border="0" title="{smiley.SMILEY_DESC}" hspace="2" vspace="2" /></a> <!-- END smiley --><br /><!-- INCLUDE pagination.html --></td>
+	<td align="center" class="bg1"><!-- BEGIN smiley --> <a href="#" onclick="initInsertions(); insert_text('{smiley.A_SMILEY_CODE}', true, true); return false;" style="line-height: 20px"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" border="0" title="{smiley.SMILEY_DESC}" hspace="2" vspace="2" /></a> <!-- END smiley --></td>
 </tr>
 </table>
 
 <table cellspacing="1" width="100%">
+<!-- IF .pagination -->
+	<tr>
+		<td align="center"><!-- INCLUDE pagination.html --></td>
+	</tr>
+<!-- ENDIF -->
 <tr>
 	<td><b><a class="bigger" href="#" onclick="window.close(); return false;">{L_CLOSE_WINDOW}</a></b></td>
 </tr>

@@ -32,7 +32,7 @@
 
 	<table class="main" width="100%" cellspacing="1">
 	<tr>
-		<th>{SITENAME} - {L_REGISTRATION}</th>
+		<th>{L_REGISTRATION}</th>
 	</tr>
 	<tr>
 		<td class="bg1">
@@ -41,7 +41,6 @@
 				<!-- IF S_SHOW_COPPA -->
 					<td align="center">
 						<br /><div class="big">{L_COPPA_BIRTHDAY}</div><br />
-						<div class="big"><a href="{U_COPPA_NO}">{L_COPPA_NO}</a> :: <a href="{U_COPPA_YES}">{L_COPPA_YES}</a></div><br />
 					</td>
 				<!-- ELSE -->
 					<td>
@@ -54,11 +53,17 @@
 			</table>
 		</td>
 	</tr>
-	<!-- IF not S_SHOW_COPPA -->
+	</table>
+	<table cellspacing="0" width="100%">
 		<tr>
-			<td align="center" class="cat"><input class="button1" type="submit" id="agreed" name="agreed" value="{L_AGREE}" /> &nbsp;<input class="button2" type="submit" name="not_agreed" value="{L_NOT_AGREE}" /></td>
+			<td align="center" class="cat">
+				<!-- IF S_SHOW_COPPA -->
+					<input class="button1" type="submit" name="coppa_no" value="{L_COPPA_NO}" /> &nbsp;<input class="button2" type="submit" name="coppa_yes" value="{L_COPPA_YES}" />
+				<!-- ELSE -->
+					<input class="button1" type="submit" id="agreed" name="agreed" value="{L_AGREE}" /> &nbsp;<input class="button2" type="submit" name="not_agreed" value="{L_NOT_AGREE}" />
+				<!-- ENDIF -->
+			</td>
 		</tr>
-	<!-- ENDIF -->
 	</table>
 	{S_HIDDEN_FIELDS}
 	{S_FORM_TOKEN}
@@ -68,7 +73,7 @@
 
 	<table class="main" width="100%" cellspacing="1">
 	<tr>
-		<th>{SITENAME} - {AGREEMENT_TITLE}</th>
+		<th>{AGREEMENT_TITLE}</th>
 	</tr>
 	<tr>
 		<td class="bg1">

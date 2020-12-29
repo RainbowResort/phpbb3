@@ -1,29 +1,18 @@
 <table width="100%" cellspacing="0">
 	<!-- IF .avatar_local_cats -->
 	<tr>
-		<td class="bg3" align="center"><span class="bigger">{L_AVATAR_CATEGORY}{L_COLON} </span><select name="avatar_local_cat">
+		<td class="bg1">
+			<span class="bigger">{L_AVATAR_CATEGORY}{L_COLON}</span> <select name="avatar_local_cat">
 			<!-- BEGIN avatar_local_cats -->
-			<option value="{avatar_local_cats.NAME}"<!-- IF avatar_local_cats.SELECTED --> selected="selected"<!-- ENDIF -->>{avatar_local_cats.NAME}</option>
+				<option value="{avatar_local_cats.NAME}"<!-- IF avatar_local_cats.SELECTED --> selected="selected"<!-- ENDIF -->>{avatar_local_cats.NAME}</option>
 			<!-- END avatar_local_cats -->
-			</select> <input class="button2" tabindex="0" type="submit" value="{L_GO}" name="avatar_local_go" />
-		</td>
-	</tr>
-	<tr>
-		<td class="bg1" align="center">
-			<table align="center" cellspacing="1">
+			</select> <input class="button2" type="submit" value="{L_GO}" name="avatar_local_go" />
+			<br clear="all" />
 			<!-- BEGIN avatar_local_row -->
-			<tr>
-				<!-- BEGIN avatar_local_col -->
-					<td class="bg1" align="center"><img src="{avatar_local_row.avatar_local_col.AVATAR_IMAGE}" alt="{avatar_local_row.avatar_local_col.AVATAR_NAME}" /></td>
-				<!-- END avatar_local_col -->
-			</tr>
-			<tr>
-				<!-- BEGIN avatar_local_option -->
-					<td class="bg1" align="center"><input type="radio" name="avatar_local_file" value="{avatar_local_row.avatar_local_option.S_OPTIONS_AVATAR}" <!-- IF avatar_local_row.avatar_local_option.CHECKED --> checked="checked"<!-- ENDIF --> /></td>
-				<!-- END avatar_local_option -->
-			</tr>
+			<!-- BEGIN avatar_local_col -->
+				<span class="nowrap"> &nbsp;<input type="radio" name="avatar_local_file" value="{avatar_local_row.avatar_local_col.AVATAR_FILE}"<!-- IF avatar_local_row.avatar_local_col.CHECKED --> checked="checked"<!-- ENDIF --> />&nbsp;<img src="{avatar_local_row.avatar_local_col.AVATAR_IMAGE}" alt="" vspace="10" align="middle" /></span>
+			<!-- END avatar_local_col -->
 			<!-- END avatar_local_row -->
-			</table>
 		</td>
 	</tr>
 	<!-- ELSE -->

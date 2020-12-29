@@ -15,6 +15,23 @@
 // ]]>
 </script>
 
+<!-- IF PROVIDER_TEMPLATE_FILE -->
+	<table class="main" width="100%" cellspacing="1">
+		<tr>
+			<th>{L_OAUTH_REGISTRATION}</th>
+		</tr>
+		<tr>
+			<td class="bg2">
+				<table cellspacing="2" width="100%">
+					<!-- INCLUDE {PROVIDER_TEMPLATE_FILE} -->
+				</table>
+			</td>
+		</tr>
+	</table>
+<!-- ENDIF -->
+
+<br clear="all" />
+
 <form name="register" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
 
 <table class="main" width="100%" cellspacing="1">
@@ -40,16 +57,16 @@
 	<td class="bg1"><input type="text" class="inputbox" name="username" size="25" value="{USERNAME}" /></td>
 </tr>
 <tr>
-	<td class="bg1"><b class="bigger">{L_EMAIL_ADDRESS}{L_COLON}</b></td>
-	<td class="bg1"><input type="text" class="inputbox" name="email" size="25" maxlength="100" value="{EMAIL}" autocomplete="off" /></td>
-</tr>
-<tr>
 	<td class="bg1"><b class="bigger">{L_PASSWORD}{L_COLON}</b><br /><span class="bigger">{L_PASSWORD_EXPLAIN}</span></td>
 	<td class="bg1"><input type="password" class="inputbox" name="new_password" size="25" value="{PASSWORD}" autocomplete="off" /></td>
 </tr>
 <tr>
 	<td class="bg1"><b class="bigger">{L_CONFIRM_PASSWORD}{L_COLON}</b></td>
 	<td class="bg1"><input type="password" class="inputbox" name="password_confirm" size="25" value="{PASSWORD_CONFIRM}" autocomplete="off" /></td>
+</tr>
+<tr>
+	<td class="bg1"><b class="bigger">{L_EMAIL_ADDRESS}{L_COLON}</b></td>
+	<td class="bg1"><input type="text" class="inputbox" name="email" size="25" maxlength="100" value="{EMAIL}" autocomplete="off" /></td>
 </tr>
 <!-- EVENT ucp_register_credentials_after -->
 <!-- EVENT ucp_register_options_before -->
@@ -78,9 +95,10 @@
 <!-- END profile_fields -->
 <!-- ENDIF -->
 <!-- EVENT ucp_register_profile_fields_after -->
-		<!-- IF CAPTCHA_TEMPLATE -->
-		<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
-		<!-- ENDIF -->
+
+<!-- IF CAPTCHA_TEMPLATE -->
+	<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+<!-- ENDIF -->
 
 <!-- IF S_COPPA -->
 	<tr>
@@ -90,9 +108,10 @@
 		<td class="bg1" colspan="2"><span class="bigger">{L_COPPA_EXPLAIN}</span></td>
 	</tr>
 <!-- ENDIF -->
-
+</table>
+<table cellspacing="0" width="100%">
 <tr>
-	<td class="cat" colspan="2" align="center"><!-- EVENT ucp_register_buttons_before --> {S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" onclick="ResetTimeZone();" /> &nbsp;<input class="button1" type="submit" name="submit" id="submit" value="{L_SUBMIT}" /></td>
+	<td class="cat" align="center"><!-- EVENT ucp_register_buttons_before --> {S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" onclick="ResetTimeZone();" /> &nbsp;<input class="button1" type="submit" name="submit" id="submit" value="{L_SUBMIT}" /></td>
 </tr>
 </table>
 {S_FORM_TOKEN}

@@ -1,6 +1,5 @@
 <form name="viewfolder" method="post" action="{S_PM_ACTION}">
 
-<!-- IF CUR_FOLDER_NAME or TOTAL_MESSAGES or S_VIEW_MESSAGE -->
 	<table class="main" width="100%" cellspacing="1" style="margin-bottom: 4px">
 	<tr>
 		<td class="bg1">
@@ -8,27 +7,10 @@
 
 			<br clear="all" />
 
-			<!-- IF TOTAL_MESSAGES -->
-				<table cellspacing="0" width="100%">
-				<tr>
-					<td nowrap="nowrap">
-						<b>{PAGE_NUMBER}</b> &nbsp;<!-- IF FOLDER_MAX_MESSAGES neq 0 -->[ {FOLDER_CUR_MESSAGES}/{FOLDER_MAX_MESSAGES} {L_MESSAGES} ]<!-- ELSE -->[ {TOTAL_MESSAGES} ]<!-- ENDIF -->
-					</td>
-					<!-- IF FOLDER_CUR_MESSAGES neq 0 -->
-						<td align="{S_CONTENT_FLOW_END}" width="100%">
-							<!-- IF U_MARK_ALL --><b><a href="{U_MARK_ALL}">{L_MARK_ALL_READ}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- ENDIF -->
-							<!-- INCLUDE pagination.html -->
-						</td>
-					<!-- ENDIF -->
-				</tr>
-				</table>
-			<!-- ENDIF -->
-
 			<!-- IF S_VIEW_MESSAGE -->
 				<table cellspacing="0" width="100%">
 				<tr>
 					<td class="bigger">
-						<!-- EVENT ucp_pm_viewmessage_options_before -->
 						<!-- IF S_DISPLAY_HISTORY and (U_VIEW_PREVIOUS_HISTORY or U_VIEW_NEXT_HISTORY) -->
 							<!-- IF U_VIEW_PREVIOUS_HISTORY --><a href="{U_VIEW_PREVIOUS_HISTORY}">{L_VIEW_PREVIOUS_HISTORY}</a> | <!-- ENDIF -->
 							<!-- IF U_VIEW_NEXT_HISTORY --><a href="{U_VIEW_NEXT_HISTORY}">{L_VIEW_NEXT_HISTORY}</a> | <!-- ENDIF -->
@@ -40,8 +22,23 @@
 					</td>
 				</tr>
 				</table>
+			<!-- ELSEIF U_POST_NEW_TOPIC or FOLDER_CUR_MESSAGES neq 0 -->
+				<table cellspacing="0" width="100%">
+				<tr>
+					<!-- IF U_POST_NEW_TOPIC -->
+						<td<!-- IF FOLDER_CUR_MESSAGES neq 0 --> width="35%"<!-- ENDIF -->>
+							<b><a href="{U_POST_NEW_TOPIC}">{L_UCP_PM_COMPOSE}</a></b>
+						</td>
+					<!-- ENDIF -->
+					<!-- IF FOLDER_CUR_MESSAGES neq 0 -->
+						<td align="{S_CONTENT_FLOW_END}"<!-- IF U_POST_NEW_TOPIC --> width="65%"<!-- ENDIF -->>
+							<!-- IF U_MARK_ALL --><b><a href="{U_MARK_ALL}">{L_MARK_ALL_READ}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- ENDIF -->
+							<!-- INCLUDE pagination.html -->
+						</td>
+					<!-- ENDIF -->
+				</tr>
+				</table>
 			<!-- ENDIF -->
 		</td>
 	</tr>
 	</table>
-<!-- ENDIF -->

@@ -6,8 +6,8 @@
 <tr>
 	<th colspan="<!-- IF S_EDIT -->2<!-- ELSEIF S_LIST -->5<!-- ELSE -->3<!-- ENDIF -->">{L_USERGROUPS}<!-- IF GROUP_NAME --> :: {GROUP_NAME}<!-- ENDIF --></th>
 </tr>
-<tr>
-	<td align="center" class="bg1" colspan="<!-- IF S_EDIT -->2<!-- ELSEIF S_LIST -->5<!-- ELSE -->3<!-- ENDIF -->"><span class="bigger"><!-- IF S_ERROR --><span class="error">{ERROR_MSG}</span><br /><!-- ENDIF -->{L_GROUPS_EXPLAIN}</span></td>
+<tr class="bigger">
+	<td align="center" class="bg1" colspan="<!-- IF S_EDIT -->2<!-- ELSEIF S_LIST -->5<!-- ELSE -->3<!-- ENDIF -->"><!-- IF S_ERROR --><div class="error">{ERROR_MSG}</div><br /><!-- ENDIF -->{L_GROUPS_EXPLAIN}</td>
 </tr>
 
 <!-- IF S_EDIT -->
@@ -17,25 +17,25 @@
 	</tr>
 	<tr>
 		<td class="bg1" width="35%"><b class="bigger">{L_GROUP_NAME}{L_COLON}</b></td>
-		<td class="bg1"><!-- IF S_SPECIAL_GROUP --><b class="bigger"<!-- IF GROUP_COLOUR --> style="color: #{GROUP_COLOUR}"<!-- ENDIF -->>{GROUP_NAME}</b><!-- ENDIF --><input name="group_name" type="<!-- IF S_SPECIAL_GROUP -->hidden<!-- ELSE -->text" class="inputbox<!-- ENDIF -->" value="{GROUP_INTERNAL_NAME}" /></td>
+		<td class="bg1"><!-- IF S_SPECIAL_GROUP --><input type="text" disabled="disabled" class="inputbox" value="{GROUP_NAME}" /><!-- ENDIF --><input name="group_name" type="<!-- IF S_SPECIAL_GROUP -->hidden<!-- ELSE -->text" class="inputbox<!-- ENDIF -->" value="{GROUP_INTERNAL_NAME}" /></td>
 	</tr>
 	<tr>
 		<td class="bg1"><b class="bigger">{L_GROUP_DESC}{L_COLON}</b></td>
-		<td class="bg1"><textarea name="group_desc" rows="5" cols="45">{GROUP_DESC}</textarea>
+		<td class="bg1"><textarea name="group_desc" cols="35" rows="5">{GROUP_DESC}</textarea>
 			<br /><input type="checkbox" name="desc_parse_bbcode"<!-- IF S_DESC_BBCODE_CHECKED --> checked="checked"<!-- ENDIF --> /> <span class="bigger">{L_PARSE_BBCODE}</span> &nbsp;<input type="checkbox" name="desc_parse_smilies"<!-- IF S_DESC_SMILIES_CHECKED --> checked="checked"<!-- ENDIF --> /> <span class="bigger">{L_PARSE_SMILIES}</span> &nbsp;<input type="checkbox" name="desc_parse_urls"<!-- IF S_DESC_URLS_CHECKED --> checked="checked"<!-- ENDIF --> /> <span class="bigger">{L_PARSE_URLS}</span>
+	<!-- IF S_SPECIAL_GROUP -->
+			<input name="group_type" type="hidden" value="{GROUP_TYPE_SPECIAL}" />
+	<!-- ELSE -->
 		</td>
 	</tr>
 	<tr>
 		<td class="bg1"><span class="bigger"><b>{L_GROUP_TYPE}{L_COLON}</b><br />{L_GROUP_TYPE_EXPLAIN}</span></td>
 		<td class="bg1">
-			<!-- IF S_SPECIAL_GROUP -->
-				<b class="bigger">{L_GROUP_IS_SPECIAL}</b> <input name="group_type" type="hidden" value="{GROUP_TYPE_SPECIAL}" />
-			<!-- ELSE -->
-				<input name="group_type" type="radio" value="{GROUP_TYPE_FREE}"{GROUP_FREE} /> <span class="bigger">{L_GROUP_OPEN}</span> &nbsp;
-				<input name="group_type" type="radio" value="{GROUP_TYPE_OPEN}"{GROUP_OPEN} /> <span class="bigger">{L_GROUP_REQUEST}</span> &nbsp;
-				<input name="group_type" type="radio" value="{GROUP_TYPE_CLOSED}"{GROUP_CLOSED} /> <span class="bigger">{L_GROUP_CLOSED}</span> &nbsp;
-				<input name="group_type" type="radio" value="{GROUP_TYPE_HIDDEN}"{GROUP_HIDDEN} /> <span class="bigger">{L_GROUP_HIDDEN}</span>
-			<!-- ENDIF -->
+			<input name="group_type" type="radio" value="{GROUP_TYPE_FREE}"{GROUP_FREE} /> <span class="bigger">{L_GROUP_OPEN}</span> &nbsp;
+			<input name="group_type" type="radio" value="{GROUP_TYPE_OPEN}"{GROUP_OPEN} /> <span class="bigger">{L_GROUP_REQUEST}</span> &nbsp;
+			<input name="group_type" type="radio" value="{GROUP_TYPE_CLOSED}"{GROUP_CLOSED} /> <span class="bigger">{L_GROUP_CLOSED}</span> &nbsp;
+			<input name="group_type" type="radio" value="{GROUP_TYPE_HIDDEN}"{GROUP_HIDDEN} /> <span class="bigger">{L_GROUP_HIDDEN}</span>
+	<!-- ENDIF -->
 		</td>
 	</tr>
 	<tr>
@@ -51,14 +51,11 @@
 		<td class="bg1"><b class="bigger">{L_GROUP_RANK}{L_COLON}</b></td>
 		<td class="bg1"><select name="group_rank">{S_RANK_OPTIONS}</select></td>
 	</tr>
-	<tr>
-		<th colspan="2">{L_GROUP_AVATAR}</th>
-	</tr>
 
 	<!-- INCLUDE ucp_avatar_options.html -->
 
 	<tr>
-		<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" name="reset" value="{L_RESET}"<!-- IF .avatar_drivers --> onclick="ResetAvatarType();"<!-- ENDIF --> /> &nbsp;<input class="button1" type="submit" name="update" value="{L_SUBMIT}" /></td>
+		<td class="cat" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" name="reset" value="{L_RESET}"<!-- IF .avatar_drivers --> onclick="ResetAvatarType();"<!-- ENDIF --> /> &nbsp;<input class="button1" type="submit" name="update" value="{L_SUBMIT}" />{S_FORM_TOKEN}</td>
 	</tr>
 
 <!-- ELSEIF S_LIST -->
@@ -66,20 +63,20 @@
 	<tr>
 		<th>{L_USERNAME}</th>
 		<th>{L_GROUP_DEFAULT}</th>
-		<th>{L_JOINED}</th>
-		<th>{L_POSTS}</th>
-		<th>{L_MARK}</th>
+		<th width="15%">{L_JOINED}</th>
+		<th width="10%">{L_POSTS}</th>
+		<th width="5%">{L_MARK}</th>
 	</tr>
 
 	<tr class="bg3">
 		<td colspan="5"><b class="bigger">{L_GROUP_LEAD}</b></td>
 	</tr>
 	<!-- BEGIN leader -->
-		<tr class="bigger"><!-- IF leader.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
-			<td class="{$BG}">{leader.USERNAME_FULL}</td>
-			<td align="center" class="{$BG}"><!-- IF leader.S_GROUP_DEFAULT -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></td>
-			<td align="center" class="{$BG}">{leader.JOINED}</td>
-			<td align="center" class="{$BG}">{leader.USER_POSTS}</td>
+		<tr><!-- IF leader.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+			<td class="{$BG}"><span class="bigger">{leader.USERNAME_FULL}</span></td>
+			<td align="center" class="{$BG}"><p><!-- IF leader.S_GROUP_DEFAULT -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></p></td>
+			<td align="center" class="{$BG}"><p>{leader.JOINED}</p></td>
+			<td align="center" class="{$BG}"><p>{leader.USER_POSTS}</p></td>
 			<td align="center" class="{$BG}"></td>
 		</tr>
 	<!-- END leader -->
@@ -94,17 +91,19 @@
 				<td colspan="5"><b class="bigger">{L_GROUP_APPROVED}</b></td>
 			</tr>
 		<!-- ELSE -->
-			<tr class="bigger"><!-- IF member.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
-				<td class="{$BG}">{member.USERNAME_FULL}</td>
-				<td align="center" class="{$BG}"><!-- IF member.S_GROUP_DEFAULT -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></td>
-				<td align="center" class="{$BG}">{member.JOINED}</td>
-				<td align="center" class="{$BG}">{member.USER_POSTS}</td>
+			<tr><!-- IF member.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+				<td class="{$BG}"><span class="bigger">{member.USERNAME_FULL}</span></td>
+				<td align="center" class="{$BG}"><p><!-- IF member.S_GROUP_DEFAULT -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></p></td>
+				<td align="center" class="{$BG}"><p>{member.JOINED}</p></td>
+				<td align="center" class="{$BG}"><p>{member.USER_POSTS}</p></td>
 				<td align="center" class="{$BG}"><input type="checkbox" name="mark[]" value="{member.USER_ID}" /></td>
 			</tr>
 		<!-- ENDIF -->
 	<!-- END member -->
+	</table>
+	<table cellspacing="0" width="100%">
 	<tr>
-		<td align="{S_CONTENT_FLOW_END}" class="cat" colspan="5"><select name="action"><option value="">{L_SELECT_OPTION}</option>{S_ACTION_OPTIONS}</select> <input class="button1" type="submit" name="update" value="{L_SUBMIT}" /></td>
+		<td class="cat" align="{S_CONTENT_FLOW_END}"><select name="action"><option value="">{L_SELECT_OPTION}</option>{S_ACTION_OPTIONS}</select> <input class="button1" type="submit" name="update" value="{L_SUBMIT}" /></td>
 	</tr>
 	</table>
 
@@ -121,8 +120,8 @@
 	<tr>
 		<th colspan="2">{L_ADD_USERS}</th>
 	</tr>
-	<tr>
-		<td align="center" class="bg1" colspan="2"><span class="bigger">{L_ADD_USERS_UCP_EXPLAIN}</span></td>
+	<tr class="bigger">
+		<td class="bg1" colspan="2" align="center">{L_ADD_USERS_UCP_EXPLAIN}</td>
 	</tr>
 	<tr>
 		<td class="bg1"><span class="bigger"><b>{L_USER_GROUP_DEFAULT}{L_COLON}</b><br />{L_USER_GROUP_DEFAULT_EXPLAIN}</span></td>
@@ -130,10 +129,12 @@
 	</tr>
 	<tr>
 		<td class="bg1"><span class="bigger"><b>{L_USERNAME}{L_COLON}</b><br />{L_USERNAMES_EXPLAIN}</span></td>
-		<td class="bg1"><textarea name="usernames" cols="40" rows="5"></textarea><br /><span class="bigger">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</span></td>
+		<td class="bg1"><textarea name="usernames" cols="35" rows="5"></textarea><br /><span class="bigger">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</span></td>
 	</tr>
+	</table>
+	<table cellspacing="0" width="100%">
 	<tr>
-		<td class="cat" colspan="2" align="center"><input class="button1" type="submit" name="addusers" value="{L_SUBMIT}" /></td>
+		<td class="cat" align="center"><input class="button1" type="submit" name="addusers" value="{L_SUBMIT}" />{S_FORM_TOKEN}</td>
 	</tr>
 
 <!-- ELSE -->
@@ -158,7 +159,6 @@
 
 </table>
 
-{S_FORM_TOKEN}
 </form>
 
 <!-- INCLUDE ucp_footer.html -->

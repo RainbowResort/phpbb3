@@ -3,23 +3,22 @@
 		<tr>
 			<th colspan="2">{L_LOAD_DRAFT}</th>
 		</tr>
-		<tr>
-			<td class="bg1" colspan="2" align="center"><span class="bigger">{L_LOAD_DRAFT_EXPLAIN}</span></td>
+		<tr class="bigger">
+			<td class="bg1" colspan="2" align="center">{L_LOAD_DRAFT_EXPLAIN}</td>
 		</tr>
 		<tr>
-			<th align="{S_CONTENT_FLOW_BEGIN}" width="78%">{L_DRAFT_TITLE}</th>
+			<th align="{S_CONTENT_FLOW_BEGIN}" width="75%">{L_DRAFT_TITLE}</th>
 			<th>{L_SAVE_DATE}</th>
 		</tr>
 		<!-- BEGIN draftrow -->
-			<tr class="bigger"><!-- IF draftrow.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+			<tr><!-- IF draftrow.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
 				<td class="{$BG}">
-					<b><a href="{draftrow.U_INSERT}" title="{L_LOAD_DRAFT}">{draftrow.DRAFT_SUBJECT}</a></b>
-					<!-- IF draftrow.S_LINK_TOPIC --><br />{L_TOPIC}{L_COLON} <a href="{draftrow.U_VIEW}">{draftrow.TITLE}</a>
-					<!-- ELSEIF draftrow.S_LINK_FORUM --><br />{L_FORUM}{L_COLON} <a href="{draftrow.U_VIEW}">{draftrow.TITLE}</a>
-					<!-- ELSEIF draftrow.S_LINK_PM --><br />{L_PRIVATE_MESSAGE}
-					<!-- ELSE --><br />{L_NO_TOPIC_FORUM}<!-- ENDIF -->
+					<a href="{draftrow.U_INSERT}" class="topictitle">{draftrow.DRAFT_SUBJECT}</a>
+					<!-- IF not S_PRIVMSGS --><!-- IF draftrow.S_LINK_TOPIC --><div class="bigger">{L_TOPIC}{L_COLON} <a href="{draftrow.U_VIEW}">{draftrow.TITLE}</a></div>
+					<!-- ELSEIF draftrow.S_LINK_FORUM --><div class="bigger">{L_FORUM}{L_COLON} <a href="{draftrow.U_VIEW}">{draftrow.TITLE}</a></div>
+					<!-- ELSE --><div class="bigger">{L_NO_TOPIC_FORUM}</div><!-- ENDIF --><!-- ENDIF -->
 				</td>
-				<td align="center" class="{$BG}" nowrap="nowrap">{draftrow.DATE}<br /><a href="{draftrow.U_INSERT}">{L_LOAD_DRAFT}</a></td>
+				<td align="center" class="{$BG}"><p>{draftrow.DATE}<br /><a href="{draftrow.U_INSERT}">{L_LOAD_DRAFT}</a></p></td>
 			</tr>
 		<!-- END draftrow -->
 	</table>

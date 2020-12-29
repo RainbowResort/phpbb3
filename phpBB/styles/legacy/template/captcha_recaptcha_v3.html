@@ -1,7 +1,9 @@
 <tr class="bigger"><td align="center" colspan="2" class="bg1" style="padding: 0 4px">
 <!-- IF S_RECAPTCHA_AVAILABLE -->
 	<noscript>{L_RECAPTCHA_NOSCRIPT}</noscript>
-	<div class="g-recaptcha" data-sitekey="{RECAPTCHA_PUBKEY}" data-callback="phpbbRecaptchaOnSubmit" data-size="invisible"<!-- IF $CAPTCHA_TAB_INDEX --> data-tabindex="{$CAPTCHA_TAB_INDEX}"<!-- ENDIF -->></div>
+	<script src="{{ U_RECAPTCHA_SCRIPT }}" async defer></script>
+	<input class="g-recaptcha" type="hidden" name="recaptcha_action" value="{{ RECAPTCHA_ACTION }}" data-recaptcha-v3="{{ RECAPTCHA_KEY }}">
+	<input type="hidden" name="recaptcha_token" value="">
 <script type="text/javascript"><!--
 var grc = {};
 
@@ -39,21 +41,27 @@ grc.recaptchaOnLoad = function() {
 	for (var i = 0; i < input.length; i++) {input[i].addEventListener('click', function() { submitButton = this;}, false);}
 	recaptchaForm.addEventListener('submit', function(e) {
 		if (!programaticallySubmitted) {
-			grecaptcha.execute();
+			grecaptcha.execute(
+				document.querySelector('[data-recaptcha-v3]').getAttribute('data-recaptcha-v3'),
+				{action: document.querySelector('[data-recaptcha-v3]').value}
+			).then(function(token) {
+				document.querySelector('input[name="recaptcha_token"]').value=token;
+				grc.recaptchaOnSubmit();
+			});
 			e.preventDefault();
 		}
 	}, false);
 }
 
-window.phpbbRecaptchaOnLoad = function() {
+if (document.readyState != 'loading'){
 	grc.recaptchaOnLoad();
-}
-
-window.phpbbRecaptchaOnSubmit = function() {
-	grc.recaptchaOnSubmit();
+} else {
+	document.addEventListener("DOMContentLoaded", function() {
+		// reCAPTCHA v3 needs to be initialized
+		grc.recaptchaOnLoad();
+	});
 }
 //--></script>
-	<script type="text/javascript" src="{RECAPTCHA_SERVER}.js?onload=phpbbRecaptchaOnLoad&hl={L_RECAPTCHA_LANG}"></script>
 <!-- ELSE -->
 	<div class="error">{L_RECAPTCHA_NOT_AVAILABLE}</div>
 <!-- ENDIF -->

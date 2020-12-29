@@ -44,17 +44,19 @@
 <tr>
 	<th>{L_ADD_WARNING}</th>
 </tr>
-<tr>
-	<td class="bg1" align="center"><span class="bigger">{L_ADD_WARNING_EXPLAIN}</span></td>
+<tr class="bigger">
+	<td class="bg1" align="center">{L_ADD_WARNING_EXPLAIN}</td>
 </tr>
 <tr>
-	<td class="bg1" align="center"><textarea name="warning" rows="10" cols="76"></textarea></td>
+	<td class="bg1" align="center"><textarea name="warning" rows="6" cols="50"></textarea></td>
 </tr>
 <!-- IF S_CAN_NOTIFY -->
 <tr>
 	<td class="bg1" align="center"><input type="checkbox" name="notify_user" checked="checked" /> <span class="bigger">{L_NOTIFY_USER_WARN}</span></td>
 </tr>
 <!-- ENDIF -->
+</table>
+<table cellspacing="0" width="100%">
 <tr>
 	<td class="cat" align="center"><input class="button2" type="reset" value="{L_RESET}" /> &nbsp;<input class="button1" type="submit" name="action[add_warning]" value="{L_SUBMIT}" /></td>
 </tr>

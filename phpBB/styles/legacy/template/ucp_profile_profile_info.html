@@ -11,13 +11,13 @@
 		<td class="bg1" colspan="2" align="center"><p class="error">{ERROR}</p></td>
 	</tr>
 <!-- ENDIF -->
-<tr>
-	<td align="center" class="bg1" colspan="2"><span class="bigger">{L_PROFILE_INFO_NOTICE}</span></td>
+<tr class="bigger">
+	<td class="bg1" colspan="2" align="center">{L_PROFILE_INFO_NOTICE}</td>
 </tr>
 <!-- EVENT ucp_profile_profile_info_before -->
 <!-- IF S_BIRTHDAYS_ENABLED -->
 	<tr>
-		<td class="bg1" width="35%"><b class="bigger">{L_BIRTHDAY}{L_COLON}</b><br /><span class="bigger">{L_BIRTHDAY_EXPLAIN}</span></td>
+		<td class="bg1" width="35%"><b class="bigger">{L_BIRTHDAY}{L_COLON}</b><!-- EVENT ucp_profile_profile_info_birthday_label_append --><br /><span class="bigger">{L_BIRTHDAY_EXPLAIN}</span></td>
 		<td class="bg1">
 			<span class="nowrap"><span class="bigger">{L_DAY}{L_COLON}</span> <select name="bday_day">{S_BIRTHDAY_DAY_OPTIONS}</select></span>
 			<span class="nowrap"><span class="bigger">{L_MONTH}{L_COLON}</span> <select name="bday_month">{S_BIRTHDAY_MONTH_OPTIONS}</select></span>
@@ -42,8 +42,10 @@
 	</tr>
 <!-- END profile_fields -->
 <!-- EVENT ucp_profile_profile_info_after -->
+</table>
+<table cellspacing="0" width="100%">
 <tr>
-	<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" /> &nbsp;<input class="button1" type="submit" name="submit" value="{L_SUBMIT}" /></td>
+	<td class="cat" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" /> &nbsp;<input class="button1" type="submit" name="submit" value="{L_SUBMIT}" /></td>
 </tr>
 </table>
 

@@ -42,12 +42,14 @@
 <tr>
 	<th>{L_ADD_FEEDBACK}</th>
 </tr>
-<tr>
-	<td class="bg1" align="center"><span class="bigger">{L_ADD_FEEDBACK_EXPLAIN}</span></td>
+<tr class="bigger">
+	<td class="bg1" align="center">{L_ADD_FEEDBACK_EXPLAIN}</td>
 </tr>
 <tr>
-	<td class="bg1" align="center"><textarea name="usernote" rows="3" cols="76"></textarea></td>
+	<td class="bg1" align="center"><textarea name="usernote" rows="3" cols="50"></textarea></td>
 </tr>
+</table>
+<table cellspacing="0" width="100%">
 <tr>
 	<td class="cat" align="center"><input class="button2" type="reset" value="{L_RESET}" /> &nbsp;<input class="button1" type="submit" name="action[add_feedback]" value="{L_SUBMIT}" /></td>
 </tr>
@@ -56,7 +58,7 @@
 <br clear="all" />
 
 <table width="100%" cellspacing="1"><tr>
-	<td><span class="bigger">{L_SEARCH_KEYWORDS}{L_COLON}</span> <input type="text" class="inputbox" name="keywords" value="{S_KEYWORDS}" />&nbsp;<input type="submit" class="button2" name="filter" value="{L_SEARCH}" /></td>
+	<td><span class="bigger">{L_SEARCH_KEYWORDS}{L_COLON}</span> <input type="text" class="inputbox" name="keywords" value="{S_KEYWORDS}" /> <input type="submit" class="button2" name="filter" value="{L_SEARCH}" /></td>
 	<td align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td>
 </tr></table>
 
@@ -68,42 +70,35 @@
 	<th>{L_ACTION}</th>
 	<!-- IF S_CLEAR_ALLOWED --><th width="5%">{L_MARK}</th><!-- ENDIF -->
 </tr>
-<!-- IF S_USER_NOTES -->
+<!-- IF .usernotes -->
 	<!-- BEGIN usernotes -->
 		<tr><!-- IF usernotes.S_ROW_COUNT is even --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
-			<td class="{$BG}"><span class="big">{usernotes.REPORT_BY}</span></td>
-			<td align="center" class="{$BG}"><span class="bigger">{usernotes.IP}</span></td>
-			<td align="center" class="{$BG}"><span class="bigger">{usernotes.REPORT_AT}</span></td>
-			<td class="{$BG}">
-				<span class="bigger">
-				{usernotes.ACTION}
-				<!-- IF usernotes.DATA --><br />&#187; ({usernotes.DATA})<!-- ENDIF -->
-				</span>
-			</td>
+			<td class="{$BG}"><span class="bigger">{usernotes.REPORT_BY}</span></td>
+			<td align="center" class="{$BG}"><p>{usernotes.IP}</p></td>
+			<td align="center" class="{$BG}"><p>{usernotes.REPORT_AT}</p></td>
+			<td class="{$BG}"><p>{usernotes.ACTION}</p></td>
 			<!-- IF S_CLEAR_ALLOWED --><td align="center" class="{$BG}"><input type="checkbox" name="marknote[]" value="{usernotes.ID}" /></td><!-- ENDIF -->
 		</tr>
 	<!-- END usernotes -->
+	</table>
+	<table cellspacing="0" width="100%">
 	<tr>
-		<td class="cat" colspan="<!-- IF S_CLEAR_ALLOWED -->5<!-- ELSE -->4<!-- ENDIF -->">
-			<table width="100%" cellspacing="0"><tr>
-				<td><!-- INCLUDE display_options.html --></td>
-				<!-- IF S_CLEAR_ALLOWED --><td align="{S_CONTENT_FLOW_END}"><input class="button2" type="submit" name="action[del_all]" value="{L_DELETE_ALL}" /> &nbsp;<input class="button2" type="submit" name="action[del_marked]" value="{L_DELETE_MARKED}" /></td><!-- ENDIF -->
-			</tr></table>
-		</td>
+		<td class="cat"><!-- INCLUDE display_options.html --></td>
+		<!-- IF S_CLEAR_ALLOWED --><td class="cat" align="{S_CONTENT_FLOW_END}"><input class="button2" type="submit" name="action[del_all]" value="{L_DELETE_ALL}" /> &nbsp;<input class="button2" type="submit" name="action[del_marked]" value="{L_DELETE_MARKED}" /></td><!-- ENDIF -->
 	</tr>
 <!-- ELSE -->
-	<tr>
-		<td align="center" class="bg1" colspan="<!-- IF S_CLEAR_ALLOWED -->5<!-- ELSE -->4<!-- ENDIF -->"><span class="big">{L_NO_ENTRIES}</span></td>
+	<tr class="big">
+		<td align="center" class="bg1" colspan="<!-- IF S_CLEAR_ALLOWED -->5<!-- ELSE -->4<!-- ENDIF -->">{L_NO_ENTRIES}</td>
 	</tr>
 <!-- ENDIF -->
 </table>
 
 <table width="100%" cellspacing="1"><tr>
 	<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL_REPORTS} ]</td>
-	<!-- IF S_CLEAR_ALLOWED and S_USER_NOTES --><td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('mcp', 'marknote', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'marknote', false); return false;">{L_UNMARK_ALL}</a></b></td><!-- IF .pagination --></tr><tr><!-- ENDIF --><!-- ENDIF -->
-	<!-- IF .pagination --><td align="{S_CONTENT_FLOW_END}" <!-- IF S_CLEAR_ALLOWED and S_USER_NOTES -->colspan="2"<!-- ELSE -->width="100%"<!-- ENDIF -->><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+	<!-- IF S_CLEAR_ALLOWED and .usernotes --><td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('mcp', 'marknote', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'marknote', false); return false;">{L_UNMARK_ALL}</a></b></td><!-- IF .pagination --></tr><tr><!-- ENDIF --><!-- ENDIF -->
+	<!-- IF .pagination --><td align="{S_CONTENT_FLOW_END}" <!-- IF S_CLEAR_ALLOWED and .usernotes -->colspan="2"<!-- ELSE -->width="100%"<!-- ENDIF -->><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
 </tr></table>
-
+{S_HIDDEN_FIELDS}
 {S_FORM_TOKEN}
 </form>
 

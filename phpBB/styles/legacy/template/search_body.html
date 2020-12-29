@@ -45,13 +45,15 @@
 <tr>
 	<td class="bg1"><b class="bigger">{L_RESULT_DAYS}{L_COLON}</b></td>
 	<td class="bg2">{S_SELECT_SORT_DAYS}</td>
-	<td class="bg1"><b class="bigger">{L_RETURN_FIRST}{L_COLON}</b></td>
-	<td class="bg2"><select name="ch">{S_CHARACTER_OPTIONS}</select> <span class="bigger">{L_POST_CHARACTERS}</span></td>
+	<td class="bg1"><b class="bigger">{L_RETURN_FIRST}{L_COLON}</b><br /><span class="bigger">{L_RETURN_FIRST_EXPLAIN}</span></td>
+	<td class="bg2"><input type="text" class="inputbox" size="5" name="ch" value="{DEFAULT_RETURN_CHARS}" /> <span class="bigger">{L_POST_CHARACTERS}</span></td>
 </tr>
 <!-- EVENT search_body_search_display_options_append -->
 <!-- EVENT search_body_search_options_after -->
+</table>
+<table cellspacing="0" width="100%">
 <tr>
-	<td class="cat" colspan="4" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" /> &nbsp;<input class="button1" name="submit" type="submit" value="{L_SEARCH}" /></td>
+	<td class="cat" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" /> &nbsp;<input class="button1" name="submit" type="submit" value="{L_SEARCH}" /></td>
 </tr>
 </table>
 	

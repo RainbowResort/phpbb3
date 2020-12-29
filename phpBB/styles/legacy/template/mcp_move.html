@@ -13,18 +13,18 @@
 		<!-- IF ADDITIONAL_MSG -->
 			<p align="center" class="error">{ADDITIONAL_MSG}</p><br />
 		<!-- ENDIF -->
-		<br /><!-- EVENT mcp_move_destination_forum_before --><div align="center"><span class="big">{L_SELECT_DESTINATION_FORUM}{L_COLON}</span> <select name="to_forum_id">{S_FORUM_SELECT}</select></div>
+		<br /><!-- EVENT mcp_move_destination_forum_before --><div align="center"><b class="bigger">{L_SELECT_DESTINATION_FORUM}{L_COLON}</b> <select name="to_forum_id">{S_FORUM_SELECT}</select></div>
 		<!-- IF S_CAN_LEAVE_SHADOW or S_CAN_LOCK_TOPIC -->
 			<table cellspacing="2" width="100%">
 				<!-- IF S_CAN_LEAVE_SHADOW -->
-					<tr><td align="center"><input type="checkbox" name="move_leave_shadow" /> <span class="big">{L_LEAVE_SHADOW}</span></td></tr>
+					<tr><td align="center"><input type="checkbox" name="move_leave_shadow" /> <span class="bigger">{L_LEAVE_SHADOW}</span></td></tr>
 				<!-- ENDIF -->
 				<!-- IF S_CAN_LOCK_TOPIC -->
-					<tr><td align="center"><input type="checkbox" name="move_lock_topics" /> <span class="big">{L_LOCK_TOPIC}</span></td></tr>
+					<tr><td align="center"><input type="checkbox" name="move_lock_topics" /> <span class="bigger">{L_LOCK_TOPIC}</span></td></tr>
 				<!-- ENDIF -->
 			</table>
 		<!-- ENDIF -->
-		<!-- EVENT mcp_move_destination_forum_after --><br /><div align="center"><div class="big">{MESSAGE_TEXT}</div><br />
+		<!-- EVENT mcp_move_destination_forum_after --><br /><div align="center"><div class="bigger"><b>{MESSAGE_TEXT}</b></div><br />
 		{S_HIDDEN_FIELDS}<input type="submit" name="confirm" value="{YES_VALUE}" class="button1" /> &nbsp;<input type="submit" name="cancel" value="{L_NO}" class="button2" /></div>
 	</td>
 </tr>

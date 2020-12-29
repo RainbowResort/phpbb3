@@ -3,7 +3,7 @@
 	<td class="bg1">
 	<!-- IF .timezone_date -->
 		<div id="tz_select_date" style="display: none; margin-bottom: 3px">
-			<select id="tz_date" class="tz_select" onchange="ChangeCurrentTime(this);">
+			<select name="tz_date" id="tz_date" class="tz_select" onchange="ChangeCurrentTime(this);">
 				<!-- BEGIN timezone_date -->
 				<option value="{timezone_date.VALUE}"<!-- IF timezone_date.SELECTED --> selected="selected"<!-- ENDIF -->>{timezone_date.TITLE}</option>
 				<!-- END timezone_date -->

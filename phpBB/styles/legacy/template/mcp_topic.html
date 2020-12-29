@@ -26,7 +26,7 @@
 			<td class="bg1">
 				<table width="100%" cellspacing="0">
 				<tr>
-					<td class="bigger"><span class="nowrap"><input type="radio" name="icon" value="0"<!-- IF not S_TOPIC_ICON --> checked="checked"<!-- ENDIF --> /> <span class="bigger">{L_NO_TOPIC_ICON}</span></span> &nbsp; <!-- BEGIN topic_icon --><span class="nowrap"><input type="radio" name="icon" value="{topic_icon.ICON_ID}" {topic_icon.S_ICON_CHECKED} /> <img src="{topic_icon.ICON_IMG}" width="{topic_icon.ICON_WIDTH}" height="{topic_icon.ICON_HEIGHT}" alt="{topic_icon.ICON_ALT}" title="{topic_icon.ICON_ALT}" /></span> &nbsp; <!-- END topic_icon --></td>
+					<td class="bigger"><span class="nowrap"><input type="radio" name="icon" value="0"<!-- IF not S_TOPIC_ICON --> checked="checked"<!-- ENDIF --> /> <span class="bigger">{L_NO_TOPIC_ICON}</span></span> &nbsp; <!-- BEGIN topic_icon --><span class="nowrap"><input type="radio" name="icon" value="{topic_icon.ICON_ID}" {topic_icon.S_ICON_CHECKED} /> <img src="{topic_icon.ICON_IMG}" width="{topic_icon.ICON_WIDTH}" height="{topic_icon.ICON_HEIGHT}" alt="" /></span> &nbsp; <!-- END topic_icon --></td>
 				</tr>
 				</table>
 			</td>
@@ -104,11 +104,10 @@
 			</tr>
 			<tr>
 				<td>
-					<div class="postbody"><div class="content">{postrow.MESSAGE}</div>
-					<!-- EVENT mcp_topic_postrow_attachments_before --></div>
+					<div class="postbody"><div class="content">{postrow.MESSAGE}</div></div>
+					<!-- IF postrow.S_HAS_ATTACHMENTS --><br /><!-- ENDIF -->	
+					<!-- EVENT mcp_topic_postrow_attachments_before -->
 					<!-- IF postrow.S_HAS_ATTACHMENTS -->
-						<br />
-
 						<table class="main" width="100%" cellspacing="1">
 						<tr>
 							<td class="bg3"><b class="bigger">{L_ATTACHMENTS}</b></td>
@@ -132,17 +131,23 @@
 			<td colspan="3"></td>
 		</tr>
 	<!-- ENDIF -->
+<!-- BEGINELSE -->
+	<tr>
+		<td class="bg1" align="center" colspan="3"><span class="big">{L_NO_POSTS_TIME_FRAME}</span></td>
+	</tr>
 <!-- END postrow -->
+</table>
+<table cellspacing="0" width="100%">
 <tr>
-	<td class="cat" colspan="3" align="{S_CONTENT_FLOW_END}"><select name="action"><option value="" selected="selected">{L_SELECT_ACTION}</option>
+	<td class="cat" align="{S_CONTENT_FLOW_END}"><select name="action"><option value="">{L_SELECT_ACTION}</option>
 		<!-- IF S_CAN_APPROVE --><option value="approve">{L_APPROVE_POSTS}</option><!-- ENDIF -->
 		<!-- IF S_CAN_LOCK --><option value="lock_post">{L_LOCK_POST_POSTS} [{L_LOCK_POST_EXPLAIN}]</option><option value="unlock_post">{L_UNLOCK_POST_POSTS}</option><!-- ENDIF -->
 		<!-- IF S_CAN_DELETE --><option value="delete_post">{L_DELETE_POSTS}</option><!-- ENDIF -->
 		<!-- IF S_CAN_RESTORE --><option value="restore">{L_RESTORE_POSTS}</option><!-- ENDIF -->
-		<!-- IF S_CAN_MERGE --><option value="merge_posts"<!-- IF ACTION eq 'merge' --> selected="selected"<!-- ENDIF -->>{L_MERGE_POSTS}</option><!-- ENDIF -->
-		<!-- IF S_CAN_SPLIT --><option value="split_all"<!-- IF ACTION eq 'split' --> selected="selected"<!-- ENDIF -->>{L_SPLIT_POSTS}</option><option value="split_beyond">{L_SPLIT_AFTER}</option><!-- ENDIF -->
+		<!-- IF S_CAN_MERGE --><option value="merge_posts"<!-- IF S_MERGE_VIEW --> selected="selected"<!-- ENDIF -->>{L_MERGE_POSTS}</option><!-- ENDIF -->
+		<!-- IF S_CAN_SPLIT --><option value="split_all"<!-- IF S_SPLIT_VIEW --> selected="selected"<!-- ENDIF -->>{L_SPLIT_POSTS}</option><option value="split_beyond">{L_SPLIT_AFTER}</option><!-- ENDIF -->
 		<!-- IF S_CAN_SYNC --><option value="resync">{L_RESYNC}</option><!-- ENDIF -->
-	</select>&nbsp;<input class="button1" type="submit" name="mcp_topic_submit" value="{L_SUBMIT}" /></td>
+	</select> <input class="button1" type="submit" name="mcp_topic_submit" value="{L_SUBMIT}" /></td>
 </tr>
 </table>
 

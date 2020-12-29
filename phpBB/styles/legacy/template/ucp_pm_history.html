@@ -34,7 +34,7 @@
 					<td class="bigger"><b>{L_PM_SUBJECT}{L_COLON}</b> {history_row.SUBJECT}</td>
 					<td align="{S_CONTENT_FLOW_END}">
 						<!-- EVENT ucp_pm_history_post_buttons_before -->
-						<!-- IF history_row.U_QUOTE or history_row.MESSAGE_AUTHOR_QUOTE --><a class="button" <!-- IF history_row.U_QUOTE -->href="{history_row.U_QUOTE}"<!-- ELSE -->href="#" onclick="addquote({history_row.MSG_ID}, '{history_row.MESSAGE_AUTHOR_QUOTE}', '{LA_WROTE}', {time:{history_row.MESSAGE_TIME},user_id:{history_row.USER_ID}}, true); return false;"<!-- ENDIF --> title="{L_QUOTE} {history_row.MESSAGE_AUTHOR}">{L_BUTTON_QUOTE}</a><!-- ENDIF -->
+						<!-- IF history_row.U_QUOTE or history_row.MESSAGE_AUTHOR_QUOTE --><a class="button" <!-- IF history_row.U_QUOTE -->href="{history_row.U_QUOTE}"<!-- ELSE -->href="#" onclick="addquote({history_row.MSG_ID}, '{history_row.MESSAGE_AUTHOR_QUOTE}', '{LA_WROTE}', {msg_id:{history_row.MSG_ID},time:{history_row.MESSAGE_TIME},user_id:{history_row.USER_ID}}, true); return false;"<!-- ENDIF --> title="{L_QUOTE} {history_row.MESSAGE_AUTHOR}">{L_BUTTON_QUOTE}</a><!-- ENDIF -->
 						<!-- IF history_row.U_POST_REPLY_PM and REPLY_IMG --><a class="button" href="{history_row.U_POST_REPLY_PM}" title="{L_POST_REPLY_PM}">{L_BUTTON_PM_REPLY}</a><!-- ENDIF -->
 						<!-- EVENT ucp_pm_history_post_buttons_after -->
 					</td>

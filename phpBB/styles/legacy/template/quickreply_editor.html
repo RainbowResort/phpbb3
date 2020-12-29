@@ -2,21 +2,30 @@
 <!-- EVENT quickreply_editor_panel_before -->
 	<table class="main" width="100%" cellspacing="1">
 		<tr>
-			<th colspan="2">{L_QUICKREPLY}</th>
+			<th>{L_QUICKREPLY}</th>
 		</tr>
 		<!-- EVENT quickreply_editor_subject_before -->
 		<tr>
-			<td class="bg1"><b class="bigger">{L_SUBJECT}{L_COLON}</b></td>
-			<td class="bg1" width="100%"><input type="text" class="inputbox" name="subject" size="60" maxlength="124" tabindex="2" value="{SUBJECT}" /></td>
+			<td class="bg1" align="center">
+				<b class="bigger">{L_SUBJECT}{L_COLON}</b>
+				<input type="text" class="inputbox" name="subject" size="60" maxlength="124" tabindex="2" value="{SUBJECT}" />
+			</td>
 		</tr>
 		<!-- EVENT quickreply_editor_message_before -->
-		<tr class="bg1">
-			<td valign="top"><table cellspacing="0" width="150"><tr><td><b class="bigger">{L_MESSAGE}{L_COLON}</b></td></tr></table></td>
-			<td class="bg1"><textarea name="message" rows="7" cols="70" tabindex="3"></textarea></td>
+		<tr>
+			<td class="bg1">
+				<table align="center" cellspacing="0" width="70%"><tr><td>&nbsp;</td><td width="100%" style="padding: 0">
+				<table cellspacing="0" class="message-box" width="100%"><tr><td style="padding-top: 0; padding-bottom: 0">
+				<textarea name="message" rows="7" cols="65" tabindex="3"></textarea>
+				</td></tr></table></td></tr></table>
+			</td>
 		</tr>
 		<!-- EVENT quickreply_editor_message_after -->
+	</table>
+	<table cellspacing="0" width="100%">
 		<tr>
-			<td class="cat" colspan="2" align="center">
+			<td class="cat" align="center">
+				<input type="text" disabled="disabled" size="1" style="display: none" value="" />
 				<input class="button2" type="submit" accesskey="f" tabindex="6" name="preview" value="{L_FULL_EDITOR}" />
 				&nbsp;<input class="button1" type="submit" accesskey="s" tabindex="7" name="post" value="{L_SUBMIT}" />
 

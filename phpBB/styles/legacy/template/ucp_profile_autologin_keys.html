@@ -13,8 +13,8 @@
 	</tr>
 <!-- ENDIF -->
 
-<tr>
-	<td align="center" colspan="4" class="bg1"><span class="bigger">{L_PROFILE_AUTOLOGIN_KEYS}</span></td>
+<tr class="bigger">
+	<td class="bg1" colspan="4" align="center">{L_PROFILE_AUTOLOGIN_KEYS}</td>
 </tr>
 <tr>
 	<th>{L_LOGIN_KEY}</th>
@@ -30,14 +30,16 @@
 		<td align="center" class="{$BG}"><input type="checkbox" name="keys[]" value="{sessions.KEY}" id="{sessions.KEY}" /></td>
 	</tr>
 <!-- BEGINELSE -->
-	<tr>
-		<td colspan="4" class="bg1" align="center"><span class="bigger">{L_PROFILE_NO_AUTOLOGIN_KEYS}</span></td>
+	<tr class="bigger">
+		<td class="bg1" colspan="4" align="center">{L_PROFILE_NO_AUTOLOGIN_KEYS}</td>
 	</tr>
 <!-- END sessions -->
 
 <!-- IF .sessions -->
+	</table>
+	<table cellspacing="0" width="100%">
 	<tr>
-		<td class="cat" colspan="4" align="{S_CONTENT_FLOW_END}">
+		<td class="cat" align="{S_CONTENT_FLOW_END}">
 			{S_HIDDEN_FIELDS}<input class="button2" type="submit" name="submit" value="{L_DELETE_MARKED}" />
 			{S_FORM_TOKEN}
 		</td>
@@ -47,7 +49,7 @@
 
 <!-- IF .sessions -->
 	<table width="100%" cellspacing="1"><tr>
-		<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('ucp', 'keys', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp', 'keys', false); return false;">{L_UNMARK_ALL}</a></b></td>
+		<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('ucp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
 	</tr></table>
 <!-- ENDIF -->
 

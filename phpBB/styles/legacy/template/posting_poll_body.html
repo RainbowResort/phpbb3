@@ -19,7 +19,7 @@
 </tr>
 <tr>
 	<td class="bg1"><b class="bigger">{L_POLL_FOR}{L_COLON}</b></td>
-	<td class="bg1"><input type="text" class="inputbox" size="3" maxlength="3" name="poll_length" value="{POLL_LENGTH}" />&nbsp;<b class="big">{L_DAYS}</b> <span class="bigger">{L_POLL_FOR_EXPLAIN}</span></td>
+	<td class="bg1"><input type="text" class="inputbox" size="3" maxlength="3" name="poll_length" value="{POLL_LENGTH}" /> <b class="bigger">{L_DAYS}</b> <span class="bigger">{L_POLL_FOR_EXPLAIN}</span></td>
 </tr>
 	<!-- IF S_POLL_VOTE_CHANGE -->
 	<tr>
@@ -29,6 +29,11 @@
 	<!-- ENDIF -->
 <!-- ENDIF -->
 <!-- IF S_POLL_DELETE -->
+	<!-- IF not S_SHOW_POLL_BOX -->
+		<tr>
+			<th colspan="2">{L_POLL_DELETE}</th>
+		</tr>
+	<!-- ENDIF -->
 	<tr>
 		<td class="bg1"><b class="bigger">{L_POLL_DELETE}{L_COLON}</b></td>
 		<td class="bg1"><input type="checkbox" name="poll_delete"<!-- IF S_POLL_DELETE_CHECKED --> checked="checked"<!-- ENDIF --> /></td>

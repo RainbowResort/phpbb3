@@ -4,9 +4,9 @@
 		</tr>
 	<!-- ENDIF -->
 	<tr>
-		<td class="bg1"><span class="bigger"><b>{QA_CONFIRM_QUESTION}{L_COLON}</b><br />{L_CONFIRM_QUESTION_EXPLAIN}</span></td>
+		<td class="bg1"<!-- IF $CAPTCHA_TD_WIDTH --> width="{$CAPTCHA_TD_WIDTH}%"<!-- ENDIF -->><b class="bigger">{QA_CONFIRM_QUESTION}{L_COLON}</b><!-- IF not $CAPTCHA_EDITOR --><br /><span class="bigger">{L_CONFIRM_QUESTION_EXPLAIN}</span><!-- ENDIF --></td>
 		<td class="bg1">
 			<input type="text" class="inputbox" name="qa_answer" size="40"<!-- IF $CAPTCHA_TAB_INDEX --> tabindex="{$CAPTCHA_TAB_INDEX}"<!-- ENDIF --> />
-			<input type="hidden" name="qa_confirm_id" id="confirm_id" value="{QA_CONFIRM_ID}" />
+			<input type="hidden" name="qa_confirm_id" id="confirm_id" value="{QA_CONFIRM_ID}" /><!-- IF $CAPTCHA_EDITOR --><br /><span class="bigger">{L_CONFIRM_QUESTION_EXPLAIN}</span><!-- ENDIF -->
 		</td>
 	</tr>

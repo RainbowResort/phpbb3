@@ -9,12 +9,12 @@
 			<!-- IF SEARCHED_QUERY --><div class="bigger">{L_SEARCHED_QUERY}{L_COLON} <b>{SEARCHED_QUERY}</b></div><!-- ENDIF -->
 			<!-- IF IGNORED_WORDS --><div class="bigger">{L_IGNORED_TERMS}{L_COLON} <b>{IGNORED_WORDS}</b></div><!-- ENDIF -->
 			<!-- IF PHRASE_SEARCH_DISABLED --><div class="bigger"><b>{L_PHRASE_SEARCH_DISABLED}</b></div><!-- ENDIF -->
-			<!-- IF SEARCH_TOPIC --><div class="bigger">{L_SEARCHED_TOPIC}{L_COLON} <a href="{U_SEARCH_TOPIC}"><b>{SEARCH_TOPIC}</b></a></div><!-- ENDIF -->
+			<!-- IF SEARCH_TOPIC --><br /><b><a class="nowrap" href="{U_SEARCH_TOPIC}">{L_RETURN_TO_TOPIC}</a></b><!-- ENDIF -->
 		</td>
 	</tr>
 	<tr valign="bottom">
 		<td>
-			<!-- IF SEARCH_IN_RESULTS and TOTAL_MATCHES > 0 -->
+			<!-- IF TOTAL_MATCHES > 0 -->
 				<div class="search-box">
 					<form action="{S_SEARCH_ACTION}" method="post">
 						<input type="text" class="inputbox" name="add_keywords" size="20" value="{L_SEARCH_IN_RESULTS}" onfocus="if (this.value == '{LA_SEARCH_IN_RESULTS}') {this.value='';}" />
@@ -45,18 +45,14 @@
 		<!-- EVENT search_results_topic_before -->
 		<tr>
 			<td class="bg1" width="25" align="center">
-				<!-- IF searchresults.S_UNREAD_TOPIC --><a href="{searchresults.U_NEWEST_POST}"><!-- ENDIF --><img src="{T_THEME_PATH}/images/{searchresults.TOPIC_IMG_STYLE}.gif" width="19" height="18" alt="<!-- IF searchresults.S_UNREAD_TOPIC -->+" border="0<!-- ENDIF -->" title="{searchresults.TOPIC_FOLDER_IMG_ALT}" /><!-- IF searchresults.S_UNREAD_TOPIC --></a><!-- ENDIF -->
+				<!-- IF searchresults.S_UNREAD_TOPIC and not S_IS_BOT --><a href="{searchresults.U_NEWEST_POST}"><!-- ENDIF --><img src="{T_THEME_PATH}/images/{searchresults.TOPIC_IMG_STYLE}.gif" width="19" height="18" alt="<!-- IF searchresults.S_UNREAD_TOPIC -->+" border="0<!-- ENDIF -->" title="{searchresults.TOPIC_FOLDER_IMG_ALT}" /><!-- IF searchresults.S_UNREAD_TOPIC and not S_IS_BOT --></a><!-- ENDIF -->
 			</td>
-			<td class="bg1" width="25" align="center">
-			<!-- IF searchresults.TOPIC_ICON_IMG -->
-				<img src="{T_ICONS_PATH}{searchresults.TOPIC_ICON_IMG}" width="{searchresults.TOPIC_ICON_IMG_WIDTH}" height="{searchresults.TOPIC_ICON_IMG_HEIGHT}" alt="" title="" />
-			<!-- ENDIF -->
-			</td>
+			<td class="bg1" width="24" align="center"><!-- IF searchresults.TOPIC_ICON_IMG --><img src="{T_ICONS_PATH}{searchresults.TOPIC_ICON_IMG}" width="16" height="16" alt="" /><!-- ENDIF --></td>
 			<td class="bg1">
 				<!-- EVENT topiclist_row_prepend -->
-				<!-- IF searchresults.S_UNREAD_TOPIC --><a href="{searchresults.U_NEWEST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_newest.gif" width="18" height="9" alt="&gt;&gt;&gt;" border="0" title="{L_UNREAD_POSTS}" /></a><!-- ENDIF -->
+				<!-- IF searchresults.S_UNREAD_TOPIC and not S_IS_BOT --><a href="{searchresults.U_NEWEST_POST}"><img src="{T_THEME_PATH}/images/icon_topic_newest.gif" width="18" height="9" alt="&gt;&gt;&gt;" border="0" title="{L_UNREAD_POSTS}" /></a><!-- ENDIF -->
 				<!-- IF searchresults.ATTACH_ICON_IMG --><img src="{T_THEME_PATH}/images/icon_topic_attach.gif" width="14" height="18" alt="(*)" title="{L_TOTAL_ATTACHMENTS}" /><!-- ENDIF -->
-				<!-- IF searchresults.S_HAS_POLL --><b>{searchresults.TOPIC_TYPE}</b> <!-- ENDIF --><a title="{L_POSTED}{L_COLON} {searchresults.FIRST_POST_TIME}" href="{searchresults.U_VIEW_TOPIC}" class="topictitle">{searchresults.TOPIC_TITLE}</a>
+				<!-- IF searchresults.S_HAS_POLL --><b>{L_VIEW_TOPIC_POLL}</b> <!-- ENDIF --><a title="{L_POSTED}{L_COLON} {searchresults.FIRST_POST_TIME}" href="{searchresults.U_VIEW_TOPIC}" class="topictitle">{searchresults.TOPIC_TITLE}</a>
 				<!-- IF searchresults.S_TOPIC_UNAPPROVED or searchresults.S_POSTS_UNAPPROVED -->
 					<a href="{searchresults.U_MCP_QUEUE}"><img src="{T_THEME_PATH}/images/icon_topic_unapproved.gif" width="19" height="18" alt="(?)" border="0" title="<!-- IF searchresults.S_TOPIC_UNAPPROVED -->{L_TOPIC_UNAPPROVED}<!-- ELSE -->{L_POSTS_UNAPPROVED}<!-- ENDIF -->" /></a>
 				<!-- ENDIF -->
@@ -105,11 +101,11 @@
 		<tr class="{$BG}">
 		<!-- EVENT search_results_post_before -->
 		<!-- IF searchresults.S_IGNORE_POST -->
-			<td align="center" class="member"<!-- IF searchresults.S_FIRST_ROW or searchresults.S_LAST_ROW --> colspan="2"<!-- ENDIF -->>{searchresults.L_IGNORE_POST}</td>
+			<td align="center" class="member"<!-- IF searchresults.S_FIRST_ROW --> colspan="2"<!-- ENDIF -->>{searchresults.L_IGNORE_POST}</td>
 		<!-- ELSE -->
 			<td align="center"><b><!-- EVENT search_results_post_author_username_prepend -->{searchresults.POST_AUTHOR_FULL}<!-- EVENT search_results_post_author_username_append --></b></td>
-			<td width="100%">
-				<table cellspacing="0" height="20" width="100%">
+			<td height="20" width="100%">
+				<table cellspacing="0" width="100%">
 				<tr>
 					<td>
 						<table cellspacing="0" width="100%"><tr><td class="bigger">
@@ -124,8 +120,8 @@
 				</tr>
 				</table>
 			</td>
-		</tr>
-		<tr class="{$BG}" valign="top">
+			</tr>
+			<tr class="{$BG}" valign="top">
 			<td><br />
 				<table cellspacing="0" width="150"><tr><td>
 					<table class="profile"><tr><td>&nbsp;</td><td width="100%"><table class="fixed"><tr><td>
@@ -147,9 +143,9 @@
 				</tr>
 				</table>
 			</td>
-		</tr>
 		<!-- ENDIF -->
 		<!-- EVENT search_results_post_after -->
+		</tr>
 		</table>
 		<!-- IF not searchresults.S_LAST_ROW --><div class="spacer"></div><!-- ENDIF -->
 	<!-- END searchresults -->
@@ -160,8 +156,8 @@
 	<tr>
 		<th>{L_INFORMATION}</th>
 	</tr>
-	<tr>
-		<td class="bg1" align="center"><span class="big">{L_NO_SEARCH_RESULTS}</span></td>
+	<tr class="big">
+		<td class="bg1" align="center">{L_NO_SEARCH_RESULTS}</td>
 	</tr>
 	</table>
 <!-- ELSEIF S_SELECT_SORT_DAYS or S_SELECT_SORT_KEY -->
@@ -173,7 +169,7 @@
 <!-- ENDIF -->
 
 <table cellspacing="1" style="margin: 5px 0" width="100%"><tr valign="top">
-	<td><b class="nowrap"><!-- IF SEARCH_TOPIC --><a href="{U_SEARCH_TOPIC}">{L_RETURN_TO_TOPIC}</a><!-- ELSE --><a href="{U_SEARCH}">{L_GO_TO_SEARCH_ADV}</a><!-- ENDIF --></b></td>
+	<td><b><a class="nowrap" href="<!-- IF SEARCH_TOPIC -->{U_SEARCH_TOPIC}">{L_RETURN_TO_TOPIC}<!-- ELSE -->{U_SEARCH}">{L_GO_TO_SEARCH_ADV}<!-- ENDIF --></a></b></td>
 	<td align="{S_CONTENT_FLOW_END}"><span class="nowrap">[ {SEARCH_MATCHES} ]</span> <!-- INCLUDE pagination.html --></td>
 </tr></table>
 

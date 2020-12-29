@@ -6,8 +6,8 @@
 <tr>
 	<th colspan="<!-- IF MODE == 'notification_options' -->{NOTIFICATION_TYPES_COLS}<!-- ELSE -->2<!-- ENDIF -->">{TITLE}</th>
 </tr>
-<tr>
-	<td class="bg1" colspan="<!-- IF MODE == 'notification_options' -->{NOTIFICATION_TYPES_COLS}<!-- ELSE -->2<!-- ENDIF -->" align="center"><span class="bigger">{TITLE_EXPLAIN}</span></td>
+<tr class="bigger">
+	<td align="center" class="bg1" colspan="<!-- IF MODE == 'notification_options' -->{NOTIFICATION_TYPES_COLS}<!-- ELSE -->2<!-- ENDIF -->">{TITLE_EXPLAIN}</td>
 </tr>
 <!-- IF MODE == 'notification_options' -->
 	<tr>
@@ -29,13 +29,15 @@
 					</span>
 				</td>
 				<!-- BEGIN notification_methods -->
-					<td align="center"><input type="checkbox" name="{notification_types.TYPE}_{notification_types.notification_methods.METHOD}"<!-- IF notification_types.notification_methods.AVAILABLE and notification_types.notification_methods.SUBSCRIBED --> checked="checked"<!-- ENDIF --><!-- IF not notification_types.notification_methods.AVAILABLE --> disabled="disabled"<!-- ENDIF --> /></td>
+					<td align="center"><input type="checkbox" name="{notification_types.TYPE}_{notification_types.notification_methods.METHOD}"<!-- IF notification_types.notification_methods.SUBSCRIBED --> checked="checked"<!-- ENDIF --><!-- IF not notification_types.notification_methods.AVAILABLE --> disabled="disabled"<!-- ENDIF --> /></td>
 				<!-- END notification_methods -->
 			</tr>
 		<!-- ENDIF -->
 	<!-- END notification_types -->
+	</table>
+	<table cellspacing="0" width="100%">
 	<tr>
-		<td class="cat" colspan="{NOTIFICATION_TYPES_COLS}" align="center">
+		<td class="cat" align="center">
 			<input type="hidden" name="form_time" value="{FORM_TIME}" />
 			{S_HIDDEN_FIELDS}
 			<input class="button2" type="reset" value="{L_RESET}" name="reset" /> &nbsp;<input class="button1" type="submit" name="submit" value="{L_SUBMIT}" />
@@ -47,16 +49,11 @@
 		<tr>
 			<th colspan="2">{L_NOTIFICATIONS}</th>
 		</tr>
-		<tr>
-			<td class="bg3" colspan="2">
-				<table width="100%" cellspacing="1">
+			<!-- IF U_MARK_ALL or .pagination -->
 				<tr>
-					<td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL_COUNT} {L_NOTIFICATIONS} ]</td>
-					<td align="{S_CONTENT_FLOW_END}" width="100%"><!-- IF U_MARK_ALL --><b><a href="{U_MARK_ALL}">{L_MARK_ALL_READ}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- ENDIF --><!-- INCLUDE pagination.html --></td>
+					<td class="bg3" colspan="2" align="{S_CONTENT_FLOW_END}"><!-- IF U_MARK_ALL --><b><a href="{U_MARK_ALL}">{L_MARK_ALL_READ}</a></b><!-- IF .pagination --> | <!-- ENDIF --><!-- ENDIF --><!-- INCLUDE pagination.html --></td>
 				</tr>
-				</table>
-			</td>
-		</tr>
+			<!-- ENDIF -->
 	<!-- ENDIF -->
 	<!-- BEGIN notification_list -->
 		<tr class="forumdesc">
@@ -71,28 +68,29 @@
 			</td>
 		</tr>
 	<!-- END notification_list -->
-	<tr>
 		<!-- IF .notification_list -->
-			<td align="{S_CONTENT_FLOW_END}" class="cat" colspan="2">
+			</table>
+			<table cellspacing="0" width="100%"><tr>
+			<td class="cat" align="{S_CONTENT_FLOW_END}">
 				<input type="hidden" name="form_time" value="{FORM_TIME}" />
 				{S_HIDDEN_FIELDS}
 				<input class="button1" type="submit" name="submit" value="{L_MARK_READ}" />
 				{S_FORM_TOKEN}
-			</td>
+			</td></tr>
 		<!-- ELSE -->
-			<td align="center" class="bg1" colspan="2">
+			<tr><td align="center" class="bg1" colspan="2">
 				<b class="bigger">{L_NO_NOTIFICATIONS}</b>
-			</td>
+			</td></tr>
 		<!-- ENDIF -->
-	</tr>
 <!-- ENDIF -->
 </table>
 
-<!-- IF .notifications or MODE == 'notification_options' or (.pagination and not MODE == 'notification_options') -->
-	<table width="100%" cellspacing="1">
-		<!-- IF .notifications or MODE == 'notification_options' --><tr><td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('ucp', '<!-- IF MODE == 'notification_options' -->notification.type<!-- ELSE -->mark[]<!-- ENDIF -->', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp', '<!-- IF MODE == 'notification_options' -->notification.type<!-- ELSE -->mark[]<!-- ENDIF -->', false); return false;">{L_UNMARK_ALL}</a></b></td></tr><!-- ENDIF -->
-		<!-- IF .pagination and not MODE == 'notification_options' --><tr><td align="{S_CONTENT_FLOW_END}"><!-- INCLUDE pagination.html --></td></tr><!-- ENDIF -->
-	</table>
+<!-- IF .notification_list or MODE == 'notification_options' -->
+	<table width="100%" cellspacing="1"><tr>
+		<!-- IF MODE != 'notification_options' --><td nowrap="nowrap"><b>{PAGE_NUMBER}</b> &nbsp;[ {TOTAL_COUNT} {L_NOTIFICATIONS} ]</td><!-- ENDIF -->
+		<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><b><a href="#" onclick="marklist('ucp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+		<!-- IF MODE != 'notification_options' and .pagination --></tr><tr><td align="{S_CONTENT_FLOW_END}" colspan="2"><!-- INCLUDE pagination.html --></td><!-- ENDIF -->
+	</tr></table>
 <!-- ENDIF -->
 
 </form>

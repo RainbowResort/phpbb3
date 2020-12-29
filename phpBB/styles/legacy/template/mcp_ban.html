@@ -36,14 +36,14 @@
 <tr>
 	<th colspan="2">{L_TITLE}</th>
 </tr>
-<tr>
-	<td class="bg1" colspan="2"><span class="bigger">{L_EXPLAIN}</span></td>
+<tr class="bigger">
+	<td class="bg1" colspan="2" align="center">{L_EXPLAIN}</td>
 </tr>
 <!-- EVENT mcp_ban_fields_before -->
 <tr>
 	<td class="bg1" valign="top" width="40%"><b class="bigger">{L_BAN_CELL}{L_COLON}</b></td>
 	<td class="bg1">
-		<textarea name="ban" id="ban" cols="30" rows="3">{USERNAMES}</textarea>
+		<textarea name="ban" id="ban" cols="30" rows="3">{BAN_QUANTIFIER}</textarea>
 		<!-- IF S_USERNAME_BAN --><div class="bigger">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</div><!-- ENDIF -->
 	</td>
 </tr>
@@ -64,8 +64,10 @@
 	<td class="bg1"><select name="banlength" onchange="var expire_date = getStuff('banlengthuntil'); if (this.value==-1) {expire_date.className = '';} else {expire_date.className = 'noscript';}">{S_BAN_END_OPTIONS}</select><br /><div id="banlengthuntil" class="noscript"><input type="text" class="inputbox" name="banlengthother" /> {L_YEAR_MONTH_DAY}</div></td>
 </tr>
 <!-- EVENT mcp_ban_fields_after -->
+</table>
+<table cellspacing="0" width="100%">
 <tr>
-	<td class="cat" colspan="2" align="center"><input type="reset" value="{L_RESET}" class="button2" onclick="getStuff('banlengthuntil').className = 'noscript';" /> &nbsp;<input type="submit" name="bansubmit" value="{L_SUBMIT}" class="button1" /></td>
+	<td class="cat" align="center"><input type="reset" value="{L_RESET}" class="button2" onclick="getStuff('banlengthuntil').className = 'noscript';" /> &nbsp;<input type="submit" name="bansubmit" value="{L_SUBMIT}" class="button1" /></td>
 </tr>
 </table>
 
@@ -75,14 +77,14 @@
 <tr>
 	<th colspan="2">{L_UNBAN_TITLE}</th>
 </tr>
-<tr>
-	<td class="bg1" colspan="2"><span class="bigger">{L_UNBAN_EXPLAIN}</span></td>
+<tr class="bigger">
+	<td class="bg1" colspan="2" align="center">{L_UNBAN_EXPLAIN}</td>
 </tr>
 <!-- IF S_BANNED_OPTIONS -->
 	<!-- EVENT mcp_ban_unban_before -->
 	<tr>
 		<td class="bg1" valign="top" width="40%"><b class="bigger">{L_BAN_CELL}{L_COLON}</b></td>
-		<td class="bg1"><select name="unban[]" multiple="multiple" size="10" style="width: 50%" onchange="if (this.selectedIndex > -1) display_details(this.options[this.selectedIndex].value); else display_details(-1);">{BANNED_OPTIONS}</select></td>
+		<td class="bg1"><select name="unban[]" multiple="multiple" size="10" style="width: 100%" onchange="if (this.selectedIndex > -1) display_details(this.options[this.selectedIndex].value); else display_details(-1);">{BANNED_OPTIONS}</select></td>
 	</tr>
 	<tr>
 		<td class="bg1" valign="top"><b class="bigger">{L_BAN_LENGTH}{L_COLON}</b></td>
@@ -97,8 +99,10 @@
 		<td class="bg1"><table cellspacing="0"><tr><td width="100%"><table class="fixed"><tr><td><b class="bigger" id="unbangivereason"></b></td></tr></table></td><td>&nbsp;</td></tr></table></td>
 	</tr>
 	<!-- EVENT mcp_ban_unban_after -->
+	</table>
+	<table cellspacing="0" width="100%">
 	<tr>
-		<td class="cat" colspan="2" align="center"><input type="reset" value="{L_RESET}" class="button2" onclick="getStuff('banlengthuntil').className = 'noscript';" /> &nbsp;<input type="submit" name="unbansubmit" value="{L_SUBMIT}" class="button1" /></td>
+		<td class="cat" align="center"><input type="reset" value="{L_RESET}" class="button2" onclick="getStuff('banlengthuntil').className = 'noscript';" /> &nbsp;<input type="submit" name="unbansubmit" value="{L_SUBMIT}" class="button1" /></td>
 	</tr>
 <!-- ELSE -->
 	<tr>
@@ -106,6 +110,7 @@
 	</tr>
 <!-- ENDIF -->
 </table>
+{S_HIDDEN_FIELDS}
 {S_FORM_TOKEN}
 </form>
 

@@ -8,7 +8,7 @@
 	</td>
 	<td align="{S_CONTENT_FLOW_END}" class="bigger">
 		<!-- IF U_CONTACT_US --><a href="{U_CONTACT_US}">{L_CONTACT_US}</a>&nbsp;| <!-- ENDIF -->
-		<!-- EVENT overall_footer_teamlink_before --> <!-- IF U_TEAM and S_DISPLAY_MEMBERLIST --><a href="{U_TEAM}">{L_THE_TEAM}</a>&nbsp;| <!-- ENDIF --> <!-- EVENT overall_footer_teamlink_after -->
+		<!-- EVENT overall_footer_teamlink_before --> <!-- IF U_TEAM and not S_IS_BOT --><a href="{U_TEAM}">{L_THE_TEAM}</a>&nbsp;| <!-- ENDIF --> <!-- EVENT overall_footer_teamlink_after -->
 		<!-- IF not S_IS_BOT --><!-- IF S_DISPLAY_MEMBERLIST --><a href="{U_MEMBERLIST}" title="{L_MEMBERLIST_EXPLAIN}">{L_MEMBERLIST}</a>&nbsp;| <!-- ENDIF --><a href="{U_DELETE_COOKIES}">{L_DELETE_COOKIES}</a>&nbsp;| <!-- ENDIF -->
 		<!-- EVENT overall_footer_timezone_before --> {S_TIMEZONE} <!-- EVENT overall_footer_timezone_after -->
 	</td>

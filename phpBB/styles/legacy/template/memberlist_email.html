@@ -2,7 +2,7 @@
 
 <!-- EVENT memberlist_email_before -->
 
-<form action="{S_POST_ACTION}" method="post" name="postform">
+<form method="post" action="{S_POST_ACTION}" name="post">
 
 <table class="main" width="100%" cellspacing="1">
 <tr>	
@@ -15,12 +15,12 @@
 <!-- ENDIF -->
 <!-- IF CONTACT_INFO -->
 <tr class="bg1">
-	<td colspan="2"><table cellspacing="5" width="100%"><tr><td><div class="postbody"><span class="content">{CONTACT_INFO}</span></div></td></tr></table></td>
+	<td colspan="2"><table cellspacing="5" width="100%"><tr><td><div class="postbody"><div class="content">{CONTACT_INFO}</div></div></td></tr></table></td>
 </tr>
 <!-- ENDIF -->
 <!-- IF S_SEND_USER -->
 	<tr>
-		<td class="bg1" width="22%"><b class="bigger">{L_RECIPIENT}{L_COLON}</b></td>
+		<td class="bg1" width="35%"><b class="bigger">{L_RECIPIENT}{L_COLON}</b></td>
 		<td class="bg1"><b class="bigger">{USERNAME_FULL}</b></td>
 	</tr>
 	<tr>
@@ -29,7 +29,7 @@
 	</tr>
 <!-- ELSEIF S_CONTACT_ADMIN-->
 	<tr>
-		<td class="bg1" width="22%"><b class="bigger">{L_RECIPIENT}{L_COLON}</b></td>
+		<td class="bg1" width="35%"><b class="bigger">{L_RECIPIENT}{L_COLON}</b></td>
 		<td class="bg1"><b class="bigger">{L_ADMINISTRATOR}</b></td>
 	</tr>
 	<!-- IF not S_IS_REGISTERED -->
@@ -48,7 +48,7 @@
 	</tr>
 <!-- ELSE -->
 	<tr>
-		<td class="bg1" width="22%"><b class="bigger">{L_EMAIL_ADDRESS}{L_COLON}</b></td>
+		<td class="bg1" width="35%"><b class="bigger">{L_EMAIL_ADDRESS}{L_COLON}</b></td>
 		<td class="bg1"><input type="text" class="inputbox" name="email" size="50" maxlength="100" value="{EMAIL}" /></td>
 	</tr>
 	<tr>
@@ -62,16 +62,18 @@
 <!-- ENDIF -->
 <tr>
 	<td class="bg1" valign="top"><b class="bigger">{L_MESSAGE_BODY}{L_COLON}</b><br /><span class="bigger">{L_EMAIL_BODY_EXPLAIN}</span></td>
-	<td class="bg1"><textarea name="message" rows="15" cols="76" tabindex="3">{MESSAGE}</textarea></td>
+	<td class="bg1"><textarea name="message" rows="15" cols="50" tabindex="3">{MESSAGE}</textarea></td>
 </tr>
 <!-- IF S_REGISTERED_USER -->
 <tr>
-	<td class="bg1"><span class="big"><b>{L_OPTIONS}{L_COLON}</b></span></td>
-	<td class="bg1"><input type="checkbox" name="cc_sender" value="1" checked="checked" /> <span class="big">{L_CC_SENDER}</span></td>
+	<td class="bg1"><b class="bigger">{L_OPTIONS}{L_COLON}</b></td>
+	<td class="bg1"><input type="checkbox" name="cc_sender" value="1" checked="checked" /> <span class="bigger">{L_CC_SENDER}</span></td>
 </tr>
 <!-- ENDIF -->
+</table>
+<table cellspacing="0" width="100%">
 <tr>
-	<td class="cat" colspan="2" align="center"><input type="submit" tabindex="6" name="submit" class="button1" value="{L_SEND_EMAIL}" /></td>
+	<td class="cat" align="center"><input type="submit" tabindex="6" name="submit" class="button1" value="{L_SEND_EMAIL}" /></td>
 </tr>
 </table>
 

@@ -16,15 +16,15 @@
 	<!-- IF S_DISPLAY_MODERATOR_FORUMS --><th width="20%">{L_MODERATOR}</th><!-- ENDIF -->
 </tr>
 <!-- BEGIN user -->
-	<tr class="<!-- IF memberrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
-		<td class="member"><!-- EVENT memberlist_team_username_prepend -->{group.user.USERNAME_FULL}<!-- IF group.user.S_INACTIVE --> <i>({L_INACTIVE})</i><!-- ENDIF --><!-- EVENT memberlist_team_username_append --></td>
-		<td align="center" class="member"><!-- IF group.user.RANK_IMG -->{group.user.RANK_IMG}<!-- ELSE -->{group.user.RANK_TITLE}<!-- ENDIF --></td>
-		<td align="center" class="member"><!-- IF group.user.U_GROUP --><a<!-- IF group.user.GROUP_COLOR --> class="username-coloured" style="color: #{group.user.GROUP_COLOR}"<!-- ENDIF --> href="{group.user.U_GROUP}">{group.user.GROUP_NAME}</a><!-- ELSE -->{group.user.GROUP_NAME}<!-- ENDIF --></td>
-		<!-- IF S_DISPLAY_MODERATOR_FORUMS --><td align="center" class="member"><!-- IF group.user.FORUM_OPTIONS --><select>{group.user.FORUMS}</select><!-- ELSEIF group.user.FORUMS -->{group.user.FORUMS}<!-- ELSE -->-<!-- ENDIF --></td><!-- ENDIF -->
+	<tr><!-- IF memberrow.S_ROW_COUNT is odd --><!-- DEFINE $BG = 'bg1' --><!-- ELSE --><!-- DEFINE $BG = 'bg2' --><!-- ENDIF -->
+		<td class="{$BG}"><div class="bigger"><!-- EVENT memberlist_team_username_prepend -->{group.user.USERNAME_FULL}<!-- IF group.user.S_INACTIVE --> <i>({L_INACTIVE})</i><!-- ENDIF --><!-- EVENT memberlist_team_username_append --></div></td>
+		<td align="center" class="{$BG}"><p><!-- IF group.user.RANK_IMG -->{group.user.RANK_IMG}<!-- ELSE -->{group.user.RANK_TITLE}<!-- ENDIF --></p></td>
+		<td align="center" class="{$BG}"><p><!-- IF group.user.U_GROUP --><a<!-- IF group.user.GROUP_COLOR --> class="username-coloured" style="color: #{group.user.GROUP_COLOR}"<!-- ENDIF --> href="{group.user.U_GROUP}">{group.user.GROUP_NAME}</a><!-- ELSE -->{group.user.GROUP_NAME}<!-- ENDIF --></p></td>
+		<!-- IF S_DISPLAY_MODERATOR_FORUMS --><td align="center" class="{$BG}"><!-- IF group.user.FORUM_OPTIONS --><select>{group.user.FORUMS}</select><!-- ELSEIF group.user.FORUMS --><p>{group.user.FORUMS}</p><!-- ELSE --><p>-</p><!-- ENDIF --></td><!-- ENDIF -->
 	</tr>
 <!-- BEGINELSE -->
-	<tr>
-		<td align="center" class="bg1" colspan="<!-- IF S_DISPLAY_MODERATOR_FORUMS -->4<!-- ELSE -->3<!-- ENDIF -->"><span class="big">{L_NO_MEMBERS}</span></td>
+	<tr class="big">
+		<td align="center" class="bg1" colspan="<!-- IF S_DISPLAY_MODERATOR_FORUMS -->4<!-- ELSE -->3<!-- ENDIF -->">{L_NO_MEMBERS}</td>
 	</tr>
 <!-- END user -->
 <!-- END group -->

@@ -21,8 +21,8 @@
 	</tr>
 	<!-- BEGIN user_row -->
 		<tr>
-			<td class="bg1"><span class="big"><!-- EVENT viewonline_body_username_prepend -->{user_row.USERNAME_FULL}<!-- EVENT viewonline_body_username_append --></span><!-- IF user_row.USER_IP --><br /><span class="bigger">{L_IP}{L_COLON} <a href="{user_row.U_USER_IP}">{user_row.USER_IP}</a> &#187; <a href="{user_row.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a></span><!-- ENDIF --><!-- IF user_row.USER_BROWSER --><br />{user_row.USER_BROWSER}<!-- ENDIF --></td>
-			<td align="center" class="bg2"><span class="bigger">{user_row.LASTUPDATE}</span></td>
+			<td class="bg1"><span class="bigger"><!-- EVENT viewonline_body_username_prepend -->{user_row.USERNAME_FULL}<!-- EVENT viewonline_body_username_append --></span><!-- IF user_row.USER_IP --><br /><span class="bigger">{L_IP}{L_COLON} <a href="{user_row.U_USER_IP}">{user_row.USER_IP}</a> &#187; <a href="{user_row.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a></span><!-- ENDIF --><!-- IF user_row.USER_BROWSER --><br />{user_row.USER_BROWSER}<!-- ENDIF --></td>
+			<td align="center" class="bg2"><p>{user_row.LASTUPDATE}</p></td>
 			<td class="bg1"><a class="bigger" href="{user_row.U_FORUM_LOCATION}">{user_row.FORUM_LOCATION}</a></td>
 		</tr>
 	<!-- END user_row -->
@@ -30,8 +30,8 @@
 	<tr>
 		<th>{L_INFORMATION}</th>
 	</tr>
-	<tr>
-		<td align="center" class="bg1" colspan="3"><span class="big">{L_NO_ONLINE_USERS}</span></td>
+	<tr class="big">
+		<td class="bg1" colspan="3" align="center">{L_NO_ONLINE_USERS}</td>
 	</tr>
 <!-- ENDIF -->
 </table>

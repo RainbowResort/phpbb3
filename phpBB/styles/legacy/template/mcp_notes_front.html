@@ -7,11 +7,13 @@
 	<th colspan="2">{L_TITLE}</th>
 </tr>
 <tr>
-	<td class="bg1" width="40%"><b class="big">{L_SELECT_USER}{L_COLON}</b><br /><span class="bigger">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</span></td>
+	<td class="bg1" width="40%"><span class="bigger"><b>{L_SELECT_USER}{L_COLON}</b><br />[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</span></td>
 	<td class="bg2"><input type="text" class="inputbox" name="username" size="20" /></td>
 </tr>
+</table>
+<table cellspacing="0" width="100%">
 <tr>
-	<td class="cat" colspan="2" align="center"><input type="reset" value="{L_RESET}" class="button2" /> &nbsp;<input type="submit" name="submituser" value="{L_SUBMIT}" class="button1" /></td>
+	<td class="cat" align="center"><input type="reset" value="{L_RESET}" class="button2" /> &nbsp;<input type="submit" name="submituser" value="{L_SUBMIT}" class="button1" /></td>
 </tr>
 </table>
 {S_FORM_TOKEN}

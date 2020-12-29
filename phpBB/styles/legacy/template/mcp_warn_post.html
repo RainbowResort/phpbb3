@@ -10,7 +10,7 @@
 	<td class="bg1" align="center">
 		<table cellspacing="1">
 		<tr>
-			<td class="big" align="center"><!-- IF USER_COLOR --><b style="color: #{USER_COLOR}"><!-- ELSE --><b><!-- ENDIF -->{USERNAME}</b></td>
+			<td class="big" align="center"><b<!-- IF USER_COLOR --> style="color: #{USER_COLOR}"<!-- ENDIF -->>{USERNAME}</b></td>
 		</tr>
 		<tr>
 			<td align="center"><!-- IF AVATAR_IMG -->{AVATAR_IMG}<!-- ELSE --><img src="{T_THEME_PATH}/images/no_avatar.gif" width="100" height="100" alt="" /><!-- ENDIF --></td>
@@ -43,7 +43,7 @@
 	<th>{L_POST_DETAILS}</th>
 </tr>
 <tr class="bg1">
-	<td><table cellspacing="5" width="100%"><tr><td><div class="postbody"><span class="content">{POST}</span></div></td></tr></table></td>
+	<td><table cellspacing="5" width="100%"><tr><td><div class="postbody"><div class="content">{POST}</div></div></td></tr></table></td>
 </tr>
 </table>
 
@@ -55,17 +55,19 @@
 <tr>
 	<th>{L_ADD_WARNING}</th>
 </tr>
-<tr>
-	<td class="bg1" align="center"><span class="bigger">{L_ADD_WARNING_EXPLAIN}</span></td>
+<tr class="bigger">
+	<td class="bg1" align="center">{L_ADD_WARNING_EXPLAIN}</td>
 </tr>
 <tr>
-	<td class="bg1" align="center"><textarea name="warning" rows="10" cols="76">{L_WARNING_POST_DEFAULT}</textarea></td>
+	<td class="bg1" align="center"><textarea name="warning" rows="6" cols="50">{L_WARNING_POST_DEFAULT}</textarea></td>
 </tr>
 <!-- IF S_CAN_NOTIFY -->
 <tr>
 	<td class="bg1" align="center"><input type="checkbox" name="notify_user" checked="checked" /> <span class="bigger">{L_NOTIFY_USER_WARN}</span></td>
 </tr>
 <!-- ENDIF -->
+</table>
+<table cellspacing="0" width="100%">
 <tr>
 	<td class="cat" align="center"><input class="button2" type="reset" value="{L_RESET}" /> &nbsp;<input class="button1" type="submit" name="action[add_warning]" value="{L_SUBMIT}" /></td>
 </tr>

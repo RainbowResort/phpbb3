@@ -63,22 +63,22 @@
 </tr>
 
 <!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->
-</table>
-<table class="main" width="100%" cellspacing="1">
 	<!-- DEFINE $CAPTCHA_TAB_INDEX = 4 -->
 	<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 <!-- ENDIF -->
 
 {S_LOGIN_REDIRECT}
 {S_FORM_TOKEN_LOGIN}
+</table>
+<table cellspacing="0" width="100%">
 <tr>
-	<td class="cat" <!-- IF (not S_ADMIN_AUTH and S_REGISTER_ENABLED) or (CAPTCHA_TEMPLATE and S_CONFIRM_CODE) -->colspan="2"<!-- ENDIF --> align="center">{S_HIDDEN_FIELDS}<input type="submit" name="login" class="button1" value="{L_LOGIN}" tabindex="5" /></td>
+	<td class="cat" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="login" class="button1" value="{L_LOGIN}" tabindex="5" /></td>
 </tr>
 </table>
 </form>
 
 <script type="text/javascript"><!--
-	if (typeof getStuff === 'function') {getStuff("<!-- IF S_ADMIN_AUTH -->focus_password<!-- ELSE -->focus_username<!-- ENDIF -->").focus();}
+	if (typeof getStuff === 'function') {getStuff("<!-- IF USERNAME eq '' -->focus_username<!-- ELSE -->focus_password<!-- ENDIF -->").focus();}
 //--></script>
 
 <!-- INCLUDE overall_footer.html -->

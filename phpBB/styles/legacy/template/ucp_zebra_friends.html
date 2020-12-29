@@ -7,8 +7,8 @@
 	<th colspan="2">{L_TITLE}</th>
 </tr>
 <!-- EVENT ucp_friend_list_before -->
-<tr>
-	<td align="center" class="bg1" colspan="2"><span class="bigger">{L_FRIENDS_EXPLAIN}</span></td>
+<tr class="bigger">
+	<td class="bg1" colspan="2" align="center">{L_FRIENDS_EXPLAIN}</td>
 </tr>
 <!-- IF ERROR -->
 	<tr>
@@ -24,8 +24,10 @@
 	<td class="bg1"><b class="bigger">{L_ADD_FRIENDS}{L_COLON}</b><br /><p>{L_ADD_FRIENDS_EXPLAIN}</p></td>
 	<td class="bg1"><textarea name="add" rows="5" cols="30">{USERNAMES}</textarea><br /><span class="bigger">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</span></td>
 </tr>
+</table>
+<table cellspacing="0" width="100%">
 <tr>
-	<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" /> &nbsp;<input class="button1" type="submit" name="submit" value="{L_SUBMIT}" /></td>
+	<td class="cat" align="center">{S_HIDDEN_FIELDS}<input class="button2" type="reset" value="{L_RESET}" name="reset" /> &nbsp;<input class="button1" type="submit" name="submit" value="{L_SUBMIT}" /></td>
 </tr>
 </table>
 

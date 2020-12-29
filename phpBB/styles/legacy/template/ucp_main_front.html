@@ -2,7 +2,7 @@
 
 <table class="main" width="100%" cellspacing="1">
 <tr>
-	<th colspan="3">{L_UCP}</th>
+	<th colspan="3">{L_TITLE}</th>
 </tr>
 <tr class="bigger">
 	<td class="bg1" colspan="3" align="center">{L_UCP_WELCOME}</td>
@@ -49,16 +49,18 @@
 		<!-- ENDIF -->
 		<tr class="bigger" valign="top"> 
 			<td align="{S_CONTENT_FLOW_END}"><b>{L_TOTAL_POSTS}{L_COLON}</b></td>
-			<td><b>{POSTS}</b><!-- IF POSTS_PCT --><br />[{POSTS_DAY} / {POSTS_PCT}]<!-- IF S_DISPLAY_SEARCH --><br /><a href="{U_SEARCH_SELF}">{L_SEARCH_YOUR_POSTS}</a><!-- ENDIF --><!-- ENDIF --></td>
+			<td><b>{POSTS}</b><!-- IF POSTS_PCT --><br />[{POSTS_DAY} / {POSTS_PCT}]<!-- IF S_DISPLAY_SEARCH --><br /><a href="{U_SEARCH_USER}">{L_SEARCH_YOUR_POSTS}</a><!-- ENDIF --><!-- ENDIF --></td>
 		</tr>
-		<!-- IF S_SHOW_ACTIVITY -->
+		<!-- IF ACTIVE_FORUM != '' -->
 			<tr class="bigger" valign="top">
 				<td align="{S_CONTENT_FLOW_END}"><b>{L_ACTIVE_IN_FORUM}{L_COLON}</b></td>
-				<td><!-- IF ACTIVE_FORUM != '' --><b><a href="{U_ACTIVE_FORUM}">{ACTIVE_FORUM}</a></b><br />[&nbsp;{ACTIVE_FORUM_POSTS} / {ACTIVE_FORUM_PCT}&nbsp;]<!-- ELSE -->-<!-- ENDIF --></td>
+				<td><b><a href="{U_ACTIVE_FORUM}">{ACTIVE_FORUM}</a></b><br />[&nbsp;{ACTIVE_FORUM_POSTS} / {ACTIVE_FORUM_PCT}&nbsp;]</td>
 			</tr>
+		<!-- ENDIF -->
+		<!-- IF ACTIVE_TOPIC != '' -->
 			<tr class="bigger" valign="top">
 				<td align="{S_CONTENT_FLOW_END}"><b>{L_ACTIVE_IN_TOPIC}{L_COLON}</b></td>
-				<td><!-- IF ACTIVE_TOPIC != '' --><b><a href="{U_ACTIVE_TOPIC}">{ACTIVE_TOPIC}</a></b><br />[&nbsp;{ACTIVE_TOPIC_POSTS} / {ACTIVE_TOPIC_PCT}&nbsp;]<!-- ELSE -->-<!-- ENDIF --></td>
+				<td><b><a href="{U_ACTIVE_TOPIC}">{ACTIVE_TOPIC}</a></b><br />[&nbsp;{ACTIVE_TOPIC_POSTS} / {ACTIVE_TOPIC_PCT}&nbsp;]</td>
 			</tr>
 		<!-- ENDIF -->
 		</table>
