@@ -32,7 +32,7 @@
 
 	<table class="main" width="100%" cellspacing="1">
 	<tr>
-		<th>{L_REGISTRATION}</th>
+		<th>{{ lang('REGISTRATION') }}</th>
 	</tr>
 	<tr>
 		<td class="bg1">
@@ -40,12 +40,12 @@
 			<tr>
 				<!-- IF S_SHOW_COPPA -->
 					<td align="center">
-						<br /><div class="big">{L_COPPA_BIRTHDAY}</div><br />
+						<br /><div class="big">{{ lang('COPPA_BIRTHDAY') }}</div><br />
 					</td>
 				<!-- ELSE -->
 					<td>
 						<!-- EVENT ucp_agreement_terms_before -->
-						<br /><div class="bigger">{L_TERMS_OF_USE}</div><br />
+						<br /><div class="bigger">{{ lang('TERMS_OF_USE') }}</div><br />
 						<!-- EVENT ucp_agreement_terms_after -->
 					</td>
 				<!-- ENDIF -->
@@ -73,14 +73,14 @@
 
 	<table class="main" width="100%" cellspacing="1">
 	<tr>
-		<th>{AGREEMENT_TITLE}</th>
+		<th>{{ AGREEMENT_TITLE }}</th>
 	</tr>
 	<tr>
 		<td class="bg1">
 			<table width="90%" cellspacing="2" align="center">
 			<tr>
 				<td>
-					<br /><div class="bigger">{AGREEMENT_TEXT}</div><br />
+					<br /><div class="bigger">{{ AGREEMENT_TEXT }}</div><br />
 				</td>
 			</tr>
 			</table>
