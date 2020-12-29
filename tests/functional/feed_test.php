@@ -63,6 +63,13 @@ class phpbb_functional_feed_test extends phpbb_functional_test_case
 		$crawler = self::submit($form);
 		self::assertContainsLang('CONFIG_UPDATED', $crawler->filter('.successbox')->text());
 
+		// Disable showing unapproved posts to users
+		$crawler = self::request('GET', "adm/index.php?sid={$this->sid}&i=acp_board&mode=features");
+		$form = $crawler->selectButton('Submit')->form();
+		$form->setValues(['config[display_unapproved_posts]' => false]);
+		$crawler = self::submit($form);
+		self::assertContainsLang('CONFIG_UPDATED', $crawler->filter('.successbox')->text());
+
 		// Special config (Guest can't see attachments)
 		$this->add_lang('acp/permissions');
 
@@ -850,10 +857,9 @@ class phpbb_functional_feed_test extends phpbb_functional_test_case
 		$this->set_flood_interval(0);
 
 		$this->login('disapprove_user');
-		$post = $this->create_topic($this->data['forums']['Feeds #1.1'], 'Feeds #1.1 - Topic #3', 'This is a test topic posted by the testing framework.', array(), 'POST_STORED_MOD');
-		$this->data['topics']['Feeds #1 - Topic #3'] = (int) $post['topic_id'];
-		$crawler = self::request('GET', "viewforum.php?f={$this->data['forums']['Feeds #1.1']}&sid={$this->sid}");
+		$this->create_topic($this->data['forums']['Feeds #1.1'], 'Feeds #1.1 - Topic #3', 'This is a test topic posted by the testing framework.', array(), 'POST_STORED_MOD');
 
+		$crawler = self::request('GET', "viewforum.php?f={$this->data['forums']['Feeds #1.1']}&sid={$this->sid}");
 		self::assertNotContains('Feeds #1.1 - Topic #3', $crawler->filter('html')->text());
 
 		$this->logout();
@@ -1240,6 +1246,7 @@ class phpbb_functional_feed_test extends phpbb_functional_test_case
 			'posts' => array(
 				'Feeds #1 - Topic #3',
 			),
+			'attachments' => array(),
 		));
 
 		$this->add_lang('viewtopic');

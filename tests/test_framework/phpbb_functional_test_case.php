@@ -418,17 +418,18 @@ class phpbb_functional_test_case extends phpbb_test_case
 
 	public function install_ext($extension)
 	{
+		$this->add_lang('acp/extensions');
+
 		$this->login();
 		$this->admin_login();
 
 		$ext_path = str_replace('/', '%2F', $extension);
 
 		$crawler = self::request('GET', 'adm/index.php?i=acp_extensions&mode=main&action=enable_pre&ext_name=' . $ext_path . '&sid=' . $this->sid);
-		$this->assertGreaterThan(1, $crawler->filter('div.main fieldset div input.button2')->count());
+		$this->assertGreaterThan(1, $crawler->filter('div.main fieldset.submit-buttons input')->count());
 
-		$form = $crawler->selectButton('confirm')->form();
+		$form = $crawler->selectButton($this->lang('EXTENSION_ENABLE'))->form();
 		$crawler = self::submit($form);
-		$this->add_lang('acp/extensions');
 
 		$meta_refresh = $crawler->filter('meta[http-equiv="refresh"]');
 
@@ -448,17 +449,18 @@ class phpbb_functional_test_case extends phpbb_test_case
 
 	public function disable_ext($extension)
 	{
+		$this->add_lang('acp/extensions');
+
 		$this->login();
 		$this->admin_login();
 
 		$ext_path = str_replace('/', '%2F', $extension);
 
 		$crawler = self::request('GET', 'adm/index.php?i=acp_extensions&mode=main&action=disable_pre&ext_name=' . $ext_path . '&sid=' . $this->sid);
-		$this->assertGreaterThan(1, $crawler->filter('div.main fieldset div input.button2')->count());
+		$this->assertGreaterThan(1, $crawler->filter('div.main fieldset.submit-buttons input')->count());
 
-		$form = $crawler->selectButton('confirm')->form();
+		$form = $crawler->selectButton($this->lang('EXTENSION_DISABLE'))->form();
 		$crawler = self::submit($form);
-		$this->add_lang('acp/extensions');
 
 		$meta_refresh = $crawler->filter('meta[http-equiv="refresh"]');
 
@@ -478,17 +480,18 @@ class phpbb_functional_test_case extends phpbb_test_case
 
 	public function delete_ext_data($extension)
 	{
+		$this->add_lang('acp/extensions');
+
 		$this->login();
 		$this->admin_login();
 
 		$ext_path = str_replace('/', '%2F', $extension);
 
 		$crawler = self::request('GET', 'adm/index.php?i=acp_extensions&mode=main&action=delete_data_pre&ext_name=' . $ext_path . '&sid=' . $this->sid);
-		$this->assertGreaterThan(1, $crawler->filter('div.main fieldset div input.button2')->count());
+		$this->assertGreaterThan(1, $crawler->filter('div.main fieldset.submit-buttons input')->count());
 
-		$form = $crawler->selectButton('confirm')->form();
+		$form = $crawler->selectButton($this->lang('EXTENSION_DELETE_DATA'))->form();
 		$crawler = self::submit($form);
-		$this->add_lang('acp/extensions');
 
 		$meta_refresh = $crawler->filter('meta[http-equiv="refresh"]');
 
@@ -710,7 +713,7 @@ class phpbb_functional_test_case extends phpbb_test_case
 
 	protected function remove_user_group($group_name, $usernames)
 	{
-		global $db, $cache, $auth, $config, $phpbb_dispatcher, $phpbb_log, $phpbb_container, $phpbb_root_path, $phpEx;
+		global $db, $cache, $auth, $config, $phpbb_dispatcher, $phpbb_log, $phpbb_container, $user, $phpbb_root_path, $phpEx;
 
 		$config = new \phpbb\config\config(array());
 		$config['coppa_enable'] = 0;
@@ -747,7 +750,7 @@ class phpbb_functional_test_case extends phpbb_test_case
 
 	protected function add_user_group($group_name, $usernames, $default = false, $leader = false)
 	{
-		global $db, $cache, $auth, $config, $phpbb_dispatcher, $phpbb_log, $phpbb_container, $phpbb_root_path, $phpEx;
+		global $db, $cache, $auth, $config, $phpbb_dispatcher, $phpbb_log, $phpbb_container, $user, $phpbb_root_path, $phpEx;
 
 		$config = new \phpbb\config\config(array());
 		$config['coppa_enable'] = 0;
@@ -785,7 +788,7 @@ class phpbb_functional_test_case extends phpbb_test_case
 		return group_user_add($group_id, false, $usernames, $group_name, $default, $leader);
 	}
 
-	protected function login($username = 'admin')
+	protected function login($username = 'admin', $autologin = false)
 	{
 		$this->add_lang('ucp');
 
@@ -793,6 +796,10 @@ class phpbb_functional_test_case extends phpbb_test_case
 		$this->assertContains($this->lang('LOGIN_EXPLAIN_UCP'), $crawler->filter('html')->text());
 
 		$form = $crawler->selectButton($this->lang('LOGIN'))->form();
+		if ($autologin)
+		{
+			$form['autologin']->tick();
+		}
 		$crawler = self::submit($form, array('username' => $username, 'password' => $username . $username));
 		$this->assertNotContains($this->lang('LOGIN'), $crawler->filter('.navbar')->text());
 
@@ -869,6 +876,8 @@ class phpbb_functional_test_case extends phpbb_test_case
 			{
 				$this->add_lang($file);
 			}
+
+			return;
 		}
 
 		$lang_path = __DIR__ . "/../../phpBB/language/en/$lang_file.php";
